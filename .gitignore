@@ -54,3 +54,6 @@ TestResult.xml
 nunit-*.xml
 
 .vs
+
+# Ignore appsettings for each dev
+appsettings.Development.json
