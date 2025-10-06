@@ -1,0 +1,149 @@
+﻿@using Microsoft.AspNetCore.Http;
+
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a asp-area="admin" asp-controller="dashboard" asp-action="index" class="brand-link">
+        <img src="~/Admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">AdminLTE 3</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="~/Admin/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a class="d-block">Hoten</a>
+                <span class="badge badge-info">(nhanvien.Quyen)</span>
+            </div>
+        </div>
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="col-md-12" style="text-align: center;">
+                <a asp-controller="login" asp-action="logout" class="btn btn-block btn-outline-danger"><i class="fas fa-power-off"></i><span class=""> Logout</span></a>
+            </div>
+
+        </div>
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                     with font-awesome or any other icon font library -->
+                @* @if (nhanvien.Quyen == 3) *@
+                @* { *@
+                    <li class="nav-item @ViewData["nhanvien"]">
+                        <a class="nav-link">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Nhân viên
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="nhanvien" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Danh sách</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="nhanvien" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Thêm</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                @* } *@
+                @* @if (nhanvien.Quyen != 3) *@
+                @* { *@
+
+
+                    <li class="nav-item">
+                        <a asp-controller="nhanvien" asp-action="profile" class="nav-link @ViewData["nhanvien-profile"]">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <p>
+                                Profile
+
+                            </p>
+                        </a>
+
+                    </li>
+                }
+                <li class="nav-item @ViewData["yeucau"]">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            Hỗ trợ
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @* @if (nhanvien.Quyen ==3) *@
+                        @* { *@
+
+                            <li class="nav-item">
+                                <a asp-controller="yeucau" asp-action="index" class="nav-link @ViewData["yeucau-list"]">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Danh sách</p>
+                                </a>
+                            </li>
+                        @* } *@
+                        @*     @if (nhanvien.Quyen ==2) *@
+                        @*     { *@
+
+                                <li class="nav-item">
+                                    <a asp-controller="profile" asp-action="yeucaudaxuly" class="nav-link @ViewData["yeucau-yeucaudaxuly"]">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Yêu cầu xử lý</p>
+                                    </a>
+                                </li>
+                            }
+
+                        
+                        @* @if (nhanvien.Quyen != 2) *@
+                        @* { *@
+                            <li class="nav-item">
+                                <a asp-controller="yeucau" asp-action="create" class="nav-link @ViewData["yeucau-create"]">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Gửi yêu cầu</p>
+                                </a>
+                            </li>
+                            @* if (nhanvien.Quyen != 3) *@
+                            @* { *@
+                                <li class="nav-item">
+                                    <a asp-controller="profile" asp-action="yeucaudagui" class="nav-link @ViewData["yeucau-yeucaudagui"]">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Yêu cầu đã gửi</p>
+                                    </a>
+                                </li>
+                        @*     } *@
+                        @* } *@
+
+
+                    </ul>
+                </li>
+
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
