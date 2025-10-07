@@ -43,8 +43,30 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
-                @* @if (nhanvien.Quyen == 3) *@
-                @* { *@
+                <li class="nav-item @ViewData["example"]">
+                    <a class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Example
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="example" asp-action="index" class="nav-link  @ViewData["example-list"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="example" asp-action="create" class="nav-link  @ViewData["example-create"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
                     <li class="nav-item @ViewData["nhanvien"]">
                         <a class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -70,9 +92,7 @@
                         </ul>
                     </li>
 
-                @* } *@
-                @* @if (nhanvien.Quyen != 3) *@
-                @* { *@
+              
 
 
                     <li class="nav-item">
@@ -85,7 +105,7 @@
                         </a>
 
                     </li>
-                }
+               
                 <li class="nav-item @ViewData["yeucau"]">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-edit"></i>
@@ -95,8 +115,7 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        @* @if (nhanvien.Quyen ==3) *@
-                        @* { *@
+                        
 
                             <li class="nav-item">
                                 <a asp-controller="yeucau" asp-action="index" class="nav-link @ViewData["yeucau-list"]">
@@ -104,9 +123,7 @@
                                     <p>Danh sách</p>
                                 </a>
                             </li>
-                        @* } *@
-                        @*     @if (nhanvien.Quyen ==2) *@
-                        @*     { *@
+                        
 
                                 <li class="nav-item">
                                     <a asp-controller="profile" asp-action="yeucaudaxuly" class="nav-link @ViewData["yeucau-yeucaudaxuly"]">
@@ -114,27 +131,24 @@
                                         <p>Yêu cầu xử lý</p>
                                     </a>
                                 </li>
-                            }
+                            
 
                         
-                        @* @if (nhanvien.Quyen != 2) *@
-                        @* { *@
+                        
                             <li class="nav-item">
                                 <a asp-controller="yeucau" asp-action="create" class="nav-link @ViewData["yeucau-create"]">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Gửi yêu cầu</p>
                                 </a>
                             </li>
-                            @* if (nhanvien.Quyen != 3) *@
-                            @* { *@
+                            
                                 <li class="nav-item">
                                     <a asp-controller="profile" asp-action="yeucaudagui" class="nav-link @ViewData["yeucau-yeucaudagui"]">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Yêu cầu đã gửi</p>
                                     </a>
                                 </li>
-                        @*     } *@
-                        @* } *@
+                        
 
 
                     </ul>

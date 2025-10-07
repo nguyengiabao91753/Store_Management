@@ -1,0 +1,276 @@
+﻿@{
+    ViewData["example"] = "menu-open";
+    ViewData["example-list"] = "active";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css ">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css ">
+
+}
+@section jslinks {
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script src="~/js/configTableData.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('select.quyen-select').change(function () {
+
+                var nvId = $(this).closest('tr').find('td:first').text();
+                var selectedValue = $(this).val();
+
+                // Gửi yêu cầu Ajax
+                $.ajax({
+                    type: 'POST',
+                    url: '/nhanvien/updatequyen',
+                    data: {
+                        id: nvId,
+                        newQuyen: selectedValue
+                    },
+                    success: function (data) {
+                        alert(data);
+
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error(error);
+                    }
+                });
+            });
+
+            $('select.kichhoat-select').change(function () {
+
+                var nvId = $(this).closest('tr').find('td:first').text();
+                var selectedValue = $(this).val();
+
+                // Gửi yêu cầu Ajax
+                $.ajax({
+                    type: 'POST',
+                    url: '/nhanvien/updatekichhoat',
+                    data: {
+                        id: nvId,
+                        newkichhoat: selectedValue
+                    },
+                    success: function (data) {
+                        alert(data);
+
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error(error);
+                    }
+                });
+            });
+        })
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var selects = document.querySelectorAll("select.kichhoat-select");
+            selects.forEach(function (select) {
+                changeClass(select);
+            });
+        });
+        function changeClass(selectElement) {
+            var selectedOption = selectElement.value;
+            if (selectedOption === "true") {
+                selectElement.classList.remove("badge-danger");
+                selectElement.classList.add("badge-success");
+            } else if (selectedOption === "false") {
+                selectElement.classList.remove("badge-success");
+                selectElement.classList.add("badge-danger");
+            }
+            $("table").click();
+        }
+    </script>
+}
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Nhân viên</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Nhân viên</a></li>
+                    <li class="breadcrumb-item active">Danh sách</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn btn-outline-primary" asp-controller="example" asp-action="create">+ Thêm ví dụ</a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+
+
+                        <table id="example1" class="table table-bordered table-hover">
+
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User Name</th>
+                                        <th>Họ tên</th>
+                                        <th>Ảnh</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Kích hoạt</th>
+                                        <th>Vị trí</th>
+                                        <th>Yêu cầu</th>
+                                        <th width="170px">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>NV001</td>
+                                        <td>johndoe</td>
+                                        <td>John Doe</td>
+                                        <td><img src="" width="100" height="100" alt="Ảnh nhân viên"></td>
+                                        <td>1990-05-15</td>
+                                        <td><span class="badge bg-success">Hoạt động</span></td>
+                                        <td><span class="badge bg-secondary">Admin</span></td>
+                                        <td><a href="#" class="btn btn-outline-info btn-sm">Xem yêu cầu</a></td>
+                                        <td>
+                                            <a href="#" class="btn btn-outline-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                                            <a href="#" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')"><i class="fas fa-trash-alt"></i> Delete</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>NV002</td>
+                                        <td>janesmith</td>
+                                        <td>Jane Smith</td>
+                                        <td><img src="" width="100" height="100" alt="Ảnh nhân viên"></td>
+                                        <td>1992-09-21</td>
+                                        <td>
+                                            <select class="form-select form-select-sm">
+                                                <option selected>Hoạt động</option>
+                                                <option>Đình chỉ</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm">
+                                                <option selected>Nhân viên</option>
+                                                <option>Nhân viên Support</option>
+                                            </select>
+                                        </td>
+                                        <td><a href="#" class="btn btn-outline-info btn-sm">Xem yêu cầu</a></td>
+                                        <td>
+                                            <a href="#" class="btn btn-outline-warning btn-sm">Edit</a>
+                                            <a href="#" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Delete</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>NV003</td>
+                                        <td>nguyenvanb</td>
+                                        <td>Nguyễn Văn B</td>
+                                        <td><img src="" width="100" height="100" alt="Ảnh nhân viên"></td>
+                                        <td>1988-02-10</td>
+                                        <td><span class="badge bg-success">Hoạt động</span></td>
+                                        <td><span class="badge bg-secondary">Admin</span></td>
+                                        <td><a href="#" class="btn btn-outline-info btn-sm">Xem yêu cầu</a></td>
+                                        <td>
+                                            <a href="#" class="btn btn-outline-warning btn-sm">Edit</a>
+                                            <a href="#" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Delete</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>NV004</td>
+                                        <td>lethianh</td>
+                                        <td>Lê Thị Anh</td>
+                                        <td><img src="" width="100" height="100" alt="Ảnh nhân viên"></td>
+                                        <td>1995-11-03</td>
+                                        <td>
+                                            <select class="form-select form-select-sm">
+                                                <option>Hoạt động</option>
+                                                <option selected>Đình chỉ</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm">
+                                                <option>Nhân viên</option>
+                                                <option selected>Nhân viên Support</option>
+                                            </select>
+                                        </td>
+                                        <td><a href="#" class="btn btn-outline-info btn-sm">Xem yêu cầu</a></td>
+                                        <td>
+                                            <a href="#" class="btn btn-outline-warning btn-sm">Edit</a>
+                                            <a href="#" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Delete</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>NV005</td>
+                                        <td>phamhoang</td>
+                                        <td>Phạm Hoàng</td>
+                                        <td><img src="" width="100" height="100" alt="Ảnh nhân viên"></td>
+                                        <td>1998-07-20</td>
+                                        <td><span class="badge bg-success">Hoạt động</span></td>
+                                        <td>
+                                            <select class="form-select form-select-sm">
+                                                <option selected>Nhân viên</option>
+                                                <option>Nhân viên Support</option>
+                                            </select>
+                                        </td>
+                                        <td><a href="#" class="btn btn-outline-info btn-sm">Xem yêu cầu</a></td>
+                                        <td>
+                                            <a href="#" class="btn btn-outline-warning btn-sm">Edit</a>
+                                            <a href="#" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User Name</th>
+                                        <th>Họ tên</th>
+                                        <th>Ảnh</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Kích hoạt</th>
+                                        <th>Vị trí</th>
+                                        <th>Yêu cầu</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                           
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
