@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RetailShop.Models;
 
-[Index("Username", Name = "UQ__Users__536C85E43CCEA586", IsUnique = true)]
+[Index("Username", Name = "UQ__Users__536C85E47CE9BA15", IsUnique = true)]
 public partial class User
 {
     [Key]

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RetailShop.Models;
 
-[Index("Barcode", Name = "UQ__Products__177800D3ED481FAC", IsUnique = true)]
+[Index("Barcode", Name = "UQ__Products__177800D309195C4D", IsUnique = true)]
 public partial class Product
 {
     [Key]
@@ -18,6 +18,9 @@ public partial class Product
 
     [StringLength(100)]
     public string ProductName { get; set; } = null!;
+
+    [Unicode(false)]
+    public string ProductImage { get; set; } = null!;
 
     [StringLength(50)]
     [Unicode(false)]

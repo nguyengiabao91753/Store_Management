@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RetailShop.Models;
 
-[Index("PromoCode", Name = "UQ__Promotio__32DBED35922443BD", IsUnique = true)]
+[Index("PromoCode", Name = "UQ__Promotio__32DBED35D65AA90B", IsUnique = true)]
 public partial class Promotion
 {
     [Key]

@@ -5,7 +5,6 @@ using RetailShop.Models;
 
 namespace RetailShop.Data;
 
-// Mark the class as partial to allow partial methods
 public partial class AppDbContext : DbContext
 {
     public AppDbContext()
@@ -39,25 +38,25 @@ public partial class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=StoreManagement;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=MSI;Database=StoreManagement;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0BE24C3517");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B93F0A810");
         });
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__A4AE64D85FAA4DEA");
+            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__A4AE64D83B507F06");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
         modelBuilder.Entity<Inventory>(entity =>
         {
-            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6B3E80A4526");
+            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6B3D05A2686");
 
             entity.Property(e => e.Quantity).HasDefaultValue(0);
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getdate())");
@@ -69,7 +68,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF1E1C7E9C");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF9EF9FBBF");
 
             entity.Property(e => e.DiscountAmount).HasDefaultValue(0m);
             entity.Property(e => e.OrderDate).HasDefaultValueSql("(getdate())");
@@ -84,7 +83,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<OrderItem>(entity =>
         {
-            entity.HasKey(e => e.OrderItemId).HasName("PK__OrderIte__57ED068126A9C139");
+            entity.HasKey(e => e.OrderItemId).HasName("PK__OrderIte__57ED0681AD00E2DF");
 
             entity.Property(e => e.Subtotal).HasComputedColumnSql("([Quantity]*[Price])", true);
 
@@ -99,7 +98,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A38597C5C0F");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A388E2B54D5");
 
             entity.Property(e => e.PaymentDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.PaymentMethod).HasDefaultValue("cash");
@@ -111,7 +110,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CD1F5159F8");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CD60B3DF86");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Unit).HasDefaultValue("pcs");
@@ -123,7 +122,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromoId).HasName("PK__Promotio__33D334B0C54E8651");
+            entity.HasKey(e => e.PromoId).HasName("PK__Promotio__33D334B0A5A02203");
 
             entity.Property(e => e.MinOrderAmount).HasDefaultValue(0m);
             entity.Property(e => e.Status).HasDefaultValue("active");
@@ -133,21 +132,19 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B40FE7CC58");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B419573563");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C2F7D4787");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C18E73456");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Role).HasDefaultValue("staff");
         });
 
-        // Call the partial method if implemented in another partial class
         OnModelCreatingPartial(modelBuilder);
     }
 
-    // Rename the partial method to avoid conflict with the base class method
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
