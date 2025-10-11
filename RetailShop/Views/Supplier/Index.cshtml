@@ -1,0 +1,143 @@
+﻿@{
+   
+    ViewData["supplier"] = "menu-open";
+    ViewData["supplier-list"] = "active";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css ">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css ">
+
+}
+@section jslinks {
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script src="~/js/configTableData.js"></script>
+
+
+  
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var selects = document.querySelectorAll("select.kichhoat-select");
+            selects.forEach(function (select) {
+                changeClass(select);
+            });
+        });
+        function changeClass(selectElement) {
+            var selectedOption = selectElement.value;
+            if (selectedOption === "true") {
+                selectElement.classList.remove("badge-danger");
+                selectElement.classList.add("badge-success");
+            } else if (selectedOption === "false") {
+                selectElement.classList.remove("badge-success");
+                selectElement.classList.add("badge-danger");
+            }
+            $("table").click();
+        }
+    </script>
+}
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Supplier</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Supplier</a></li>
+                    <li class="breadcrumb-item active">List</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn btn-outline-primary" asp-controller="supplier" asp-action="create">+ Add Supplier</a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Address</th>
+                                    <th width="170px">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var s in ViewBag.suppliers)
+                                {
+                                    <tr>
+                                        <td>@s.SupplierId</td>
+                                        <td>@s.Name</td>
+                                        <td>@s.Email</td>
+                                        <td>@s.Phone</td>
+                                        <td>@s.Address</td>
+
+                                       
+                                       
+                                        <td>
+                                            <a class="btn btn-outline-warning" asp-controller="supplier" asp-action="edit" asp-route-id="@s.SupplierId">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </a>
+                                            <a class="btn btn-outline-danger" onclick="return confirmDelete()" asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId">
+                                                <i class="fas fa-trash-alt"></i>
+                                                Delete
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Address</th>
+                                    <th width="170px">Hành động</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>

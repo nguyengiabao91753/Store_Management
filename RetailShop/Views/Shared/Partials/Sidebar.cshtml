@@ -67,7 +67,7 @@
 
                     </ul>
                 </li>
-                    <li class="nav-item @ViewData["nhanvien"]">
+                <li class="nav-item @ViewData["nhanvien"]">
                         <a class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
@@ -91,70 +91,30 @@
 
                         </ul>
                     </li>
-
-              
-
-
-                    <li class="nav-item">
-                        <a asp-controller="nhanvien" asp-action="profile" class="nav-link @ViewData["nhanvien-profile"]">
-                            <i class="nav-icon fas fa-edit"></i>
-                            <p>
-                                Profile
-
-                            </p>
-                        </a>
-
-                    </li>
-               
-                <li class="nav-item @ViewData["yeucau"]">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-edit"></i>
+                <li class="nav-item @ViewData["supplier"]">
+                    <a class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Hỗ trợ
-                            <i class="fas fa-angle-left right"></i>
+                            Supplier
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        
-
-                            <li class="nav-item">
-                                <a asp-controller="yeucau" asp-action="index" class="nav-link @ViewData["yeucau-list"]">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Danh sách</p>
-                                </a>
-                            </li>
-                        
-
-                                <li class="nav-item">
-                                    <a asp-controller="profile" asp-action="yeucaudaxuly" class="nav-link @ViewData["yeucau-yeucaudaxuly"]">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Yêu cầu xử lý</p>
-                                    </a>
-                                </li>
-                            
-
-                        
-                        
-                            <li class="nav-item">
-                                <a asp-controller="yeucau" asp-action="create" class="nav-link @ViewData["yeucau-create"]">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Gửi yêu cầu</p>
-                                </a>
-                            </li>
-                            
-                                <li class="nav-item">
-                                    <a asp-controller="profile" asp-action="yeucaudagui" class="nav-link @ViewData["yeucau-yeucaudagui"]">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Yêu cầu đã gửi</p>
-                                    </a>
-                                </li>
-                        
-
+                        <li class="nav-item">
+                            <a asp-controller="supplier" asp-action="index" class="nav-link  @ViewData["supplier-list"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="supplier" asp-action="create" class="nav-link  @ViewData["supplier-create"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>
-
-
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
