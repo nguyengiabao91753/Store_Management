@@ -13,10 +13,16 @@ builder.Services.AddControllersWithViews();
 // Đọc connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Thêm DbContext vào DI container
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+//// Thêm DbContext vào DI container
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(connectionString));
 
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure() // optional resilience
+    ));
 
 #region Add De[pendency Injection for Services
 builder.Services.AddScoped<IExample, Example>();
