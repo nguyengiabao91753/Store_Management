@@ -93,4 +93,17 @@ public class SupplierController : Controller
             return View("Edit", supplier);
         }
     }
+
+    [HttpGet]
+    [Route("detail/{id}")]
+    public async Task<IActionResult> Detail(int id)
+    {
+        var rs = await _supplierService.GetSupplierByIdAsync(id);
+        if (rs.IsSuccess)
+        {
+            return View("Detail", rs.Data);
+        }
+        TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
+        return RedirectToAction("Index");
+    }
 }

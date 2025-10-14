@@ -55,7 +55,8 @@ public class SupplierService : ISupplierService
         var rs = new ResultService<Supplier>();
         try
         {
-            var supplier = await _db.Suppliers.FindAsync(id);
+            var supplier = await _db.Suppliers.Include(s => s.Products)
+            .FirstOrDefaultAsync(s => s.SupplierId == id);
             if (supplier == null)
             {
                 rs.IsSuccess = false;

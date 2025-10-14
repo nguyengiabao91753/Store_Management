@@ -101,18 +101,27 @@
                                         <td>@s.Phone</td>
                                         <td>@s.Address</td>
 
-                                       
-                                       
-                                        <td>
-                                            <a class="btn btn-outline-warning" asp-controller="supplier" asp-action="edit" asp-route-id="@s.SupplierId">
-                                                <i class="fas fa-edit"></i>
-                                                Edit
-                                            </a>
-                                            <a class="btn btn-outline-danger" onclick="return confirmDelete()" asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId">
-                                                <i class="fas fa-trash-alt"></i>
-                                                Delete
-                                            </a>
+
+
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a asp-controller="supplier" asp-action="detail" asp-route-id="@s.SupplierId"
+                                                   class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+                                                <a asp-controller="supplier" asp-action="edit" asp-route-id="@s.SupplierId"
+                                                   class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Supplier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId"
+                                                   class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Supplier">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </div>
                                         </td>
+
 
                                     </tr>
                                 }
