@@ -56,4 +56,41 @@ public class SupplierController : Controller
         }
         
     }
+
+    [HttpGet]
+    [Route("edit/{id}")]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var rs = await _supplierService.GetSupplierByIdAsync(id);
+        if(rs.IsSuccess)
+        {
+            return View("Edit", rs.Data);
+        }
+        TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
+        return RedirectToAction("Index");
+       
+    }
+
+    [HttpPost]
+    [Route("update")]
+    public async Task<IActionResult> Update(Supplier supplier)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            TempData["err"] = "Cập nhật thất bại: " + string.Join(", ", errors);
+            return View("Edit", supplier);
+        }
+        var rs = await _supplierService.UpdateSupplierAsync(supplier);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = "Cập nhật thành công";
+            return RedirectToAction("Index");
+        }
+        else
+        {
+            TempData["err"] = "Cập nhật thất bại: " + rs.Message;
+            return View("Edit", supplier);
+        }
+    }
 }
