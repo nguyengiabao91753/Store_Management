@@ -1,0 +1,169 @@
+﻿@{
+
+    ViewData["promotion"] = "menu-open";
+    ViewData["promotion-list"] = "active";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css ">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css ">
+
+}
+@section jslinks {
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script src="~/js/configTableData.js"></script>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var selects = document.querySelectorAll("select.kichhoat-select");
+            selects.forEach(function (select) {
+                changeClass(select);
+            });
+        });
+        function changeClass(selectElement) {
+            var selectedOption = selectElement.value;
+            if (selectedOption === "true") {
+                selectElement.classList.remove("badge-danger");
+                selectElement.classList.add("badge-success");
+            } else if (selectedOption === "false") {
+                selectElement.classList.remove("badge-success");
+                selectElement.classList.add("badge-danger");
+            }
+            $("table").click();
+        }
+    </script>
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Promotion</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Promotion</a></li>
+                    <li class="breadcrumb-item active">List</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn btn-outline-primary" asp-controller="Promotion" asp-action="create">+ Add Promotion</a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Value</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Min Order Amount</th>
+                                    <th>Usage Limit</th>
+                                    <th>Used Count</th>
+                                    <th>Status</th>
+
+                                    <th width="170px">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var p in ViewBag.promotions)
+                                {
+                                    <tr>
+                                        <td>@p.PromoId</td>
+                                        <td>@p.PromoCode</td>
+                                        <td>@p.Description</td>
+                                        <td>@p.DiscountType</td>
+                                        <td>@p.DiscountValue</td>
+                                        <td>@p.StartDate</td>
+                                        <td>@p.EndDate</td>
+                                        <td>@p.MinOrderAmount</td>
+                                        <td>@p.UsageLimit</td>
+                                        <td>@p.UsedCount</td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a asp-controller="promotion" asp-action="detail" asp-route-id="@p.PromoId"
+                                                   class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+                                                <a asp-controller="promotion" asp-action="edit" asp-route-id="@p.PromoId"
+                                                   class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Promotion">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                <a asp-controller="promotion" asp-action="delete" asp-route-id="@p.PromoId"
+                                                   class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Promotion">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Value</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Min Order Amount</th>
+                                    <th>Usage Limit</th>
+                                    <th>Used Count</th>
+                                    <th>Status</th>
+
+                                    <th width="170px">Hành động</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
