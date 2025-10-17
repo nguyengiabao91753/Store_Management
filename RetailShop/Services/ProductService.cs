@@ -116,31 +116,4 @@ public class ProductService : IProductService
         }
         return rs;
     }
-
-    public async Task<ResultService<Product>> DeleteProductAsync(int id)
-    {
-        var rs = new ResultService<Product>();
-        try
-        {
-            var existingProduct = await _db.Products.FindAsync(id);
-            if (existingProduct == null)
-            {
-                rs.IsSuccess = false;
-                rs.Message = "Product not found.";
-                return rs;
-            }
-
-            _db.Products.ExecuteDeleteAsync(existingProduct);
-            _db.SaveChanges();
-            rs.IsSuccess = true;
-            rs.Data = existingProduct;
-            rs.Message = "Product deleted successfully.";
-        }
-        catch (Exception ex)
-        {
-            rs.IsSuccess = false;
-            rs.Message = $"Error deleting product: {ex.Message}";
-        }
-        return rs;
-    }
 }
