@@ -27,8 +27,6 @@
 
     <script src="~/js/configTableData.js"></script>
 
-
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var selects = document.querySelectorAll("select.kichhoat-select");
@@ -104,7 +102,7 @@
                                         <td>@p.PromoId</td>
                                         <td>@p.PromoCode</td>
                                         <td>@p.Description</td>
-                                        <td>@p.DiscountType</td>
+                                        <td>@(p.DiscountType == "percent" ? "%" : "VND")</td>
                                         <td>@p.DiscountValue</td>
                                         <td>@p.StartDate</td>
                                         <td>@p.EndDate</td>

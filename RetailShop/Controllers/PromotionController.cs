@@ -34,4 +34,26 @@ public class PromotionController : Controller
 	{
 		return View("Create");
     }
+	[HttpPost]
+	[Route("store")]
+	public async Task<IActionResult> Store(Promotion promotion)
+	{
+		if (!ModelState.IsValid)
+		{
+			var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+			TempData["err"] = "Thêm thất bại: " + string.Join(", ", errors);
+			return View("Create", promotion);
+		}
+		var result = await _promotionService.CreatePromotionAsync(promotion);
+		if (result.IsSuccess)
+		{
+			TempData["success"] = "Thêm thành công";
+			return RedirectToAction("Index");
+		}
+		else
+		{
+			TempData["err"] = "Thêm thất bại: " + result.Message;
+			return View("Create", promotion);
+		}
+    }
 }
