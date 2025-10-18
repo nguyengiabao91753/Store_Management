@@ -1,0 +1,425 @@
+@model List<RetailShop.Models.Customer>
+
+@{
+    ViewData["customer"] = "menu-open";
+    ViewData["customer-list"] = "active";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <style>
+        /* Popup overlay */
+        #overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        /* Form popup */
+        #createFormPopup {
+            background: white;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            padding: 20px 25px;
+            position: relative;
+            animation: 0.3s ease-in-out;
+        }
+
+        .text-end {
+            text-align: center;
+        }
+
+        /* Nút X */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        #editOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        #editFormPopup {
+            background: white;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            padding: 20px 25px;
+            position: relative;
+            animation: 0.3s ease-in-out;
+        }
+    </style>
+}
+
+@section jslinks {
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        // Khởi tạo DataTable
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+
+        // Hiển thị popup
+        function openEditPopup(CustomerId, Name, Phone, Email, Address) {
+            document.getElementById("editOverlay").style.display = "flex";
+
+            document.getElementById("EditCustomerId").value = CustomerId;
+            document.getElementById("EditName").value = Name;
+            document.getElementById("EditPhone").value = Phone;
+            document.getElementById("EditEmail").value = Email;
+            document.getElementById("EditAddress").value = Address;
+        }
+
+        // Ẩn popup
+        function closeEditPopup() {
+            document.getElementById("editOverlay").style.display = "none";
+        }
+
+        // Khi nhấn ngoài form → đóng popup
+        window.onclick = function (event) {
+            const overlay = document.getElementById("overlay");
+            if (event.target === overlay) {
+                closePopup();
+            }
+        };
+
+        // Hàm thêm khách hàng
+        async function addCustomer(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("Name").value.trim();
+            const phone = document.getElementById("Phone").value.trim();
+            const email = document.getElementById("Email").value.trim();
+            const address = document.getElementById("Address").value.trim();
+
+
+            if (!name) {
+                alert("Vui lòng nhập tên khách hàng!");
+                return;
+            }
+            if (!phone) {
+                alert("Vui lòng nhập số điện thoại!");
+                return;
+            }
+            if (!email) {
+                alert("Vui lòng nhập email!");
+                return;
+            }
+            const response = await fetch("/customer/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, phone, email, address })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            if (result.success) {
+                closePopup();
+                location.reload(); // reload lại bảng để thấy khách hàng mới
+            }
+        }
+
+        // Hiển thị popup
+        function openPopup() {
+            document.getElementById("overlay").style.display = "flex";
+        }
+
+        // Ẩn popup
+        function closePopup() {
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("addCustomerForm").reset();
+        }
+
+
+        async function updateCustomer(event) {
+            event.preventDefault();
+
+            const id = document.getElementById("EditCustomerId").value;
+            const name = document.getElementById("EditName").value.trim();
+            const phone = document.getElementById("EditPhone").value.trim();
+            const email = document.getElementById("EditEmail").value.trim();
+            const address = document.getElementById("EditAddress").value.trim();
+            if (!name) {
+                alert("Vui lòng nhập tên khách hàng!");
+                return;
+            }
+            if (!phone) {
+                alert("Vui lòng nhập số điện thoại!");
+                return;
+            }
+            if (!email) {
+                alert("Vui lòng nhập email!");
+                return;
+            }
+            const response = await fetch("/customer/update", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ customerId: id, name, phone, email, address })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            if (result.success) {
+                closeEditPopup();
+                location.reload();
+            }
+        }
+
+        async function deleteCustomer(id) {
+            if (!confirm("Bạn có chắc muốn xóa khách hàng này không?")) return;
+
+            try {
+                const response = await fetch(`/Customer/Delete/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message || "Xóa khách hàng thành công!");
+                    location.reload(); // tải lại danh sách
+                } else {
+                    alert(result.message || "Không thể xóa khách hàng.");
+                }
+            } catch (error) {
+                alert("Lỗi khi xóa khách hàng: " + error);
+            }
+        }
+
+
+        async function restoreCustomer(id) {
+            if (!confirm("Bạn có chắc muốn khôi phục khách hàng này không?")) return;
+
+            try {
+                const response = await fetch(`/Customer/restore/${id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message || "Khôi phục khách hàng thành công!");
+                    location.reload(); 
+                } else {
+                    alert(result.message || "Không thể khôi phục khách hàng.");
+                }
+            } catch (error) {
+                alert("Lỗi khi khôi phục khách hàng: " + error);
+            }
+        }
+
+
+    </script>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Khách hàng</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-controller="Customer" asp-action="Index">Khách hàng</a></li>
+                    <li class="breadcrumb-item active">Danh sách</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <button class="btn btn-outline-primary" type="button" onclick="openPopup()">
+                            + Thêm khách hàng
+                        </button>
+                    </div>
+
+                    <!-- Danh sách khách hàng -->
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Email</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Ngày tạo</th>
+                                    <th width="150px">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var c in Model)
+                                    {
+                                        <tr>
+                                            <td>@c.CustomerId</td>
+                                            <td>@c.Name</td>
+                                            <td>@c.Phone</td>
+                                            <td>@c.Email</td>
+                                            <td>@c.Address</td>
+                                            <td>@(c.CreatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                                            <td>
+                                                @if (c.Active)
+                                                {
+                                                    <!-- Khi khách hàng đang hoạt động -->
+                                                    <button type="button" class="btn btn-outline-warning btn-sm"
+                                                        onclick="openEditPopup('@c.CustomerId', '@c.Name', '@c.Phone', '@c.Email', '@c.Address')">
+                                                        <i class="fas fa-edit"></i> Sửa
+                                                    </button>
+
+                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        onclick="deleteCustomer(@c.CustomerId)">
+                                                        <i class="fas fa-trash-alt"></i> Xóa
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <!-- Khi khách hàng không hoạt động -->
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
+                                                        <i class="fas fa-edit"></i> Sửa
+                                                    </button>
+
+                                                    <button type="button" class="btn btn-outline-success btn-sm"
+                                                        onclick="restoreCustomer(@c.CustomerId)">
+                                                        <i class="fas fa-undo"></i> Khôi phục
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">Không có dữ liệu khách hàng</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Overlay và form create popup -->
+<div id="overlay">
+    <div id="createFormPopup">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <h4 class="mb-3 text-center">Thêm khách hàng mới</h4>
+        <form id="addCustomerForm" onsubmit="addCustomer(event)">
+            <div class="mb-3">
+                <label class="form-label">Tên khách hàng</label>
+                <input id="Name" name="Name" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <input id="Phone" name="Phone" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input id="Email" name="Email" type="email" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                <input id="Address" name="Address" class="form-control" />
+            </div>
+
+            <div class="text-end">
+                <button type="button" class="btn btn-secondary me-2" onclick="closePopup()">Cancel</button>
+                <button type="submit" class="btn btn-success">Tạo khách hàng</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Overlay và form popup Sửa khách hàng -->
+<div id="editOverlay">
+    <div id="editFormPopup">
+        <span class="close-btn" onclick="closeEditPopup()">&times;</span>
+        <h4 class="mb-3 text-center">Cập nhật khách hàng</h4>
+        <form id="editCustomerForm" onsubmit="updateCustomer(event)">
+            <input type="hidden" id="EditCustomerId" />
+
+            <div class="mb-3">
+                <label class="form-label">Tên khách hàng</label>
+                <input id="EditName" name="EditName" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <input id="EditPhone" name="EditPhone" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input id="EditEmail" name="EditEmail" type="email" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                <input id="EditAddress" name="EditAddress" class="form-control" />
+            </div>
+
+            <div class="text-end">
+                <button type="button" class="btn btn-secondary me-2" onclick="closeEditPopup()">Hủy</button>
+                <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
