@@ -86,7 +86,6 @@
                                     <th>Description</th>
                                     <th>Type</th>
                                     <th>Value</th>
-                                    <th>Value</th>
                                     <th>Start date</th>
                                     <th>End date</th>
                                     <th>Min Order Amount</th>
@@ -112,6 +111,7 @@
                                         <td>@p.MinOrderAmount</td>
                                         <td>@p.UsageLimit</td>
                                         <td>@p.UsedCount</td>
+                                        <td>@p.Status</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a asp-controller="promotion" asp-action="detail" asp-route-id="@p.PromoId"
@@ -130,8 +130,6 @@
                                                 </a>
                                             </div>
                                         </td>
-
-
                                     </tr>
                                 }
                             </tbody>
@@ -141,7 +139,6 @@
                                     <th>Code</th>
                                     <th>Description</th>
                                     <th>Type</th>
-                                    <th>Value</th>
                                     <th>Value</th>
                                     <th>Start date</th>
                                     <th>End date</th>
