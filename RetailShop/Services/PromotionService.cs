@@ -111,5 +111,49 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
+
+    public async Task<ResultService<Promotion>> DeletePromotionAsync(int id)
+    {
+        var rs = new ResultService<Promotion>();
+        try
+        {
+            var promotion = await _db.Promotions.FindAsync(id);
+            if (promotion == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Promotion not found.";
+                return rs;
+            }
+
+            // Determine if the promotion has been used or is referenced by any order
+            var usedCount = promotion.UsedCount ?? 0;
+            var isReferencedByOrders = await _db.Orders.AnyAsync(o => o.PromoId == id);
+
+            if (usedCount > 0 || isReferencedByOrders)
+            {
+                // Soft-delete by hiding when there is usage or references
+                promotion.Status = "hidden";
+                _db.Promotions.Update(promotion);
+                await _db.SaveChangesAsync();
+                rs.IsSuccess = true;
+                rs.Data = promotion;
+                rs.Message = "Promotion hidden because it has usage or active references.";
+                return rs;
+            }
+
+            // Hard delete when safe
+            _db.Promotions.Remove(promotion);
+            await _db.SaveChangesAsync();
+            rs.IsSuccess = true;
+            rs.Data = promotion;
+            rs.Message = "Promotion deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error deleting promotion: {ex.Message}";
+        }
+        return rs;
+    }
 }
 

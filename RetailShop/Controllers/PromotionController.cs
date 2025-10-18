@@ -92,6 +92,23 @@ public class PromotionController : Controller
 			return View("Edit", promotion);
 		}
 	}
-	
+
+
+	[HttpPost]
+	[ValidateAntiForgeryToken]
+	[Route("delete/{id}")]
+	public async Task<IActionResult> DeletePost(int id)
+	{
+		var result = await _promotionService.DeletePromotionAsync(id);
+		if (result.IsSuccess)
+		{
+			TempData["success"] = result.Message;
+		}
+		else
+		{
+			TempData["err"] = "Xóa thất bại: " + result.Message;
+		}
+		return RedirectToAction("Index");
+	}
 }
 

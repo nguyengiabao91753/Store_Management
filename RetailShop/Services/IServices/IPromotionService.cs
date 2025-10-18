@@ -8,5 +8,5 @@ namespace RetailShop.Services.IServices;
         Task<ResultService<Promotion>> GetPromotionByIdAsync(int id);
         Task<ResultService<Promotion>> CreatePromotionAsync(Promotion promotion);
         Task<ResultService<Promotion>> UpdatePromotionAsync(Promotion promotion);
-
-    }
+        Task<ResultService<Promotion>> DeletePromotionAsync(int id);
+}
