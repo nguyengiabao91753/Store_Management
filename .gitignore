@@ -57,3 +57,5 @@ nunit-*.xml
 
 # Ignore appsettings for each dev
 appsettings.Development.json
+docker-compose.yml
+data/

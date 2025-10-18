@@ -7,15 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Product\Create.cshtml" />
     <Content Remove="Views\Product\Detail.cshtml" />
+    <Content Remove="Views\Product\Edit.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Views\Product\Create.cshtml" />
     <Compile Include="Views\Product\Detail.cshtml" />
+    <Compile Include="Views\Product\Edit.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt" Version="1.0.0" />
+    <None Include="Views\Product\Edit.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.20">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
