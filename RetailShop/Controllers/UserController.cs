@@ -1,0 +1,124 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using RetailShop.Models;
+using RetailShop.Dtos;
+using RetailShop.Services.IServices;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+namespace RetailShop.Controllers
+{
+    public class UsersController : Controller
+    {
+        private readonly IUserService _userService;
+
+        // Dependency Injection: Nhận IUserService qua constructor
+        public UsersController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+        // -------------------------------------------------------------------
+        // 1. ACTION: Hiển thị Danh sách (READ - List)
+        // -------------------------------------------------------------------
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var result = await _userService.GetAllUsersAsync();
+
+            if (result.IsSuccess)
+            {
+                // Trả về danh sách User cho View (dùng result.Data)
+                return View(result.Data);
+            }
+
+            // Xử lý khi thất bại (ví dụ: lỗi kết nối database)
+            // Có thể thêm thông báo lỗi vào ViewData hoặc TempData
+            TempData["ErrorMessage"] = result.Message;
+            return View(new List<User>()); // Trả về View với danh sách rỗng
+        }
+
+        // -------------------------------------------------------------------
+        // 2. ACTION: Hiển thị Form Tạo mới (CREATE - GET)
+        // -------------------------------------------------------------------
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // -------------------------------------------------------------------
+        // 3. ACTION: Xử lý dữ liệu Form Tạo mới (CREATE - POST)
+        // -------------------------------------------------------------------
+        [HttpPost]
+        //[ValidateAntiForgeryToken] // Bảo vệ chống tấn công CSRF
+        public async Task<IActionResult> Create(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.CreateUserAsync(user);
+
+                if (result.IsSuccess)
+                {
+                    TempData["SuccessMessage"] = "Tạo User mới thành công!";
+                    return RedirectToAction(nameof(Index)); // Chuyển hướng về trang danh sách
+                }
+
+                // Nếu Service trả về lỗi (ví dụ: Username đã tồn tại)
+                ModelState.AddModelError("", result.Message ?? "Tạo User thất bại.");
+            }
+
+            // Nếu dữ liệu Model không hợp lệ hoặc Service lỗi, quay lại form
+            return View(user);
+        }
+
+        // -------------------------------------------------------------------
+        // 4. ACTION: Hiển thị Form Chỉnh sửa (EDIT - GET)
+        // -------------------------------------------------------------------
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userService.GetUserByIdAsync(id.Value);
+
+            if (!result.IsSuccess || result.Data == null)
+            {
+                return NotFound();
+            }
+
+            return View(result.Data);
+        }
+
+        // -------------------------------------------------------------------
+        // 5. ACTION: Xử lý dữ liệu Form Chỉnh sửa (EDIT - POST)
+        // -------------------------------------------------------------------
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, User user)
+        {
+            if (id != user.UserId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+               
+                var result = await _userService.EditUserAsync(user);
+
+                if (result.IsSuccess)
+                {
+                    TempData["SuccessMessage"] = "Cập nhật User thành công!";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ModelState.AddModelError("", result.Message ?? "Cập nhật User thất bại.");
+            }
+
+            return View(user);
+        }
+    }
+}

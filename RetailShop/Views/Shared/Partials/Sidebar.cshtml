@@ -139,6 +139,15 @@
 
                     </ul>
                 </li>
+                <li class="nav-item @ViewData["customer"]">
+                    <a asp-controller="customer" asp-action="index" class="nav-link  @ViewData["customer-index"]">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                        Customers
+                        </p>
+                    </a>
+                  
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
