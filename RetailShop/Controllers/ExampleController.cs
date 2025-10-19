@@ -15,4 +15,11 @@ public class ExampleController : Controller
     {
         return View("Create");
     }
+
+    [HttpGet]
+    [Route("v2")]
+    public IActionResult Home()
+    {
+        return View();
+    }
 }

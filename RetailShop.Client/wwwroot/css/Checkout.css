@@ -1,0 +1,268 @@
+﻿.checkout-card {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.order-list .item {
+    display: grid;
+    grid-template-columns: 64px 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+    .order-list .item:last-child {
+        border-bottom: none;
+    }
+
+.order-list img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.item-name {
+    font-weight: 600;
+}
+
+.item-addons {
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.item-qty {
+    text-align: center;
+    font-weight: 500;
+}
+
+.item-price {
+    text-align: right;
+    font-weight: 600;
+}
+
+.payment-option {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .payment-option:hover {
+        border-color: #0d6efd;
+        background: #f1f6ff;
+    }
+
+    .payment-option.active {
+        border-color: #0d6efd;
+        background: #f1f6ff;
+    }
+
+    .payment-option .icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+    }
+
+#headerMenuBtn,
+#headerDateTime {
+    background-color: white;
+}
+
+#headerDateTime {
+    border-radius: 24px;
+    align-items: center;
+    width: 200px;
+    padding: 5px 0 5px 30px;
+}
+
+.open-close-store {
+    border-radius: 25px;
+    height: 58px;
+    width: 200px;
+    background-color: white;
+    text-align: center;
+    display: block;
+    padding-top: 10px;
+}
+
+.btn-power {
+    border-radius: 24px;
+    margin-left: 25px;
+}
+
+#status-text {
+    transition: color 0.3s ease;
+    /* Hiệu ứng chuyển màu mượt */
+}
+
+/* Khi chuyển sang trạng thái đóng */
+.open-close-store.closed #status-text {
+    color: #dc3545;
+    /* đỏ */
+}
+
+
+/* Khi đang mở */
+.open-close-store:not(.closed) #status-text {
+    color: #198754;
+    /* xanh */
+}
+
+.overflow-auto {
+    background-color: #fff;
+    border-radius: 24px;
+}
+
+#header-placeholder {
+    padding: 8px 24px 0 24px;
+}
+
+/*Confirm box*/
+/* Overlay nền mờ */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeInBg 0.25s ease;
+}
+
+    .confirm-overlay.d-none {
+        display: none;
+    }
+
+/* Khung hộp */
+.confirm-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    width: 340px;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: fadeInUp 0.25s ease;
+    font-family: "Inter", sans-serif;
+}
+
+/* Nút đóng góc trên */
+.confirm-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    .confirm-close:hover {
+        color: #000;
+    }
+
+/* Icon tròn phía trên */
+.confirm-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 12px;
+}
+
+    /* Màu từng loại */
+    .confirm-icon.danger {
+        background: #fee2e2;
+        color: #dc3545;
+    }
+
+    .confirm-icon.warning {
+        background: #fff3cd;
+        color: #ffc107;
+    }
+
+    .confirm-icon.success {
+        background: #d1fae5;
+        color: #198754;
+    }
+
+/* Tiêu đề và nội dung */
+.confirm-box h5 {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.confirm-box p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+/* Nhóm nút */
+.confirm-box .btn {
+    min-width: 110px;
+    padding: 8px 0;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.confirm-box .btn-light {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.confirm-box .btn-danger {
+    background: #dc3545;
+    border: none;
+}
+
+    .confirm-box .btn-danger:hover {
+        background: #bb2d3b;
+    }
+
+/* Hiệu ứng fade nhẹ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInBg {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
