@@ -1,7 +1,7 @@
 ﻿@{
-   
-    ViewData["supplier"] = "menu-open";
-    ViewData["supplier-list"] = "active";
+
+    ViewData["promotion"] = "menu-open";
+    ViewData["promotion-list"] = "active";
 }
 
 @section csslinks {
@@ -27,8 +27,6 @@
 
     <script src="~/js/configTableData.js"></script>
 
-
-  
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var selects = document.querySelectorAll("select.kichhoat-select");
@@ -47,20 +45,20 @@
             }
             $("table").click();
         }
+
     </script>
 }
-
 
 
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Supplier</h1>
+                <h1>Promotion</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Supplier</a></li>
+                    <li class="breadcrumb-item"><a href="#">Promotion</a></li>
                     <li class="breadcrumb-item active">List</li>
                 </ol>
             </div>
@@ -75,7 +73,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <a class="btn btn-outline-primary" asp-controller="supplier" asp-action="create">+ Add Supplier</a>
+                        <a class="btn btn-outline-primary" asp-controller="Promotion" asp-action="create">+ Add Promotion</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -83,56 +81,72 @@
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Address</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Min Order Amount</th>
+                                    <th>Usage Limit</th>
+                                    <th>Used Count</th>
+                                    <th>Status</th>
+
                                     <th width="170px">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                @foreach (var s in ViewBag.suppliers)
+                                @foreach (var p in ViewBag.promotions)
                                 {
                                     <tr>
-                                        <td>@s.SupplierId</td>
-                                        <td>@s.Name</td>
-                                        <td>@s.Email</td>
-                                        <td>@s.Phone</td>
-                                        <td>@s.Address</td>
-
-
-
+                                        <td>@p.PromoId</td>
+                                        <td>@p.PromoCode</td>
+                                        <td>@p.Description</td>
+                                        <td>@(p.DiscountType == "percent" ? "%" : "VND")</td>
+                                        <td>@p.DiscountValue</td>
+                                        <td>@p.StartDate</td>
+                                        <td>@p.EndDate</td>
+                                        <td>@p.MinOrderAmount</td>
+                                        <td>@p.UsageLimit</td>
+                                        <td>@p.UsedCount</td>
+                                        <td>@p.Status</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
-                                                <a asp-controller="supplier" asp-action="detail" asp-route-id="@s.SupplierId"
+                                                <a asp-controller="promotion" asp-action="detail" asp-route-id="@p.PromoId"
                                                    class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
 
-                                                <a asp-controller="supplier" asp-action="edit" asp-route-id="@s.SupplierId"
-                                                   class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Supplier">
+                                                <a asp-controller="promotion" asp-action="edit" asp-route-id="@p.PromoId"
+                                                   class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Promotion">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
 
-                                                <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId"
-                                                   class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Supplier">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </a>
+                                                <form asp-controller="promotion" asp-action="delete" asp-route-id="@p.PromoId" method="post" class="d-inline" onsubmit="return confirmDelete()">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" title="Delete Promotion">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
-
-
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Address</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Min Order Amount</th>
+                                    <th>Usage Limit</th>
+                                    <th>Used Count</th>
+                                    <th>Status</th>
+
                                     <th width="170px">Hành động</th>
                                 </tr>
                             </tfoot>

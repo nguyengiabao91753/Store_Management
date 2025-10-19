@@ -52,7 +52,29 @@ public class SupplierService : ISupplierService
 
     public async Task<ResultService<Supplier>> GetSupplierByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var rs = new ResultService<Supplier>();
+        try
+        {
+            var supplier = await _db.Suppliers.Include(s => s.Products)
+            .FirstOrDefaultAsync(s => s.SupplierId == id);
+            if (supplier == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Supplier not found.";
+            }
+            else
+            {
+                rs.IsSuccess = true;
+                rs.Data = supplier;
+                rs.Message = "Supplier retrieved successfully.";
+            }
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error when finding supplier: {ex.Message}";
+        }
+        return rs;
     }
 
     public async Task<ResultService<Supplier>> UpdateSupplierAsync(Supplier supplier)

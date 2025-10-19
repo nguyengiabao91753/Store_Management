@@ -115,6 +115,39 @@
 
                     </ul>
                 </li>
+                <li class="nav-item @ViewData["promotion"]">
+                    <a class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Promotion
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="promotion" asp-action="index" class="nav-link  @ViewData["promotion-list"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="promotion" asp-action="create" class="nav-link  @ViewData["promotion-create"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item @ViewData["customer"]">
+                    <a asp-controller="customer" asp-action="index" class="nav-link  @ViewData["customer-index"]">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                        Customers
+                        </p>
+                    </a>
+                  
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

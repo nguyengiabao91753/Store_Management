@@ -1,0 +1,91 @@
+﻿@model RetailShop.Models.Promotion
+
+@{
+    
+    ViewData["promotion"] = "menu-open";
+    ViewData["promotion-create"] = "active";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMhUs4iqYMyJs31/0Y2mRmGJXLbBICF/xS9WSjb" crossorigin="anonymous">
+
+}
+
+@section jslinks {
+
+}
+
+<form method="post" asp-controller="promotion" asp-action="store" enctype="multipart/form-data">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Add Promotion</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row form">
+                <div class="col-md">
+                    <div class="form-group">
+                        <label>Promo Code</label>
+                        <input type="text" class="form-control" asp-for="PromoCode" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" class="form-control" asp-for="Description" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Discount Type</label>
+                        <select class="form-control" asp-for="DiscountType" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="percent">%</option>
+                            <option value="fixed">VND</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Discount Value</label>
+                        <input type="number" min="1" class="form-control" asp-for="DiscountValue" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" class="form-control" asp-for="StartDate" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" class="form-control" asp-for="EndDate" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Minimum Order Amount (VND)</label>
+                        <input type="number" min="1000" class="form-control" asp-for="MinOrderAmount" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Usage Limit</label>
+                        <input type="number" step="1" min="1" class="form-control" asp-for="UsageLimit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+
+    <!-- /.card -->
+</form>
