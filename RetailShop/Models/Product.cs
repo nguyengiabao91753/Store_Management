@@ -40,6 +40,8 @@ public partial class Product
     [InverseProperty("Products")]
     public virtual Category? Category { get; set; }
 
+    public bool Active { get; set; } = true;
+
     [InverseProperty("Product")]
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
