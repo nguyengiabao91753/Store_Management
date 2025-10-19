@@ -1,0 +1,68 @@
+﻿.track-order-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.track-order-header .search-box input {
+    width: 220px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.nav-buttons .btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.track-order-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 8px;
+}
+
+.track-card:hover {
+    transform: translateY(-3px);
+}
+
+.track-card .name {
+    font-weight: 600;
+}
+
+.track-card .status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-left: 6px;
+}
+
+.status.done {
+    background: #e6fffa;
+    color: #0d9488;
+}
+
+.status.kitchen {
+    background: #e0f2fe;
+    color: #1d4ed8;
+}
+
+.track-card small {
+    color: #6c757d;
+}
+
+.track-card .see-more {
+    font-size: 13px;
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.nav-buttons .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

@@ -1,0 +1,34 @@
+﻿@* -----------------------------
+    Header Partial View
+    Path: Views/Shared/Partials/Header.cshtml
+   ----------------------------- *@
+
+<div class="container-fluid px-4 top-bar d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light rounded-circle"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#menuSidebar"
+                id="headerMenuBtn"
+                style="width: 58px; height: 58px">
+            <i class="fa fa-bars"></i>
+        </button>
+
+        <div id="headerDateTime">
+            <div class="fw-semibold">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="headerDate" class="fw-semibold">Wed, 29 May 2024</span>
+            </div>
+            <small class="text-muted">
+                <i class="fa-regular fa-clock" style="padding-left: 30px"></i>
+                <span id="headerTime" class="text-muted">07:59 AM</span>
+            </small>
+        </div>
+    </div>
+
+    <div class="open-close-store">
+        <span style="color: #198754" id="status-text">Open Order</span>
+        <button class="btn btn-outline-success btn-power" id="toggle-btn">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Common Staff Scripts -->
+<script src="~/js/Staff/Site.js"></script>
+
+<script>
+    // Update DateTime
+    function updateDateTime() {
+        const now = new Date();
+        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+        const dateElement = document.getElementById('currentDate');
+        const timeElement = document.getElementById('currentTime');
+
+        if (dateElement) {
+            dateElement.textContent = now.toLocaleDateString('en-US', options);
+        }
+        if (timeElement) {
+            timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+    }
+
+    // Toggle Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('leftSidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('hidden');
+        }
+    }
+
+    // Confirm Logout
+    function confirmLogout() {
+        if (confirm('Are you sure you want to log out?')) {
+            window.location.href = '@Url.Action("Logout", "Auth", new { area = "Staff" })';
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Setup toggle sidebar button
+        const toggleBtn = document.getElementById('toggleSidebarBtn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', toggleSidebar);
+        }
+
+        // Setup close sidebar button
+        const closeBtn = document.querySelector('.close-sidebar');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', toggleSidebar);
+        }
+    });
+</script>

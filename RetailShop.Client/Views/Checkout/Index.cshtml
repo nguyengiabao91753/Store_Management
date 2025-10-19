@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Checkout";
+}
+@section csslinks {
+    <link rel="stylesheet" href="~/css/Checkout.css" asp-append-version="true" />
+}
+
+<div class="checkout-wrapper container my-5">
+    <div class="row g-4">
+        <!-- LEFT: ORDER DETAILS -->
+        <div class="col-lg-8">
+            <div class="card checkout-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1">Order details</h5>
+                        <p class="text-muted small mb-0">
+                            Customer: <strong>Anup Kumar</strong> · Table #005 · Dine In
+                        </p>
+                    </div>
+                    <span class="badge bg-light text-primary px-3 py-2">15% Discount offer</span>
+                </div>
+
+                <div id="order-list" class="order-list mb-4"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card p-3 border-0 shadow-sm h-100">
+                            <h6 class="fw-bold">Discount coupon</h6>
+                            <p class="text-muted small mb-2">Apply coupon for special discount.</p>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Enter coupon code" />
+                                <button class="btn btn-primary">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card p-3 border-0 shadow-sm h-100">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Subtotal</span><span id="subtotal">$0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Service charges</span><span>$4.88</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Restaurant tax</span><span>$12.67</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Special discount</span><span>-$23.43</span>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Total</span>
+                                <span id="total" class="fw-bold fs-5 text-dark">$35.04</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: PAYMENT MODE -->
+        <div class="col-lg-4">
+            <div class="card checkout-card p-4">
+                <h5 class="fw-bold mb-2">Select payment mode</h5>
+                <p class="text-muted small mb-4">Select a payment method to complete your order.</p>
+
+                <div class="payment-options d-flex flex-column gap-3 mb-4">
+                    <div class="payment-option active">
+                        <div class="d-flex align-items-center">
+                            <div class="icon me-3 bg-light"><i class="fa-solid fa-credit-card text-primary"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-semibold">Pay using card</h6>
+                                <p class="small text-muted mb-0">Complete payment with credit/debit card.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-option">
+                        <div class="d-flex align-items-center">
+                            <div class="icon me-3 bg-light"><i class="fa-solid fa-money-bill-wave text-primary"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-semibold">Pay on cash</h6>
+                                <p class="small text-muted mb-0">Collect cash from customer directly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-option">
+                        <div class="d-flex align-items-center">
+                            <div class="icon me-3 bg-light"><i class="fa-solid fa-qrcode text-primary"></i></div>
+                            <div>
+                                <h6 class="mb-1 fw-semibold">Pay using UPI / QR</h6>
+                                <p class="small text-muted mb-0">Scan QR code for instant payment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 py-3 fs-5" id="confirmPayment">
+                    Confirm payment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Cancel Transaction Modal -->
+    <div id="cancelConfirm" class="confirm-overlay d-none">
+        <div class="confirm-box">
+            <p>Do you want to cancel the current transaction?</p>
+            <div class="d-flex justify-content-between gap-2 mt-3 ConfirmButton">
+                <button id="confirmNo" class="btn btn-secondary btn-sm">No</button>
+                <button id="confirmYes" class="btn btn-danger btn-sm">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Checkout.js" asp-append-version="true"></script>
+}

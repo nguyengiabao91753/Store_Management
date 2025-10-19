@@ -1,0 +1,65 @@
+﻿/* Common styles for all Staff pages - Site.css */
+
+/* You can add common styles here that apply to all staff pages */
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .left-sidebar {
+        width: 240px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .left-sidebar {
+        width: 100%;
+        max-height: none;
+        position: relative;
+        top: 0;
+    }
+
+    .page-content-wrapper {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 10px;
+    }
+
+    .header-bar {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+
+    .header-left {
+        flex-wrap: wrap;
+    }
+
+    .left-sidebar {
+        display: none;
+    }
+
+        .left-sidebar.show-mobile {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 1000;
+            width: 280px;
+        }
+}
+
+/* Print styles */
+@media print {
+    .header-bar,
+    .left-sidebar,
+    .sidebar-logout {
+        display: none;
+    }
+}

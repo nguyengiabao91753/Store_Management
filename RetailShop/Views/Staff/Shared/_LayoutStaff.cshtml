@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Http;
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <partial name="Staff/Shared/Partials/HeadStaff" />
+    @RenderSection("csslinks", required: false)
+</head>
+<body>
+    <div class="container-fluid">
+        <!--Header-->
+        <partial name="Staff/Shared/Partials/HeaderStaff" />
+        <!--./ Header-->
+        <!--Main Content-->
+        <div class="main-content">
+            <!--Left Sidebar-->
+            <partial name="Staff/Shared/Partials/LeftSideBarStaff" />
+            <!--./ Left Sidebar-->
+            <!--Page Content-->
+            <div class="page-content-wrapper">
+                @RenderBody()
+            </div>
+            <!--./ Page Content-->
+        </div>
+        <!--./ Main Content-->
+    </div>
+
+    <!--Common Scripts-->
+    <partial name="Staff/Shared/Partials/FooterStaff" />
+
+    <!--Page Specific Scripts-->
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
