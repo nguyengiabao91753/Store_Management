@@ -1,0 +1,86 @@
+﻿@model RetailShop.Models.Category
+@{
+    ViewData["category"] = "menu-open";
+    ViewData["category-list"] = "active";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@Model.CategoryName - Detail</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index">Category</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- Category info -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Category Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>ID:</strong> @Model.CategoryId</p>
+                <p><strong>Name:</strong> @Model.CategoryName</p>
+            </div>
+        </div>
+
+        <!-- Product list -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Products in this Category</h5>
+            </div>
+            <div class="card-body">
+                <table id="categoryProductTable" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Supplier</th>
+                            <th>Price</th>
+                            <th>Created At</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in (List<RetailShop.Models.Product>)ViewBag.Products)
+                        {
+                            <tr>
+                                <td>@p.ProductId</td>
+                                <td>@p.ProductName</td>
+                                <td>@p.Supplier?.Name</td>
+                                <td>@p.Price.ToString("C")</td>
+                                <td>@p.CreatedAt?.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <img src="@p.ProductImage" width="60" height="60" style="object-fit: cover;" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section jslinks {
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(function () {
+            $('#categoryProductTable').DataTable({
+                "responsive": true,
+                "autoWidth": false,
+                "pageLength": 10
+            });
+        });
+    </script>
+}
