@@ -19,6 +19,7 @@ public class ProductService : IProductService
         var rs = new ResultService<Product>();
         try
         {
+            product.CreatedAt = DateTime.Now;
             await _db.Products.AddAsync(product);
             await _db.SaveChangesAsync();
             rs.IsSuccess = true;
@@ -37,7 +38,12 @@ public class ProductService : IProductService
         var rs = new ResultService<List<Product>>();
         try
         {
-            var products = await _db.Products.ToListAsync();
+            var products = await _db.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .AsNoTracking()
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
             rs.IsSuccess = true;
             rs.Data = products;
             rs.Message = "Products retrieved successfully.";
@@ -58,8 +64,6 @@ public class ProductService : IProductService
             var product = await _db.Products
                 .Include(s => s.Category)
                 .Include(s => s.Supplier)
-                .Include(s => s.Inventories)
-                .Include(s => s.OrderItems)
             .FirstOrDefaultAsync(s => s.ProductId == id);
             if (product == null)
             {
@@ -93,15 +97,18 @@ public class ProductService : IProductService
                 rs.Message = "Product not found.";
                 return rs;
             }
-            existingProduct.ProductName = product.ProductName;
+            //existingProduct.ProductName = product.ProductName;
+            //existingProduct.Category = product.Category;
+            //existingProduct.Supplier = product.Supplier;
+            //existingProduct.ProductImage = product.ProductImage;
+            //existingProduct.Barcode = product.Barcode;
+            //existingProduct.Price = product.Price;
+            //existingProduct.Unit = product.Unit;
+            //existingProduct.CreatedAt = product.CreatedAt;
+
+            _db.Entry(existingProduct).CurrentValues.SetValues(product);
             existingProduct.CategoryId = product.CategoryId;
             existingProduct.SupplierId = product.SupplierId;
-            existingProduct.ProductImage = product.ProductImage;
-            existingProduct.Barcode = product.Barcode;
-            existingProduct.Price = product.Price;
-            existingProduct.Unit = product.Unit;
-            existingProduct.CreatedAt = product.CreatedAt;
-
 
             _db.Products.Update(existingProduct);
             _db.SaveChanges();

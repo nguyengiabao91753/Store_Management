@@ -1,22 +1,30 @@
-﻿﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RetailShop.Models;
 using RetailShop.Services.IServices;
 
 namespace RetailShop.Controllers;
+
 [Route("product")]
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
-    public ProductController(IProductService productService)
+    private readonly ISupplierService _supplierService;
+    private readonly ICategoryService _categoryService;
+
+    public ProductController(IProductService productService, ISupplierService supplierService, ICategoryService categoryService)
     {
         _productService = productService;
+        _supplierService = supplierService;
+        _categoryService = categoryService;
     }
+
     public async Task<IActionResult> Index()
     {
         var rs = await _productService.GetAllProductsAsync();
         if (rs.IsSuccess)
         {
-            ViewBag.suppliers = rs.Data;
+            ViewBag.Products = rs.Data;
         }
         else
         {
@@ -28,8 +36,9 @@ public class ProductController : Controller
 
     [HttpGet]
     [Route("create")]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        await LoadDropdowns();
         return View("Create");
     }
 
@@ -39,22 +48,22 @@ public class ProductController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-            TempData["err"] = "Thêm thất bại: " + string.Join(", ", errors);
+            TempData["err"] = "Thêm thất bại: " + string.Join(", ",
+                ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+            await LoadDropdowns(product.SupplierId, product.CategoryId);
             return View("Create", product);
         }
+
         var result = await _productService.CreateProductAsync(product);
         if (result.IsSuccess)
         {
             TempData["success"] = "Thêm thành công";
             return RedirectToAction("Index");
         }
-        else
-        {
-            TempData["err"] = "Thêm thất bại: " + result.Message;
-            return View("Create", product);
-        }
-        
+
+        TempData["err"] = "Thêm thất bại: " + result.Message;
+        await LoadDropdowns(product.SupplierId, product.CategoryId);
+        return View("Create", product);
     }
 
     [HttpGet]
@@ -62,13 +71,14 @@ public class ProductController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var rs = await _productService.GetProductByIdAsync(id);
-        if(rs.IsSuccess)
+        if (rs.IsSuccess)
         {
+            await LoadDropdowns(rs.Data.SupplierId, rs.Data.CategoryId);
             return View("Edit", rs.Data);
         }
+
         TempData["err"] = "Lấy sản phẩm thất bại: " + rs.Message;
         return RedirectToAction("Index");
-       
     }
 
     [HttpPost]
@@ -77,21 +87,22 @@ public class ProductController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-            TempData["err"] = "Cập nhật thất bại: " + string.Join(", ", errors);
+            TempData["err"] = "Cập nhật thất bại: " + string.Join(", ",
+                ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+            await LoadDropdowns(product.SupplierId, product.CategoryId);
             return View("Edit", product);
         }
+
         var rs = await _productService.UpdateProductAsync(product);
         if (rs.IsSuccess)
         {
             TempData["success"] = "Cập nhật thành công";
             return RedirectToAction("Index");
         }
-        else
-        {
-            TempData["err"] = "Cập nhật thất bại: " + rs.Message;
-            return View("Edit", product);
-        }
+
+        TempData["err"] = "Cập nhật thất bại: " + rs.Message;
+        await LoadDropdowns(product.SupplierId, product.CategoryId);
+        return View("Edit", product);
     }
 
     [HttpGet]
@@ -103,7 +114,17 @@ public class ProductController : Controller
         {
             return View("Detail", rs.Data);
         }
+
         TempData["err"] = "Lấy sản phẩm thất bại: " + rs.Message;
         return RedirectToAction("Index");
+    }
+
+    private async Task LoadDropdowns(int? selectedSupplierId = null, int? selectedCategoryId = null)
+    {
+        var suppliers = await _supplierService.GetAllSuppliersAsync();
+        var categories = await _categoryService.GetAllCategoriesAsync();
+
+        ViewBag.Suppliers = new SelectList(suppliers.Data, "SupplierId", "Name", selectedSupplierId);
+        ViewBag.Categories = new SelectList(categories.Data, "CategoryId", "CategoryName", selectedCategoryId);
     }
 }

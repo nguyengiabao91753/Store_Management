@@ -26,6 +26,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #region Add De[pendency Injection for Services
 builder.Services.AddScoped<IExample, Example>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 #endregion
 
 
