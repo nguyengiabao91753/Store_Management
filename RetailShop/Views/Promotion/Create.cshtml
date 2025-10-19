@@ -13,62 +13,6 @@
 
 @section jslinks {
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-
-    //         const today = new Date().toISOString().split("T")[0];
-
-    //         const form = document.querySelector("form");
-    //         const startInput = document.getElementById("StartDate");
-    //         const endInput = document.getElementById("EndDate");
-    //         const discountValue = document.querySelector("[name='DiscountValue']");
-    //         const error = document.createElement("div");
-    //         const type = document.getElementById("DiscountType");
-
-    //         startInput.setAttribute("min", today);
-    //         endInput.setAttribute("min", today);
-    //         error.classList.add("text-danger");
-    //         endInput.parentNode.appendChild(error);
-
-    //         form.addEventListener("submit", function (e) {
-    //             let valid = true;
-    //             error.textContent = "";
-    //         startInput.setAttribute("min", today);
-    //         endInput.setAttribute("min", today);
-    //             const start = new Date(startInput.value);
-    //             const end = new Date(endInput.value);
-    //             const today = new Date();
-    //             today.setHours(0,0,0,0);
-
-    //             if (start < today) {
-    //                 valid = false;
-    //                 alert("Start date cannot be before today.");
-    //             }
-
-    //             if (end < start) {
-    //                 valid = false;
-    //                 error.textContent = "End date must be after start date.";
-    //             }
-
-    //             if (discountValue.value <= 0) {
-    //                 valid = false;
-    //                 alert("Discount value must be greater than 0.");
-    //             }
-
-    //             if(type.value=="percent" && (discountValue.value > 100){
-    //                 valid = false;
-    //                 alert("For percentage discount, value must be between 1 and 100.");
-    //             }
-    //             if(type.value=="fixed" && (discountValue.value < 1000){
-    //                 valid = false;
-    //                 alert("For VND discount, value must be more than or equal to 1000 VND.");
-    //             }
-    //             if (!valid) {
-    //                 e.preventDefault(); // stop form submission
-    //             }
-    //         });
-    //     });
-    // </script>
 }
 
 <form method="post" asp-controller="promotion" asp-action="store" enctype="multipart/form-data">
