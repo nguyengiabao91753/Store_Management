@@ -46,6 +46,15 @@ public class ProductController : Controller
     [Route("store")]
     public async Task<IActionResult> Store(Product product)
     {
+        //Nếu người dùng để trống ProductImage → gán ảnh mặc định
+        if (string.IsNullOrWhiteSpace(product.ProductImage))
+        {
+            product.ProductImage = @"No Image";
+        }
+        if (string.IsNullOrWhiteSpace(product.ProductImage))
+        {
+            product.CreatedAt = DateTime.Now;
+        }
         if (!ModelState.IsValid)
         {
             TempData["err"] = "Thêm thất bại: " + string.Join(", ",

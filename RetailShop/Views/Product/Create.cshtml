@@ -10,7 +10,10 @@
           crossorigin="anonymous" />
 }
 
-<form asp-action="Create" asp-controller="Product" method="post" enctype="multipart/form-data">
+@section jslinks {
+
+}
+<form method="post" asp-controller="Product" asp-action="Store" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
 
     <div class="card">
@@ -29,7 +32,7 @@
 
             <div class="form-group">
                 <label asp-for="SupplierId">Supplier</label>
-                <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierList" required>
+                <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.Suppliers" required>
                     <option value="">-- Select Supplier --</option>
                 </select>
                 <span asp-validation-for="SupplierId" class="text-danger"></span>
@@ -37,7 +40,7 @@
 
             <div class="form-group">
                 <label asp-for="CategoryId">Category</label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryList" required>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories" required>
                     <option value="">-- Select Category --</option>
                 </select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
@@ -45,13 +48,13 @@
 
             <div class="form-group">
                 <label asp-for="ProductImage">Product Image</label>
-                <input asp-for="ProductImage" type="file" class="form-control" name="ImageFile" />
+                <input asp-for="ProductImage" type="text" class="form-control" name="ImageFile" />
                 <span asp-validation-for="ProductImage" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Barcode"></label>
-                <input asp-for="Barcode" class="form-control" />
+                <input asp-for="Barcode" class="form-control" required />
                 <span asp-validation-for="Barcode" class="text-danger"></span>
             </div>
 
@@ -63,7 +66,7 @@
 
             <div class="form-group">
                 <label asp-for="Unit"></label>
-                <input asp-for="Unit" class="form-control" />
+                <input asp-for="Unit" class="form-control" required/>
                 <span asp-validation-for="Unit" class="text-danger"></span>
             </div>
         </div>
@@ -75,9 +78,3 @@
         </div>
     </div>
 </form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

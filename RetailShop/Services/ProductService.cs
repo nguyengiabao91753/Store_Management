@@ -28,8 +28,9 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
+            var inner = ex.InnerException?.Message ?? "";
             rs.IsSuccess = false;
-            rs.Message = $"Error creating product: {ex.Message}";
+            rs.Message = $"Error creating product: {ex.Message} | Inner: {inner}";
         }
         return rs;
     }
@@ -104,8 +105,8 @@ public class ProductService : IProductService
             //existingProduct.Barcode = product.Barcode;
             //existingProduct.Price = product.Price;
             //existingProduct.Unit = product.Unit;
-            //existingProduct.CreatedAt = product.CreatedAt;
 
+            product.CreatedAt = existingProduct.CreatedAt;
             _db.Entry(existingProduct).CurrentValues.SetValues(product);
             existingProduct.CategoryId = product.CategoryId;
             existingProduct.SupplierId = product.SupplierId;
@@ -118,8 +119,9 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
+            var inner = ex.InnerException?.Message ?? "";
             rs.IsSuccess = false;
-            rs.Message = $"Error updating product: {ex.Message}";
+            rs.Message = $"Error creating product: {ex.Message} | Inner: {inner}";
         }
         return rs;
     }
