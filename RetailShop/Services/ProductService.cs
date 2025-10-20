@@ -22,6 +22,17 @@ public class ProductService : IProductService
             product.CreatedAt = DateTime.Now;
             await _db.Products.AddAsync(product);
             await _db.SaveChangesAsync();
+
+            string barcode = "PRD-" +
+                Convert.ToBase64String(BitConverter.GetBytes(product.ProductId))
+                .Replace("=", "")
+                .Replace("+", "")
+                .Replace("/", "");
+
+            product.Barcode = barcode;
+            _db.Products.Update(product);
+            await _db.SaveChangesAsync();
+
             rs.IsSuccess = true;
             rs.Data = product;
             rs.Message = "Product created successfully.";
@@ -42,6 +53,7 @@ public class ProductService : IProductService
             var products = await _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
+                .Where(p => p.Active)
                 .AsNoTracking()
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
@@ -66,7 +78,7 @@ public class ProductService : IProductService
                 .Include(s => s.Category)
                 .Include(s => s.Supplier)
             .FirstOrDefaultAsync(s => s.ProductId == id);
-            if (product == null)
+            if (product == null || product.Active == false)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Product not found.";
@@ -92,7 +104,7 @@ public class ProductService : IProductService
         try
         {
             var existingProduct = await _db.Products.FindAsync(product.ProductId);
-            if (existingProduct == null)
+            if (existingProduct == null || existingProduct.Active == false)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Product not found.";
@@ -102,11 +114,12 @@ public class ProductService : IProductService
             //existingProduct.Category = product.Category;
             //existingProduct.Supplier = product.Supplier;
             //existingProduct.ProductImage = product.ProductImage;
-            //existingProduct.Barcode = product.Barcode;
             //existingProduct.Price = product.Price;
             //existingProduct.Unit = product.Unit;
 
+            product.Barcode = existingProduct.Barcode;
             product.CreatedAt = existingProduct.CreatedAt;
+            product.Active = existingProduct.Active;    
             _db.Entry(existingProduct).CurrentValues.SetValues(product);
             existingProduct.CategoryId = product.CategoryId;
             existingProduct.SupplierId = product.SupplierId;
