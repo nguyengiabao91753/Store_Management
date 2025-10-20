@@ -94,7 +94,9 @@
                                             <td>
                                                 @if (!string.IsNullOrEmpty(s.ProductImage))
                                                 {
-                                                    <img src="@Url.Content("~/uploads/" + s.ProductImage)" alt="Image" style="width:60px; height:60px; object-fit:cover; border-radius:6px;" />
+                                                    <img src="@(string.IsNullOrEmpty(s.ProductImage) ? "/Admin/dist/img/default-150x150.png" : s.ProductImage)"
+                                                        style="width:60px; height:60px; object-fit:cover; border-radius:6px;";
+                                                        alt="@s.ProductName" />
                                                 }
                                                 else
                                                 {

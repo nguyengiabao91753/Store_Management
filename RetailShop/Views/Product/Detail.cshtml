@@ -3,6 +3,19 @@
 @{
     ViewData["product"] = "menu-open";
     ViewData["product-list"] = "active";
+
+    // === Helper dùng để load ảnh sản phẩm an toàn ===
+
+    Func<string?, string> LoadImage = (imgName) =>
+    {
+        if (string.IsNullOrWhiteSpace(imgName))
+            return Url.Content("~/Admin/dist/img/default-150x150.png");
+
+        if (imgName.StartsWith("/")) // đường dẫn đã đầy đủ
+            return imgName;
+
+        return Url.Content("~/uploads/" + imgName);
+    };
 }
 
 <section class="content-header">
@@ -31,17 +44,10 @@
             </div>
             <div class="card-body row">
                 <div class="col-md-4 text-center">
-                    @if (!string.IsNullOrEmpty(Model.ProductImage))
-                    {
-                        <img src="@Url.Content("~/uploads/" + Model.ProductImage)"
-                             alt="@Model.ProductName"
-                             class="img-fluid rounded"
-                             style="max-height:250px; object-fit:cover;" />
-                    }
-                    else
-                    {
-                        <div class="text-muted">No Image</div>
-                    }
+                    <img src="@LoadImage(Model.ProductImage)"
+                         alt="@Model.ProductName"
+                         class="img-fluid rounded"
+                         style="max-height:250px; object-fit:cover;" />
                 </div>
                 <div class="col-md-8">
                     <p><strong>Product ID:</strong> @Model.ProductId</p>
@@ -56,8 +62,7 @@
             </div>
         </div>
 
-        <!-- Related Products (if needed, here we can skip or show something else) -->
-        @* Example: show products from same supplier (like Supplier.Detail.cshtml) *@
+        <!-- Related Products -->
         @if (Model.Supplier?.Products != null && Model.Supplier.Products.Any())
         {
             <div class="card mb-4">
@@ -82,17 +87,10 @@
                                 <tr>
                                     <td>@p.ProductId</td>
                                     <td>
-                                        @if (!string.IsNullOrEmpty(p.ProductImage))
-                                        {
-                                            <img src="@Url.Content("~/uploads/" + p.ProductImage)"
-                                                 alt="@p.ProductName"
-                                                 width="60" height="60"
-                                                 style="object-fit: cover;" />
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted">No Image</span>
-                                        }
+                                        <img src="@LoadImage(p.ProductImage)"
+                                             alt="@p.ProductName"
+                                             width="60" height="60"
+                                             style="object-fit: cover;" />
                                     </td>
                                     <td>@p.ProductName</td>
                                     <td>@String.Format("{0:N0}", p.Price) ₫</td>

@@ -52,4 +52,7 @@ public partial class Product
     [ForeignKey("SupplierId")]
     [InverseProperty("Products")]
     public virtual Supplier? Supplier { get; set; }
+
+    [NotMapped]
+    public IFormFile? ImageFile { get; set; }
 }
