@@ -133,7 +133,11 @@ public class ProductController : Controller
         var suppliers = await _supplierService.GetAllSuppliersAsync();
         var categories = await _categoryService.GetAllCategoriesAsync();
 
-        ViewBag.Suppliers = new SelectList(suppliers.Data, "SupplierId", "Name", selectedSupplierId);
-        ViewBag.Categories = new SelectList(categories.Data, "CategoryId", "CategoryName", selectedCategoryId);
+        // Lọc chỉ những cái có Active = true
+        var activeSuppliers = suppliers.Data?.Where(s => s.Active == true).ToList() ?? new();
+        var activeCategories = categories.Data?.Where(c => c.Active == true).ToList() ?? new();
+
+        ViewBag.Suppliers = new SelectList(activeSuppliers, "SupplierId", "Name", selectedSupplierId);
+        ViewBag.Categories = new SelectList(activeCategories, "CategoryId", "CategoryName", selectedCategoryId);
     }
 }
