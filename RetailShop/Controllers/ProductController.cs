@@ -128,20 +128,22 @@ public class ProductController : Controller
         return View("Create", product);
     }
 
-    [HttpGet]
-    [Route("edit/{id}")]
-    public async Task<IActionResult> Edit(int id)
-    {
-        var rs = await _productService.GetProductByIdAsync(id);
-        if (rs.IsSuccess && rs.Data != null)
+        [HttpGet]
+        [Route("edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
         {
-            await LoadDropdowns(rs.Data.SupplierId, rs.Data.CategoryId);
-            return View("Edit", rs.Data);
-        }
+            var rs = await _productService.GetProductByIdAsync(id);
+        
+            if (rs.IsSuccess && rs.Data != null)
+            {
+                rs.Data.Quantity = rs.Data.Inventories.FirstOrDefault()?.Quantity ?? 0;
+                await LoadDropdowns(rs.Data.SupplierId, rs.Data.CategoryId);
+                return View("Edit", rs.Data);
+            }
 
-        TempData["err"] = "Không tìm thấy sản phẩm hoặc lỗi: " + rs.Message;
-        return RedirectToAction("Index");
-    }
+            TempData["err"] = "Không tìm thấy sản phẩm hoặc lỗi: " + rs.Message;
+            return RedirectToAction("Index");
+        }
 
     [HttpPost]
     [Route("update")]

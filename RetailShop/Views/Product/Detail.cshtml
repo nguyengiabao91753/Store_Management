@@ -57,86 +57,11 @@
                     <p><strong>Barcode:</strong> @Model.Barcode</p>
                     <p><strong>Unit:</strong> @Model.Unit</p>
                     <p><strong>Price:</strong> @String.Format("{0:N0}", Model.Price) ₫</p>
+                    <p><strong>Quantity:</strong> @(Model.Inventory?.Quantity ?? 0)</p>
                     <p><strong>Created At:</strong> @Model.CreatedAt?.ToString("yyyy-MM-dd HH:mm")</p>
                 </div>
             </div>
         </div>
-
-        <!-- Related Products -->
-        @if (Model.Supplier?.Products != null && Model.Supplier.Products.Any())
-        {
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Other Products by Supplier</h5>
-                </div>
-                <div class="card-body">
-                    <table id="supplierProductTable" class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Product ID</th>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var p in Model.Supplier.Products.Where(p => p.ProductId != Model.ProductId))
-                            {
-                                <tr>
-                                    <td>@p.ProductId</td>
-                                    <td>
-                                        <img src="@LoadImage(p.ProductImage)"
-                                             alt="@p.ProductName"
-                                             width="60" height="60"
-                                             style="object-fit: cover;" />
-                                    </td>
-                                    <td>@p.ProductName</td>
-                                    <td>@String.Format("{0:N0}", p.Price) ₫</td>
-                                    <td>@p.Category?.CategoryName</td>
-                                    <td>@p.CreatedAt?.ToString("yyyy-MM-dd")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-
-        <!-- Optional: Order Items -->
-        @if (Model.OrderItems != null && Model.OrderItems.Any())
-        {
-            <div class="card">
-                <div class="card-header">
-                    <h5>Order Items Containing This Product</h5>
-                </div>
-                <div class="card-body">
-                    <table id="orderItemTable" class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var o in Model.OrderItems)
-                            {
-                                <tr>
-                                    <td>@o.OrderId</td>
-                                    <td>@o.Quantity</td>
-                                    <td>@String.Format("{0:N0}", o.Price) ₫</td>
-                                    <td>@String.Format("{0:N0}", o.Quantity * o.Price) ₫</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-
     </div>
 </section>
 
