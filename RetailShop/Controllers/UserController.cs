@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace RetailShop.Controllers
 {
+    [Route("user")]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
@@ -20,7 +21,7 @@ namespace RetailShop.Controllers
         // -------------------------------------------------------------------
         // 1. ACTION: Hiển thị Danh sách (READ - List)
         // -------------------------------------------------------------------
-        [HttpGet]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var result = await _userService.GetAllUsersAsync();
@@ -38,16 +39,31 @@ namespace RetailShop.Controllers
         }
 
         // -------------------------------------------------------------------
-        // 2. ACTION: Hiển thị Form Tạo mới (CREATE - GET)
+        // 2. ACTION: Hiển thị chi tiết (READ - Single Item)
         // -------------------------------------------------------------------
-        [HttpGet]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var result = await _userService.GetUserByIdAsync(id.Value);
+
+            if (!result.IsSuccess || result.Data == null) return NotFound();
+
+            return View(result.Data);
+        }
+
+        // -------------------------------------------------------------------
+        // 3. ACTION: Hiển thị Form Tạo mới (CREATE - GET)
+        // -------------------------------------------------------------------
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
         // -------------------------------------------------------------------
-        // 3. ACTION: Xử lý dữ liệu Form Tạo mới (CREATE - POST)
+        // 4. ACTION: Xử lý dữ liệu Form Tạo mới (CREATE - POST)
         // -------------------------------------------------------------------
         [HttpPost]
         //[ValidateAntiForgeryToken] // Bảo vệ chống tấn công CSRF
@@ -72,9 +88,9 @@ namespace RetailShop.Controllers
         }
 
         // -------------------------------------------------------------------
-        // 4. ACTION: Hiển thị Form Chỉnh sửa (EDIT - GET)
+        // 5. ACTION: Hiển thị Form Chỉnh sửa (EDIT - GET)
         // -------------------------------------------------------------------
-        [HttpGet]
+        [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,7 +109,7 @@ namespace RetailShop.Controllers
         }
 
         // -------------------------------------------------------------------
-        // 5. ACTION: Xử lý dữ liệu Form Chỉnh sửa (EDIT - POST)
+        // 6. ACTION: Xử lý dữ liệu Form Chỉnh sửa (EDIT - POST)
         // -------------------------------------------------------------------
         [HttpPost]
         //[ValidateAntiForgeryToken]
@@ -119,6 +135,24 @@ namespace RetailShop.Controllers
             }
 
             return View(user);
+        }
+        // -------------------------------------------------------------------
+        // 7. ACTION: Xóa dữ liệu User(POST - ID)
+        // -------------------------------------------------------------------
+        [HttpPost("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Message ?? "Xóa User thất bại!";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Xóa User thành công!";
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -53,7 +53,9 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-warning">Sửa</a> |
                     <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-info">Chi tiết</a> |
-                    <a asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-sm btn-danger">Xóa</a>
+                    <form asp-action="Delete" asp-route-id="@item.UserId" method="post" style="display:inline;" onsubmit="return confirm('Bạn chắc chắn muốn xóa User: @item.FullName không?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
                 </td>
             </tr>
         }

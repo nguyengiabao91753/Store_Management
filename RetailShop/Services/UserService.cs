@@ -175,5 +175,40 @@ namespace RetailShop.Services
             }
             return rs;
         }
+
+        // =========================================================
+        // 5. DELETE USER
+        // =========================================================
+        public async Task<ResultService<User>> DeleteUserAsync(int id)
+        {
+            var rs = new ResultService<User>();
+            try
+            {
+                // 1. Tìm User cần xóa
+                var userToDelete = await _db.Users.FindAsync(id);
+
+                if (userToDelete == null)
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = $"Không tìm thấy User với ID = {id} cần xóa.";
+                    return rs;
+                }
+
+                // 2. Thực hiện xóa
+                _db.Users.Remove(userToDelete);
+
+                // 3. Lưu thay đổi vào database
+                await _db.SaveChangesAsync();
+
+                rs.IsSuccess = true;
+                rs.Message = $"User '{userToDelete.FullName}' đã được xóa thành công.";
+            }
+            catch (Exception ex)
+            {
+                rs.IsSuccess = false;
+                rs.Message = $"Xóa User thất bại do lỗi hệ thống: {ex.Message}";
+            }
+            return rs;
+        }
     }
 }
