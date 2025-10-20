@@ -9,6 +9,5 @@ public interface ISupplierService
     Task<ResultService<Supplier>> GetSupplierByIdAsync(int id);
     Task<ResultService<Supplier>> CreateSupplierAsync(Supplier supplier);
     Task<ResultService<Supplier>> UpdateSupplierAsync(Supplier supplier);
-
     
 }

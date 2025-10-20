@@ -1,0 +1,134 @@
+﻿/* ========== RESET & FONT ========== */
+body {
+    background: #f3f7ff;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+}
+
+/* ========== HEADER ========== */
+#headerMenuBtn,
+#headerDateTime {
+    background-color: white;
+}
+
+#headerDateTime {
+    border-radius: 24px;
+    align-items: center;
+    width: 200px;
+    padding: 5px 0 5px 30px;
+}
+
+.open-close-store {
+    border-radius: 25px;
+    height: 58px;
+    width: 200px;
+    background-color: white;
+    text-align: center;
+    display: block;
+    padding-top: 10px;
+}
+
+.btn-power {
+    border-radius: 24px;
+    margin-left: 25px;
+}
+
+#status-text {
+    transition: color 0.3s ease;
+}
+
+.open-close-store.closed #status-text {
+    color: #dc3545;
+}
+
+.open-close-store:not(.closed) #status-text {
+    color: #198754;
+}
+
+/* ========== LAYOUT SHARED ========== */
+.top-bar {
+    height: 66px;
+    background: transparent;
+    border: whitesmoke;
+    border-radius: 24px;
+}
+
+.sidebar {
+    position: fixed;
+    left: -280px;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: #fff;
+    transition: left .25s ease;
+    z-index: 1040;
+}
+
+    .sidebar.show {
+        left: 0;
+    }
+
+/* ========== REUSABLE CARD STYLES ========== */
+.product-card,
+.card-queue,
+.table-wrap,
+.kpi,
+.graph-card,
+.fav-list {
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(12, 35, 64, 0.06);
+}
+
+/* ========== CART PANEL ========== */
+.cart-panel {
+    position: fixed;
+    right: 24px;
+    top: 90px;
+    width: 360px;
+    bottom: 24px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(12, 35, 64, 0.12);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* responsive */
+@media (max-width: 991px) {
+    .cart-panel {
+        position: static;
+        width: 100%;
+        margin-top: 12px;
+    }
+
+    main {
+        padding-bottom: 40px;
+    }
+}
+
+.cartList {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding-right: 6px;
+}
+
+/* ========== TRACK ORDER BASE (shared by BillingQueue) ========== */
+.track-card {
+    flex: 0 0 auto;
+    min-width: 220px;
+    max-width: 260px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e6e6e6;
+    padding: 12px;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+    .track-card strong {
+        display: block;
+        margin-bottom: 6px;
+    }

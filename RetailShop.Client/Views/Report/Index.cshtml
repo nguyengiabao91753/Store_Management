@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Report";
+}
+@section csslinks {
+    <link rel="stylesheet" href="~/css/Report.css" asp-append-version="true" />
+}
+
+<div class="container-fluid px-4 py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div><h4 class="mb-0">Report</h4></div>
+        <div>
+            <button id="btnDownloadReport" class="btn btn-outline-secondary">Download</button>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="kpi">
+                <div class="small text-muted">Total Sales Amount</div>
+                <div class="fs-4 fw-bold">12,650.00 USD</div>
+                <div class="small text-success">+ USD 1,543.30 (12.2%)</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="kpi">
+                <div class="small text-muted">Total Product Sales</div>
+                <div class="fs-4 fw-bold">1,250 Items</div>
+                <div class="small text-success">+ 125 Items (10%)</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="kpi">
+                <div class="small text-muted">Total Customers</div>
+                <div class="fs-4 fw-bold">400 Persons</div>
+                <div class="small text-danger">-5 Persons (0.02%)</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="kpi">
+                <div class="small text-muted">Net Profit</div>
+                <div class="fs-4 fw-bold">12,650.00 USD</div>
+                <div class="small text-success">+ USD 3,792 (0.3%)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-3">
+        <div class="col-lg-8">
+            <div class="graph-card">
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="mb-0">Report Graph</h6>
+                    <div class="small text-muted">Total Sales Amount</div>
+                </div>
+                <div class="mock-graph align-items-end mt-3"
+                     style="height:220px; display:flex; gap:8px; padding:16px; border-radius:8px; background:linear-gradient(180deg,#f8fbff,#fff)">
+                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
+                        <div style="height:60%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
+                    </div>
+                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
+                        <div style="height:70%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
+                    </div>
+                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
+                        <div style="height:50%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
+                    </div>
+                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
+                        <div style="height:80%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
+                    </div>
+                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
+                        <div style="height:65%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-3">
+                    <div><strong>Amount</strong><div class="small text-muted">12,650.00 USD</div></div>
+                    <div><strong>Growth</strong><div class="small text-success">+1,543.30 USD</div></div>
+                    <div><strong>Growth %</strong><div class="small text-success">12.2%</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="fav-list">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Favorite Product</h6>
+                    <div class="small text-muted">Top sold items</div>
+                </div>
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="https://via.placeholder.com/48?text=Cro" class="rounded" style="width:48px;height:48px;">
+                            <div>
+                                <div class="fw-semibold">Buttermelt Croissant</div>
+                                <small class="text-muted">Pastry</small>
+                            </div>
+                        </div>
+                        <div>183 Times</div>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="https://via.placeholder.com/48?text=Beef" class="rounded" style="width:48px;height:48px;">
+                            <div>
+                                <div class="fw-semibold">Beef Crowich</div>
+                                <small class="text-muted">Sandwich</small>
+                            </div>
+                        </div>
+                        <div>160 Times</div>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center py-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="https://via.placeholder.com/48?text=Cake" class="rounded" style="width:48px;height:48px;">
+                            <div>
+                                <div class="fw-semibold">Sliced Blackforest</div>
+                                <small class="text-muted">Cake</small>
+                            </div>
+                        </div>
+                        <div>125 Times</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Report.js" asp-append-version="true"></script>
+}

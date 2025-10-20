@@ -1,0 +1,62 @@
+﻿@using Microsoft.AspNetCore.Http;
+
+<div class="left-sidebar" id="leftSidebar">
+    <div class="user-profile">
+        <img src="https://i.pravatar.cc/150?img=47" alt="User" class="user-avatar">
+        <div class="user-info">
+            <div class="user-name">@ViewBag.StaffName ?? "Staff Member"</div>
+            <div class="user-role">@ViewBag.StaffRole ?? "Cashier"</div>
+        </div>
+        <button class="user-dropdown">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <button class="close-sidebar" onclick="toggleSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="sidebar-title">
+        <i class="fas fa-store"></i>
+        <span>Point of Sales</span>
+    </div>
+
+    <div class="sidebar-menu">
+        <a href="@Url.Action("Index", "POS", new { area = "Staff" })"
+           class="sidebar-menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "POS" ? "active" : "")">
+            <i class="fas fa-cash-register"></i>
+            <span>POS</span>
+        </a>
+        <a href="@Url.Action("Activity", "Dashboard", new { area = "Staff" })"
+           class="sidebar-menu-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Activity</span>
+        </a>
+        <a href="@Url.Action("Index", "Report", new { area = "Staff" })"
+           class="sidebar-menu-item">
+            <i class="fas fa-file-alt"></i>
+            <span>Report</span>
+        </a>
+        <a href="@Url.Action("Index", "Inventory", new { area = "Staff" })"
+           class="sidebar-menu-item">
+            <i class="fas fa-box"></i>
+            <span>Inventory</span>
+        </a>
+        <a href="@Url.Action("Index", "Team", new { area = "Staff" })"
+           class="sidebar-menu-item">
+            <i class="fas fa-users"></i>
+            <span>Teams</span>
+        </a>
+        <a href="@Url.Action("Index", "Settings", new { area = "Staff" })"
+           class="sidebar-menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <div class="sidebar-logout">
+        <button class="logout-btn" onclick="confirmLogout()">
+            <i class="fas fa-power-off"></i>
+            <span>Log Out</span>
+        </button>
+    </div>
+</div>

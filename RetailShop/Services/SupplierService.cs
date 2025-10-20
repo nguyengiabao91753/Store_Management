@@ -74,6 +74,7 @@ public class SupplierService : ISupplierService
             rs.IsSuccess = false;
             rs.Message = $"Error when finding supplier: {ex.Message}";
         }
+
         return rs;
     }
 

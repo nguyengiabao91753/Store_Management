@@ -9,4 +9,10 @@ public class LoginController : Controller
     {
         return View();
     }
+
+    [Route("v2")]
+    public IActionResult Login()
+    {
+        return View("Login");
+    }
 }
