@@ -134,7 +134,36 @@ public class ProductService : IProductService
         {
             var inner = ex.InnerException?.Message ?? "";
             rs.IsSuccess = false;
-            rs.Message = $"Error creating product: {ex.Message} | Inner: {inner}";
+            rs.Message = $"Error updating product: {ex.Message} | Inner: {inner}";
+        }
+        return rs;
+    }
+
+    public async Task<ResultService<Product>> DeleteProductAsync(int id)
+    {
+        var rs = new ResultService<Product>();
+        try
+        {
+            var existingProduct = await _db.Products.FindAsync(id);
+            if (existingProduct == null || existingProduct.Active == false)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Product not found.";
+                return rs;
+            }
+
+            existingProduct.Active = false;
+            _db.Products.Update(existingProduct);
+            _db.SaveChanges();
+            rs.IsSuccess = true;
+            rs.Data = existingProduct;
+            rs.Message = "Product deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            var inner = ex.InnerException?.Message ?? "";
+            rs.IsSuccess = false;
+            rs.Message = $"Error deleting product: {ex.Message} | Inner: {inner}";
         }
         return rs;
     }

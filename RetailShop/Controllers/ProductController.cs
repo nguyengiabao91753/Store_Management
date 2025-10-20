@@ -114,6 +114,23 @@ public class ProductController : Controller
         return View("Edit", product);
     }
 
+    [HttpPost]
+    [Route("delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var rs = await _productService.DeleteProductAsync(id);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = "Xóa thành công";
+            return RedirectToAction("Index");
+        }
+
+        TempData["err"] = "Xóa thất bại: " + rs.Message;
+        return RedirectToAction("Index");
+    }
+
+
     [HttpGet]
     [Route("detail/{id}")]
     public async Task<IActionResult> Detail(int id)

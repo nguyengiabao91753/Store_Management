@@ -9,4 +9,5 @@ public interface IProductService
     Task<ResultService<Product>> GetProductByIdAsync(int id);
     Task<ResultService<Product>> CreateProductAsync(Product product);
     Task<ResultService<Product>> UpdateProductAsync(Product product);
+    Task<ResultService<Product>> DeleteProductAsync(int id);
 }
