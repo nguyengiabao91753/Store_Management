@@ -25,6 +25,9 @@ public partial class Supplier
     [StringLength(255)]
     public string? Address { get; set; }
 
+    [Required]
+    public bool Active { get; set; } = true;
+
     [InverseProperty("Supplier")]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

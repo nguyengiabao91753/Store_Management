@@ -22,6 +22,9 @@ public partial class Product
     [Unicode(false)]
     public string? ProductImage { get; set; }
 
+    [NotMapped]
+    public IFormFile? ImageFile { get; set; }
+
     [StringLength(50)]
     [Unicode(false)]
     public string? Barcode { get; set; }
@@ -36,6 +39,9 @@ public partial class Product
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
+    [Required]
+    public bool Active { get; set; } = true;
+
     [ForeignKey("CategoryId")]
     [InverseProperty("Products")]
     public virtual Category? Category { get; set; }
@@ -43,10 +49,28 @@ public partial class Product
     [InverseProperty("Product")]
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
+    [NotMapped]
+    public Inventory? Inventory
+    {
+        get => Inventories.FirstOrDefault();
+        set
+        {
+            if (value != null)
+            {
+                Inventories.Clear();
+                Inventories.Add(value);
+            }
+        }
+    }
+
+    [NotMapped]
+    public int Quantity { get; set; }
+
     [InverseProperty("Product")]
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
     [ForeignKey("SupplierId")]
     [InverseProperty("Products")]
     public virtual Supplier? Supplier { get; set; }
+
 }

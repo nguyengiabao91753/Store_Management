@@ -22,6 +22,27 @@ public class ProductService : IProductService
             product.CreatedAt = DateTime.Now;
             await _db.Products.AddAsync(product);
             await _db.SaveChangesAsync();
+
+            string barcode = "PRD-" +
+                Convert.ToBase64String(BitConverter.GetBytes(product.ProductId))
+                .Replace("=", "")
+                .Replace("+", "")
+                .Replace("/", "");
+
+            product.Barcode = barcode;
+            _db.Products.Update(product);
+            await _db.SaveChangesAsync();
+
+            var inventory = new Inventory
+            {
+                ProductId = product.ProductId,
+                Quantity = product.Quantity, // lấy từ [NotMapped] property
+                UpdatedAt = DateTime.Now
+            };
+
+            _db.Inventories.Add(inventory);
+            await _db.SaveChangesAsync();
+
             rs.IsSuccess = true;
             rs.Data = product;
             rs.Message = "Product created successfully.";
@@ -42,6 +63,8 @@ public class ProductService : IProductService
             var products = await _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
+                .Include(p => p.Inventories)
+                .Where(p => p.Active)
                 .AsNoTracking()
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
@@ -65,8 +88,9 @@ public class ProductService : IProductService
             var product = await _db.Products
                 .Include(s => s.Category)
                 .Include(s => s.Supplier)
+                .Include(p => p.Inventories)
             .FirstOrDefaultAsync(s => s.ProductId == id);
-            if (product == null)
+            if (product == null || product.Active == false)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Product not found.";
@@ -91,37 +115,86 @@ public class ProductService : IProductService
         var rs = new ResultService<Product>();
         try
         {
-            var existingProduct = await _db.Products.FindAsync(product.ProductId);
-            if (existingProduct == null)
+            var existingProduct = await _db.Products
+                .Include(p => p.Inventories)
+                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+
+            if (existingProduct == null || existingProduct.Active == false)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Product not found.";
                 return rs;
             }
-            //existingProduct.ProductName = product.ProductName;
-            //existingProduct.Category = product.Category;
-            //existingProduct.Supplier = product.Supplier;
-            //existingProduct.ProductImage = product.ProductImage;
-            //existingProduct.Barcode = product.Barcode;
-            //existingProduct.Price = product.Price;
-            //existingProduct.Unit = product.Unit;
 
+            // Giữ lại các thông tin cũ không được sửa
+            product.Barcode = existingProduct.Barcode;
             product.CreatedAt = existingProduct.CreatedAt;
+            product.Active = existingProduct.Active;
+
+            // Cập nhật thông tin cơ bản
             _db.Entry(existingProduct).CurrentValues.SetValues(product);
             existingProduct.CategoryId = product.CategoryId;
             existingProduct.SupplierId = product.SupplierId;
 
-            _db.Products.Update(existingProduct);
-            _db.SaveChanges();
+            // ===== CẬP NHẬT INVENTORY =====
+            var existingInventory = existingProduct.Inventories.FirstOrDefault();
+            if (existingInventory != null)
+            {
+                existingInventory.Quantity = product.Quantity;
+                _db.Inventories.Update(existingInventory);
+            }
+            else
+            {
+                var newInventory = new Inventory
+                {
+                    ProductId = existingProduct.ProductId,
+                    Quantity = product.Quantity
+                };
+                _db.Inventories.Add(newInventory);
+                existingProduct.Inventories.Add(newInventory);
+            }
+
+            await _db.SaveChangesAsync();
+
             rs.IsSuccess = true;
             rs.Data = existingProduct;
-            rs.Message = "Product updated successfully.";
+            rs.Message = "Product updated successfully, including inventory quantity.";
         }
         catch (Exception ex)
         {
             var inner = ex.InnerException?.Message ?? "";
             rs.IsSuccess = false;
-            rs.Message = $"Error creating product: {ex.Message} | Inner: {inner}";
+            rs.Message = $"Error updating product: {ex.Message} | Inner: {inner}";
+        }
+        return rs;
+    }
+
+
+    public async Task<ResultService<Product>> DeleteProductAsync(int id)
+    {
+        var rs = new ResultService<Product>();
+        try
+        {
+            var existingProduct = await _db.Products.FindAsync(id);
+            if (existingProduct == null || existingProduct.Active == false)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Product not found.";
+                return rs;
+            }
+
+            existingProduct.Active = false;
+            _db.Products.Update(existingProduct);
+            _db.SaveChanges();
+            rs.IsSuccess = true;
+            rs.Data = existingProduct;
+            rs.Message = "Product deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            var inner = ex.InnerException?.Message ?? "";
+            rs.IsSuccess = false;
+            rs.Message = $"Error deleting product: {ex.Message} | Inner: {inner}";
         }
         return rs;
     }
