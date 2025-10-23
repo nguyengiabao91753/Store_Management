@@ -39,8 +39,6 @@ public partial class Product
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
-    [Required]
-    public bool Active { get; set; } = true;
 
     [ForeignKey("CategoryId")]
     [InverseProperty("Products")]
