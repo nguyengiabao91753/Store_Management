@@ -20,7 +20,7 @@ public partial class Product
     public string ProductName { get; set; } = null!;
 
     [Unicode(false)]
-    public string ProductImage { get; set; } = null!;
+    public string? ProductImage { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]

@@ -54,7 +54,7 @@ public class SupplierController : Controller
             TempData["err"] = "Thêm thất bại: " + result.Message;
             return View("Create", supplier);
         }
-        
+
     }
 
     [HttpGet]
@@ -68,7 +68,7 @@ public class SupplierController : Controller
         }
         TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
         return RedirectToAction("Index");
-       
+
     }
 
     [HttpPost]
