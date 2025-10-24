@@ -54,7 +54,6 @@ public class SupplierController : Controller
             TempData["err"] = "Thêm thất bại: " + result.Message;
             return View("Create", supplier);
         }
-
     }
 
     [HttpGet]

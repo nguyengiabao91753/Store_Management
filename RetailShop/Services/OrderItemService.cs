@@ -58,7 +58,11 @@ namespace RetailShop.Services;
         var rs = new ResultService<OrderItem>();
         try
         {
-            var orderItem = await _db.OrderItems.FindAsync(id);
+            var orderItem = await _db.OrderItems
+                //.Include(oi => oi.Order)
+                .Include(oi => oi.Product)
+                .FirstOrDefaultAsync(oi => oi.OrderItemId == id);
+
             if (orderItem == null)
             {
                 rs.IsSuccess = false;
@@ -76,7 +80,9 @@ namespace RetailShop.Services;
             rs.IsSuccess = false;
             rs.Message = $"Error retrieving OrderItem: {ex.Message}";
         }
+
         return rs;
     }
+
 }
 

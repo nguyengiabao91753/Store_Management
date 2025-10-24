@@ -5,7 +5,7 @@ using RetailShop.Services;
 using RetailShop.Services.IServices;
 
 namespace RetailShop.Controllers;
-[Route("orders")]
+[Route("order")]
 
 public class OrderController : Controller
 {
