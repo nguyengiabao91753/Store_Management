@@ -1,7 +1,22 @@
+﻿using Microsoft.EntityFrameworkCore;
+using RetailShop.Client.Data;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Đọc connection string
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Thêm DbContext vào DI container  
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure() // optional resilience
+    ));
 
 var app = builder.Build();
 

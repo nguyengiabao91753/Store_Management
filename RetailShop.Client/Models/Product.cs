@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace RetailShop.Models;
+namespace RetailShop.Client.Models;
 
 [Index("Barcode", Name = "UQ__Products__177800D309195C4D", IsUnique = true)]
 public partial class Product

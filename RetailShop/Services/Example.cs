@@ -12,8 +12,7 @@ public class Example : IExample
     }
     public string GetMessage()
     {
-        //var us = _db.Users.FirstOrDefault();
-        //return "Hello from Example service: " + us.Username.ToString();
-        return "";
+        var us = _db.Users.FirstOrDefault();
+        return "Hello from Example service: ";
     }
 }

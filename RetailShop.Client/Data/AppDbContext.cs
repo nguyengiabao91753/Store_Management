@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using RetailShop.Models;
+using RetailShop.Client.Models;
 
-namespace RetailShop.Data;
+namespace RetailShop.Client.Data;
 
 public partial class AppDbContext : DbContext
 {

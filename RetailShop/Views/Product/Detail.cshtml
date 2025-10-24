@@ -1,0 +1,85 @@
+﻿@model RetailShop.Models.Product
+
+@{
+    ViewData["product"] = "menu-open";
+    ViewData["product-list"] = "active";
+
+    // === Helper dùng để load ảnh sản phẩm an toàn ===
+
+    Func<string?, string> LoadImage = (imgName) =>
+    {
+        if (string.IsNullOrWhiteSpace(imgName))
+            return Url.Content("~/Admin/dist/img/default-150x150.png");
+
+        if (imgName.StartsWith("/")) // đường dẫn đã đầy đủ
+            return imgName;
+
+        return Url.Content("~/uploads/" + imgName);
+    };
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@Model.ProductName - Detail</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index">Product</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <!-- Product Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Product Information</h5>
+            </div>
+            <div class="card-body row">
+                <div class="col-md-4 text-center">
+                    <img src="@LoadImage(Model.ProductImage)"
+                         alt="@Model.ProductName"
+                         class="img-fluid rounded"
+                         style="max-height:250px; object-fit:cover;" />
+                </div>
+                <div class="col-md-8">
+                    <p><strong>Product ID:</strong> @Model.ProductId</p>
+                    <p><strong>Product Name:</strong> @Model.ProductName</p>
+                    <p><strong>Category:</strong> @Model.Category?.CategoryName</p>
+                    <p><strong>Supplier:</strong> @Model.Supplier?.Name</p>
+                    <p><strong>Barcode:</strong> @Model.Barcode</p>
+                    <p><strong>Unit:</strong> @Model.Unit</p>
+                    <p><strong>Price:</strong> @String.Format("{0:N0}", Model.Price) ₫</p>
+                    <p><strong>Quantity:</strong> @(Model.Inventory?.Quantity ?? 0)</p>
+                    <p><strong>Created At:</strong> @Model.CreatedAt?.ToString("yyyy-MM-dd HH:mm")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section jslinks {
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(function () {
+            $('#supplierProductTable').DataTable({
+                responsive: true,
+                autoWidth: false,
+                pageLength: 10
+            });
+            $('#orderItemTable').DataTable({
+                responsive: true,
+                autoWidth: false,
+                pageLength: 10
+            });
+        });
+    </script>
+}
