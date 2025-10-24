@@ -69,7 +69,7 @@ public class SupplierController : Controller
         TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
         return RedirectToAction("Index");
        
-    }
+    }   
 
     [HttpPost]
     [Route("update")]

@@ -171,6 +171,29 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item @ViewData["order"]">
+                    <a class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Order
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Order" asp-action="Index" class="nav-link @ViewData["order-list"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Order" asp-action="Edit" class="nav-link @ViewData["order-edit"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cập nhật</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
             </ul>
         </nav>

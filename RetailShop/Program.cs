@@ -21,6 +21,8 @@ builder.Services.AddScoped<IExample, Example>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
