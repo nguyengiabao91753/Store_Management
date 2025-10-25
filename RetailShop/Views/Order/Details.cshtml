@@ -36,15 +36,21 @@
                 <p><strong>Promo ID:</strong> @Model.PromoId</p> *@
                 <p><strong>Order Date:</strong> @Model.OrderDate</p>
                 <p><strong>Status:</strong> @Model.Status</p>
-                <p><strong>Total Amount:</strong> @Model.TotalAmount</p>
-                <p><strong>Discount Amount:</strong> @Model.DiscountAmount</p>
-@*                 @if (Model.Payments != null)
+                <p><strong>Total (VND):</strong> @Model.TotalAmount</p>
+                <p><strong>Discount (VND):</strong> @Model.DiscountAmount</p>
+                @if (Model.Promo != null)
+                {
+                    <p><strong>Promo Code:</strong> @Model.Promo.PromoCode</p>
+                    <p><strong>Promo Description:</strong> @Model.Promo.Description</p>
+                }
+                @*                 @if (Model.Payments != null)
                 {
                     <div class="mt-3">
                         <p><strong>Payment Method:</strong> @Model.Payments.PaymentMethod</p>
                         <p><strong>Payment Date:</strong> @(Model.Payments.PaymentDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</p>
                     </div>
                 } *@
+
             </div>
         </div>
 
@@ -68,7 +74,7 @@
                 <p><strong>Username:</strong> @(Model.User != null ? Model.User.Username : "N/A")</p>
                 <p><strong>Full Name:</strong> @(Model.User != null ? Model.User.FullName : "N/A")</p>
                 <p><strong>Role:</strong> @(Model.User != null ? Model.User.Role : "N/A")</p>
-@*                 <p><strong>Created At:</strong> @Model.User?.CreatedAt?.ToString("yyyy-MM-dd HH:mm")</p>
+@*              <p><strong>Created At:</strong> @Model.User?.CreatedAt?.ToString("yyyy-MM-dd HH:mm")</p>
                 <p><strong>Status:</strong> @(Model.User != null ? (Model.User.Active ? "Active" : "Inactive") : "N/A")</p> *@
             </div>
         </div>
@@ -101,8 +107,8 @@
                                 <td>@item.Product?.ProductName</td>
                                 <td>@item.Product?.Category?.CategoryName</td>
                                 <td>@item.Quantity</td>
-                                <td>@item.Price.ToString("C")</td>
-                                <td>@item.Subtotal?.ToString("C")</td>
+                                <td>@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                <td>@item.Subtotal?.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
 
                             </tr>
                         }

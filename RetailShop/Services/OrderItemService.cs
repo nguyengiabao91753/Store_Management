@@ -13,7 +13,7 @@ namespace RetailShop.Services;
         {
             _db = db;
         }
-
+     
     public async Task<ResultService<OrderItem>> CreateOrderItemAsync(OrderItem OrderItem)
     {
         var rs = new ResultService<OrderItem>();

@@ -57,8 +57,10 @@ namespace RetailShop.Services;
             var order = await _db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.User)
+                .Include(o => o.Promo)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Category)
                 //.Include(o => o.Payments)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
@@ -95,7 +97,8 @@ namespace RetailShop.Services;
                 rs.Message = "Order not found.";
                 return rs;
             }
-            _db.Entry(existingOrder).CurrentValues.SetValues(order);
+            existingOrder.Status = order.Status;
+            _db.Orders.Update(existingOrder);
             await _db.SaveChangesAsync();
             rs.IsSuccess = true;
             rs.Data = existingOrder;

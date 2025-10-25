@@ -16,6 +16,13 @@ public class OrderController : Controller
     }
     public async Task<IActionResult> Index()
     {
+        // Handle possible TempData message (from Details redirect)
+        if (TempData["err"] != null)
+        {
+            ViewBag.Error = TempData["err"];
+            TempData.Remove("err"); // clear after reading
+        }
+
         var rs = await _orderService.GetAllOrdersAsync();
         if (rs.IsSuccess)
         {
@@ -23,11 +30,13 @@ public class OrderController : Controller
         }
         else
         {
-            TempData["err"] = "Lấy danh sách đơn hàng thất bại: " + rs.Message;
+            ViewBag.Error = "Lấy danh sách đơn hàng thất bại: " + rs.Message;
             ViewBag.orders = new List<object>();
         }
+
         return View();
     }
+
 
     [HttpGet]
     [Route("detail/{id}")]
@@ -45,7 +54,7 @@ public class OrderController : Controller
         }
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("edit/{id}")]
     public async Task<IActionResult> Edit(int id)
     {
@@ -58,5 +67,28 @@ public class OrderController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
+    [Route("update")]
+    public async Task<IActionResult> Update (Order order)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            TempData["err"] = "Cập nhật thất bại: " + string.Join(", ", errors);
+            return View("Edit", order);
+        }
+        int orderId = order.OrderId;
+        var rs = await _orderService.UpdateOrderAsync(order);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = "Cập nhật thành công";
+            return RedirectToAction("Index");
+        }
+        else
+        {
+            TempData["err"] = "Cập nhật thất bại: " + rs.Message;
+            return View("Edit", order);
+        }
+    }
 }
 

@@ -1,5 +1,4 @@
 ﻿@{
-
     ViewData["order"] = "menu-open";
     ViewData["order-list"] = "active";
 }
@@ -28,7 +27,6 @@
     <script src="~/js/configTableData.js"></script>
 
 
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var selects = document.querySelectorAll("select.kichhoat-select");
@@ -49,7 +47,6 @@
         }
     </script>
 }
-
 
 
 <section class="content-header">
@@ -111,17 +108,19 @@
 
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
-                                                <a asp-controller="order" asp-action="detail" asp-route-id="@s.SupplierId"
+                                                <a asp-controller="order" asp-action="detail" asp-route-id="@s.OrderId"
                                                    class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-
-                                                <a asp-controller="order" asp-action="edit" asp-route-id="@s.SupplierId"
+                                                @if (s.Status == "pending")
+                                                {
+                                                <a asp-controller="order" asp-action="edit" asp-route-id="@s.OrderId"
                                                    class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Order">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                }
 @* 
-                                                <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId"
+                                                <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.OrderId"
                                                    class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Order">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </a> *@
