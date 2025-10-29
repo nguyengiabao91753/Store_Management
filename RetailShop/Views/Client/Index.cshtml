@@ -1,0 +1,56 @@
+﻿@model IEnumerable<RetailShop.Models.Product>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Cửa hàng sản phẩm";
+}
+
+<div class="content-header text-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="container">
+
+    <!-- Thanh tìm kiếm -->
+    <form method="get" class="mb-4 d-flex justify-content-center">
+        <input type="text" name="keyword" class="form-control w-50" value="@ViewBag.Keyword" placeholder="Nhập tên hoặc mã sản phẩm...">
+        <button class="btn btn-primary ms-2" type="submit">Tìm kiếm</button>
+    </form>
+
+    <!-- Hiển thị danh sách sản phẩm -->
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            Không tìm thấy sản phẩm nào.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card shadow-sm h-100 border-0">
+                        <img src="~/images/@item.ProductImage" class="card-img-top" alt="@item.ProductName" style="height:180px; object-fit:contain;">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">@item.ProductName</h5>
+                            <p class="card-text text-muted mb-1">
+                                <small>@item.Category?.CategoryName</small>
+                            </p>
+                            <p class="fw-bold text-danger mb-2">@item.Price.ToString("N0") ₫</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section csslinks {
+    <style>
+        .card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+}

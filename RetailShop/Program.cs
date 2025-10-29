@@ -29,6 +29,7 @@ builder.Services.AddScoped<IExample, Example>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService> ();
+builder.Services.AddScoped<IProductService, ProductService>();
 #endregion
 
 
