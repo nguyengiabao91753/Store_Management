@@ -46,6 +46,26 @@
             $("table").click();
         }
     </script>
+    <script>
+        $(function () {
+            function applyStatusFilter(status) {
+                var table = $('#example1').DataTable();
+                if (status === 'all') {
+                    table.column(5).search('').draw();
+                } else {
+                    table.column(5).search('^' + status + '$', true, false).draw();
+                }
+            }
+
+            $('#orderStatusTabs').on('click', 'a.nav-link', function (e) {
+                e.preventDefault();
+                $('#orderStatusTabs a.nav-link').removeClass('active');
+                $(this).addClass('active');
+                var status = $(this).data('status');
+                applyStatusFilter(status);
+            });
+        });
+    </script>
 }
 
 
@@ -74,6 +94,22 @@
 @*                     <div class="card-header">
                         <a class="btn btn-outline-primary" asp-controller="order" asp-action="create">+ Add Order</a>
                     </div> *@
+                    <div class="card-header">
+                        <ul class="nav nav-tabs" id="orderStatusTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-status="all">All</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-status="pending">Pending</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-status="paid">Paid</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-status="canceled">Canceled</a>
+                            </li>
+                        </ul>
+                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-hover">

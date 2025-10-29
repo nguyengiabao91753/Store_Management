@@ -105,7 +105,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.PaymentDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.PaymentMethod).HasDefaultValue("cash");
 
-            entity.HasOne(d => d.Order).WithMany(p => p.Payments)
+            entity.HasOne(d => d.Order).WithOne(p => p.Payment)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Payments_Orders");
         });

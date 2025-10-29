@@ -61,7 +61,7 @@ namespace RetailShop.Services;
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
                         .ThenInclude(p => p.Category)
-                //.Include(o => o.Payments)
+                .Include(o => o.Payment)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
