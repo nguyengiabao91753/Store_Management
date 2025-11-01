@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailShop.Client.Data;
+using RetailShop.Client.Services;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlOptions => sqlOptions.EnableRetryOnFailure() // optional resilience
     ));
+
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

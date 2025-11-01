@@ -1,32 +1,42 @@
 using Microsoft.AspNetCore.Mvc;
 using RetailShop.Client.Models;
-using System.Diagnostics;
+using RetailShop.Client.Services;
 
 namespace RetailShop.Client.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IProductService _svc;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductService svc, ILogger<HomeController> logger)
         {
+            _svc = svc;
             _logger = logger;
         }
 
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index(int? categoryId, string? q)
         {
-            return View();
+            ViewBag.Categories = await _svc.GetCategoriesAsync();
+            ViewBag.ActiveCategoryId = categoryId;
+            ViewBag.Query = q;
+
+            var products = await _svc.GetProductsAsync(categoryId, q);
+            return View(products); 
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public async Task<IActionResult> GetProducts(int? categoryId, string? q)
         {
-            return View();
+            var products = await _svc.GetProductsAsync(categoryId, q);
+            return PartialView("_ProductCards", products);
         }
+
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+            => View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
     }
 }
