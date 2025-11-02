@@ -11,9 +11,9 @@ public class SupplierController : Controller
     {
         _supplierService = supplierService;
     }
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(bool active = true)
     {
-        var rs = await _supplierService.GetAllSuppliersAsync();
+        var rs = await _supplierService.GetAllSuppliersAsync(active);
         if (rs.IsSuccess)
         {
             ViewBag.suppliers = rs.Data;
@@ -103,6 +103,38 @@ public class SupplierController : Controller
             return View("Detail", rs.Data);
         }
         TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    [Route("delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var rs = await _supplierService.DeleteSupplierAsync(id);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = rs.Message;
+        }
+        else
+        {
+            TempData["err"] = "Xóa nhà cung cấp thất bại: " + rs.Message;
+        }
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    [Route("restore/{id}")]
+    public async Task<IActionResult> Restore(int id)
+    {
+        var rs = await _supplierService.RestoreSupplierAsync(id);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = rs.Message;
+        }
+        else
+        {
+            TempData["err"] = "Phục hồi nhà cung cấp thất bại: " + rs.Message;
+        }
         return RedirectToAction("Index");
     }
 }

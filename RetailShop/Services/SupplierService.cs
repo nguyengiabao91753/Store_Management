@@ -32,12 +32,40 @@ public class SupplierService : ISupplierService
         }
         return rs;
     }
-    public async Task<ResultService<List<Supplier>>> GetAllSuppliersAsync()
+
+    public async Task<ResultService<bool>> DeleteSupplierAsync(int id)
+    {
+        var rs = new ResultService<bool>();
+        try
+        {
+            var supplier = await _db.Suppliers.FindAsync(id);
+            if (supplier == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Supplier not found.";
+                rs.Data = false;
+                return rs;
+            }
+            supplier.Active = false;
+            await _db.SaveChangesAsync();
+            rs.IsSuccess = true;
+            rs.Data = true;
+            rs.Message = "Supplier deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error deleting supplier: {ex.Message}";
+        }
+        return rs;
+    }
+
+    public async Task<ResultService<List<Supplier>>> GetAllSuppliersAsync(bool active = true)
     {
         var rs = new ResultService<List<Supplier>>();
         try
         {
-            var suppliers = await _db.Suppliers.ToListAsync();
+            var suppliers = await _db.Suppliers.Where(s => s.Active == active).OrderByDescending(s => s.SupplierId).ToListAsync();
             rs.IsSuccess = true;
             rs.Data = suppliers;
             rs.Message = "Suppliers retrieved successfully.";
@@ -75,6 +103,33 @@ public class SupplierService : ISupplierService
             rs.Message = $"Error when finding supplier: {ex.Message}";
         }
 
+        return rs;
+    }
+
+    public async Task<ResultService<bool>> RestoreSupplierAsync(int id)
+    {
+        var rs = new ResultService<bool>();
+        try
+        {
+            var supplier = await _db.Suppliers.FindAsync(id);
+            if (supplier == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Supplier not found.";
+                rs.Data = false;
+                return rs;
+            }
+            supplier.Active = true;
+            await _db.SaveChangesAsync();
+            rs.IsSuccess = true;
+            rs.Data = true;
+            rs.Message = "Supplier deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error deleting supplier: {ex.Message}";
+        }
         return rs;
     }
 

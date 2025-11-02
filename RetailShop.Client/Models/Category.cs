@@ -14,6 +14,7 @@ public partial class Category
     [StringLength(100)]
     public string CategoryName { get; set; } = null!;
 
+    [NotMapped]
     public bool Active { get; set; } = true;
 
     [InverseProperty("Category")]
