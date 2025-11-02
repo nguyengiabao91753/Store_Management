@@ -1,53 +1,53 @@
 ﻿@{
-   
+
     ViewData["supplier"] = "menu-open";
     ViewData["supplier-list"] = "active";
 }
 
 @section csslinks {
     <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css ">
-    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css ">
+        <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css ">
+        <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css ">
 
 }
 @section jslinks {
-    <script src="~/js/jquery-3.7.1.min.js"></script>
-    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
-    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="~/js/jquery-3.7.1.min.js"></script>
+<script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+<script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
-    <script src="~/js/configTableData.js"></script>
+<script src="~/js/configTableData.js"></script>
 
 
-  
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var selects = document.querySelectorAll("select.kichhoat-select");
-            selects.forEach(function (select) {
-                changeClass(select);
-            });
-        });
-        function changeClass(selectElement) {
-            var selectedOption = selectElement.value;
-            if (selectedOption === "true") {
-                selectElement.classList.remove("badge-danger");
-                selectElement.classList.add("badge-success");
-            } else if (selectedOption === "false") {
-                selectElement.classList.remove("badge-success");
-                selectElement.classList.add("badge-danger");
-            }
-            $("table").click();
-        }
-    </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    var selects = document.querySelectorAll("select.kichhoat-select");
+    selects.forEach(function (select) {
+    changeClass(select);
+    });
+    });
+    function changeClass(selectElement) {
+    var selectedOption = selectElement.value;
+    if (selectedOption === "true") {
+    selectElement.classList.remove("badge-danger");
+    selectElement.classList.add("badge-success");
+    } else if (selectedOption === "false") {
+    selectElement.classList.remove("badge-success");
+    selectElement.classList.add("badge-danger");
+    }
+    $("table").click();
+    }
+</script>
 }
 
 
@@ -74,9 +74,27 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <a class="btn btn-outline-primary" asp-controller="supplier" asp-action="create">+ Add Supplier</a>
+                    <div class="card-header ">
+                        <a class="btn btn-outline-primary" asp-controller="supplier" asp-action="create">
+                            + Add Supplier
+                        </a>
+
+                        <div class="dropdown float-right">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Filter
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" asp-controller="supplier" asp-action="index" asp-route-active="true">
+                                    <i class="fas fa-check"></i> Show Active
+                                </a>
+                                <a class="dropdown-item" asp-controller="supplier" asp-action="index" asp-route-active="false">
+                                    <i class="fas fa-trash-alt"></i> Show Deleted
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
+
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-hover">
@@ -106,19 +124,29 @@
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
                                                 <a asp-controller="supplier" asp-action="detail" asp-route-id="@s.SupplierId"
-                                                   class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
+                                                class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
 
-                                                <a asp-controller="supplier" asp-action="edit" asp-route-id="@s.SupplierId"
-                                                   class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Supplier">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
+                                                @if (s.Active == true)
+                                                {
+                                                    <a asp-controller="supplier" asp-action="edit" asp-route-id="@s.SupplierId"
+                                                    class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Supplier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
 
-                                                <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId"
-                                                   class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Supplier">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </a>
+                                                    <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.SupplierId"
+                                                    class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Supplier">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                }
+                                                @if(s.Active == false)
+                                                {
+                                                    <a asp-controller="supplier" asp-action="restore" asp-route-id="@s.SupplierId"
+                                                       class="btn btn-sm btn-outline-success" onclick="return confirmRestore()" data-toggle="tooltip" title="Restore Supplier">
+                                                        <i class="fas fa-trash-restore"></i>
+                                                    </a>
+                                                }
                                             </div>
                                         </td>
 

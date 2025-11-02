@@ -8,12 +8,12 @@ using System.Collections.Generic;
 namespace RetailShop.Controllers
 {
     [Route("user")]
-    public class UsersController : Controller
+    public class UserController : Controller
     {
         private readonly IUserService _userService;
 
         // Dependency Injection: Nhận IUserService qua constructor
-        public UsersController(IUserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }

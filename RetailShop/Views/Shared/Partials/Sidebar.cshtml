@@ -48,19 +48,19 @@
                         <a class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
-                                Nhân viên
+                                User
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a asp-controller="Users" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]">
+                                <a asp-controller="user" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Danh sách</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-controller="Users" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]">
+                                <a asp-controller="user" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Thêm</p>
                                 </a>
@@ -92,29 +92,29 @@
 
                     </ul>
                 </li>
-                    <li class="nav-item @ViewData["nhanvien"]">
-                        <a class="nav-link">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Nhân viên
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a asp-controller="Users" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Danh sách</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="Users" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Thêm</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    @* <li class="nav-item @ViewData["nhanvien"]"> *@
+                    @*     <a class="nav-link"> *@
+                    @*         <i class="nav-icon fas fa-tachometer-alt"></i> *@
+                    @*         <p> *@
+                    @*             Nhân viên *@
+                    @*             <i class="right fas fa-angle-left"></i> *@
+                    @*         </p> *@
+                    @*     </a> *@
+                    @*     <ul class="nav nav-treeview"> *@
+                    @*         <li class="nav-item"> *@
+                    @*             <a asp-controller="User" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]"> *@
+                    @*                 <i class="far fa-circle nav-icon"></i> *@
+                    @*                 <p>Danh sách</p> *@
+                    @*             </a> *@
+                    @*         </li> *@
+                    @*         <li class="nav-item"> *@
+                    @*             <a asp-controller="User" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]"> *@
+                    @*                 <i class="far fa-circle nav-icon"></i> *@
+                    @*                 <p>Thêm</p> *@
+                    @*             </a> *@
+                    @*         </li> *@
+                    @*     </ul> *@
+                    @* </li> *@
                 <li class="nav-item @ViewData["supplier"]">
                     <a class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
