@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailShop.Client.Data;
+using RetailShop.Client.Extension;
 using RetailShop.Client.Services;
+using RetailShop.Client.Services.IServices;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,16 +12,26 @@ builder.Services.AddControllersWithViews();
 // Đọc connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+
+SD.AdminUrl = builder.Configuration["Endpoints:Admin"];
+
 // Thêm DbContext vào DI container  
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //    options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure() // optional resilience
+        builder.Configuration.GetConnectionString("DefaultConnection")
+        //sqlOptions => sqlOptions.EnableRetryOnFailure() // optional resilience
     ));
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IPromotionPOSService, PromotionPOSService>();
+builder.Services.AddScoped<ICustomerPOSService, CustomerPOSService>();
+builder.Services.AddScoped<IPaymentPOSService, PaymentPOSService>();
+builder.Services.AddScoped<IInventoryPOSService, InventoryPOSService>();
+builder.Services.AddScoped<IOrderPOSService, OrderPOSService>();
+
+
 
 var app = builder.Build();
 

@@ -20,7 +20,7 @@ public class SupplierController : Controller
         }
         else
         {
-            TempData["err"] = "Lấy danh sách nhà cung cấp thất bại: " + rs.Message;
+            TempData["err"] = "Lấy danh sách nhà cung cấp thất bại";
             ViewBag.Suppliers = new List<Supplier>();
         }
         return View();
@@ -51,7 +51,7 @@ public class SupplierController : Controller
         }
         else
         {
-            TempData["err"] = "Thêm thất bại: " + result.Message;
+            TempData["err"] = "Thêm thất bại";
             return View("Create", supplier);
         }
     }
@@ -65,7 +65,7 @@ public class SupplierController : Controller
         {
             return View("Edit", rs.Data);
         }
-        TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
+        TempData["err"] = "Lấy nhà cung cấp thất bại";
         return RedirectToAction("Index");
 
     }
@@ -88,7 +88,7 @@ public class SupplierController : Controller
         }
         else
         {
-            TempData["err"] = "Cập nhật thất bại: " + rs.Message;
+            TempData["err"] = "Cập nhật thất bại";
             return View("Edit", supplier);
         }
     }
@@ -102,7 +102,7 @@ public class SupplierController : Controller
         {
             return View("Detail", rs.Data);
         }
-        TempData["err"] = "Lấy nhà cung cấp thất bại: " + rs.Message;
+        TempData["err"] = "Lấy nhà cung cấp thất bại";
         return RedirectToAction("Index");
     }
 
@@ -117,7 +117,7 @@ public class SupplierController : Controller
         }
         else
         {
-            TempData["err"] = "Xóa nhà cung cấp thất bại: " + rs.Message;
+            TempData["err"] = "Xóa nhà cung cấp thất bại";
         }
         return RedirectToAction("Index");
     }
@@ -133,7 +133,7 @@ public class SupplierController : Controller
         }
         else
         {
-            TempData["err"] = "Phục hồi nhà cung cấp thất bại: " + rs.Message;
+            TempData["err"] = "Phục hồi nhà cung cấp thất bại" ;
         }
         return RedirectToAction("Index");
     }
