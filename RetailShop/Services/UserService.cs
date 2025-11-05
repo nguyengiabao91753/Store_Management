@@ -25,13 +25,23 @@ namespace RetailShop.Services
         // =========================================================
         // 1. GET ALL USERS
         // =========================================================
-        public async Task<ResultService<List<User>>> GetAllUsersAsync()
+        public async Task<ResultService<List<User>>> GetAllUsersAsync(bool includeAdmin = true)
         {
             var rs = new ResultService<List<User>>();
             try
             {
-                // Load danh sách Users (có thể bỏ qua Orders để tối ưu)
-                var users = await _db.Users.ToListAsync();
+                // 1. Khởi tạo truy vấn
+                var query = _db.Users.AsQueryable();
+
+                // 2. Áp dụng điều kiện lọc nếu không muốn bao gồm Admin
+                if (!includeAdmin)
+                {
+                    // Chỉ lấy những user có Role KHÔNG phải là 'admin'
+                    query = query.Where(u => u.Role != "admin");
+                }
+
+                // 3. Thực thi truy vấn và tải danh sách
+                var users = await query.ToListAsync();
 
                 rs.IsSuccess = true;
                 rs.Data = users;
@@ -128,17 +138,11 @@ namespace RetailShop.Services
             var rs = new ResultService<User>();
             try
             {
-                //xác nhận có người dùng cần cập nhật
-                var existingUser = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.UserId);
-                if (existingUser == null)
-                {
-                    rs.IsSuccess = false;
-                    rs.Message = "Không tìm thấy người dùng cần cập nhật.";
-                    return rs;
-                }
-
-                //Username đã bị người khác sử dụng chưa?
-                var duplicateUserName = await _db.Users.AnyAsync(u => u.Username == user.Username && u.UserId != user.UserId);
+                // 1. Kiểm tra username trùng lặp
+                // Controller đã truyền đối tượng 'user' (là existingUser) 
+                // với Username cũ (không thay đổi trên form Edit)
+                var duplicateUserName = await _db.Users
+                    .AnyAsync(u => u.Username == user.Username && u.UserId != user.UserId);
 
                 if (duplicateUserName)
                 {
@@ -147,21 +151,9 @@ namespace RetailShop.Services
                     return rs;
                 }
 
-                //Nếu user.Password rỗng, giữ mật khẩu cũ
-                if (string.IsNullOrEmpty(user.Password))
-                {
-                    user.Password = existingUser.Password;
-                }
-                else
-                {
-                    // Nếu có mật khẩu mới, phải mã hóa
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                }
-
-                
+                // 2. LƯU THAY ĐỔI
+                // Dùng Update() để đảm bảo EF biết đối tượng này đã được sửa
                 _db.Users.Update(user);
-
-
                 await _db.SaveChangesAsync();
 
                 rs.IsSuccess = true;
@@ -170,6 +162,7 @@ namespace RetailShop.Services
             }
             catch (Exception ex)
             {
+                //...
                 rs.IsSuccess = false;
                 rs.Message = $"Lỗi khi cập nhật người dùng: {ex.Message}";
             }

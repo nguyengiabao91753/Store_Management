@@ -24,19 +24,19 @@
         <!-- /.login-logo -->
         @if (TempData["success"] != null)
         {
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                @TempData["success"]
-            </div>
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-check"></i> Alert!</h5>
+            @TempData["success"]
+        </div>
         }
         @if (TempData["err"] != null)
         {
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                @TempData["err"]
-            </div>
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-check"></i> Alert!</h5>
+            @TempData["err"]
+        </div>
         }
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
@@ -116,6 +116,22 @@
             }
         }
     </script>
+    
+    @* BỔ SUNG LỆNH DELAY CHUYỂN HƯỚNG *@
+    @if (TempData["success"] != null)
+{
+    var controllerName = "User";
+    var actionName = "Index";
+    var redirectUrl = Url.Action(actionName, controllerName);
+
+    <script>
+        // Tạo độ trễ 1000ms (1 giây)
+        setTimeout(function() {
+            // Chuyển hướng đến trang danh sách User
+            window.location.href = '@redirectUrl';
+        }, 1500); // <-- 1000 miligiây = 1 giây
+    </script>
+}
 </body>
 </html>
 

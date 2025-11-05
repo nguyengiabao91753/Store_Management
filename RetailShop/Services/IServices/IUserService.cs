@@ -5,7 +5,7 @@ using RetailShop.Dtos;
 
     public interface IUserService
     {
-        Task<ResultService<List<User>>> GetAllUsersAsync();
+        Task<ResultService<List<User>>> GetAllUsersAsync(bool includeAdmin = true);
         Task<ResultService<User>> GetUserByIdAsync(int id);
         Task<ResultService<User>> CreateUserAsync(User user);
         Task<ResultService<User>> EditUserAsync(User user);

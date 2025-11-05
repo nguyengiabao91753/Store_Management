@@ -24,7 +24,7 @@ namespace RetailShop.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var result = await _userService.GetAllUsersAsync();
+            var result = await _userService.GetAllUsersAsync(includeAdmin: false);
 
             if (result.IsSuccess)
             {
@@ -122,8 +122,29 @@ namespace RetailShop.Controllers
 
             if (ModelState.IsValid)
             {
-               
-                var result = await _userService.EditUserAsync(user);
+                //lấy user hiện tại từ db
+                var existingResult = await _userService.GetUserByIdAsync(id);
+
+                if (!existingResult.IsSuccess || existingResult.Data == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy người dùng để cập nhật.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var existingUser = existingResult.Data;
+
+                // 2. CHỈ CẬP NHẬT CÁC TRƯỜNG ĐƯỢC PHÉP (Hạn chế rủi ro ghi đè)
+
+                // Cập nhật FullName:
+                existingUser.FullName = user.FullName;
+
+                // Cập nhật Role:
+                existingUser.Role = user.Role;
+
+                //Các trường Username, Password, Active, CreatedAt giữ nguyên giá trị cũ.
+
+                // 3. THỰC HIỆN CẬP NHẬT với đối tượng đã được bảo vệ
+                var result = await _userService.EditUserAsync(existingUser);
 
                 if (result.IsSuccess)
                 {
@@ -134,6 +155,7 @@ namespace RetailShop.Controllers
                 ModelState.AddModelError("", result.Message ?? "Cập nhật User thất bại.");
             }
 
+            // Nếu ModelState không hợp lệ hoặc cập nhật thất bại
             return View(user);
         }
         // -------------------------------------------------------------------

@@ -3,11 +3,25 @@ using RetailShop.Data;
 using RetailShop.Services;
 using RetailShop.Services.IServices;
 using System;
+using Microsoft.AspNetCore.Authentication.Cookies; // <-- Cần cho Cookie Auth
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        // Chỉ định tên Scheme, bạn có thể dùng mặc định
+        options.LoginPath = "/login"; // <-- Đặt trang đăng nhập (Action Index của LoginController)
+        options.LogoutPath = "/login/logout"; // <-- Đặt trang đăng xuất (Action Logout của LoginController
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Thời gian hết hạn của cookie (ví dụ: 30 phút)
+        options.SlidingExpiration = true; 
+        options.Cookie.HttpOnly = true; 
+        options.Cookie.IsEssential = true;
+    });
 
 
 // Đọc connection string
@@ -55,6 +69,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
