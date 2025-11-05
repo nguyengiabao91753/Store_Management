@@ -268,3 +268,7 @@ VALUES
     (2, 0, 'cash'),
     (3, 300000, 'bank_transfer');
 GO
+
+-- Lệnh SQL để thêm cột Active
+ALTER TABLE Users
+ADD Active BIT DEFAULT 1 NOT NULL;

@@ -13,6 +13,11 @@
 
             @* Trường ẩn (Hidden Field) để giữ UserId khi POST *@
             <input type="hidden" asp-for="UserId" />
+            @* BỔ SUNG CÁC TRƯỜNG ẨN ĐỂ ĐẢM BẢO CÁC GIÁ TRỊ CŨ ĐƯỢC GỬI LẠI *@
+
+            <input type="hidden" asp-for="Password" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="Active" />
 
             @* Trường Username (thường không cho phép sửa đổi trong thực tế) *@
             <div class="form-group">
@@ -36,7 +41,6 @@
             </div>
 
             @* Thêm phần thay đổi mật khẩu (nếu cần, thường nằm trong form riêng) *@
-            <p class="text-info">Để trống mật khẩu nếu không muốn thay đổi.</p>
 
             <div class="form-group">
                 <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
@@ -45,7 +49,3 @@
         </form>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

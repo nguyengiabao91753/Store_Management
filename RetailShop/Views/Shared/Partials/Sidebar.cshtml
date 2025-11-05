@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@using System.Security.Claims;
 
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -11,14 +12,32 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
+        @* ... (Phần code trên giữ nguyên) ... *@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="~/Admin/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
+            @if (User.Identity.IsAuthenticated)
+            {
             <div class="info">
-                <a class="d-block">Hoten</a>
-                <span class="badge badge-info">(nhanvien.Quyen)</span>
+                @* 1. Hiển thị Tên (Username) *@
+                <a class="d-block"><strong>@User.Identity.Name</strong></a>
+
+                @* 2. Hiển thị Quyền (Role) *@
+                @{
+                        // Lấy Claim Role (nếu có)
+                        var roleClaim = User.FindFirst(ClaimTypes.Role);
+                        string userRole = roleClaim != null ? roleClaim.Value.ToUpper() : "Không rõ";
+                }
+                <span class="badge badge-info">(@userRole)</span>
             </div>
+            }
+            else
+            {
+            <div class="info">
+                <a class="d-block">Khách</a>
+            </div>
+            }
         </div>
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="col-md-12" style="text-align: center;">
@@ -42,29 +61,29 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
-                     with font-awesome or any other icon font library -->
-                
+                 with font-awesome or any other icon font library -->
+
                 <li class="nav-item @ViewData["nhanvien"]">
-                        <a class="nav-link">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                User
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a asp-controller="user" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Danh sách</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="user" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Thêm</p>
-                                </a>
-                            </li>
+                    <a class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            User
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="user" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="user" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>
@@ -92,29 +111,29 @@
 
                     </ul>
                 </li>
-                    @* <li class="nav-item @ViewData["nhanvien"]"> *@
-                    @*     <a class="nav-link"> *@
-                    @*         <i class="nav-icon fas fa-tachometer-alt"></i> *@
-                    @*         <p> *@
-                    @*             Nhân viên *@
-                    @*             <i class="right fas fa-angle-left"></i> *@
-                    @*         </p> *@
-                    @*     </a> *@
-                    @*     <ul class="nav nav-treeview"> *@
-                    @*         <li class="nav-item"> *@
-                    @*             <a asp-controller="User" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]"> *@
-                    @*                 <i class="far fa-circle nav-icon"></i> *@
-                    @*                 <p>Danh sách</p> *@
-                    @*             </a> *@
-                    @*         </li> *@
-                    @*         <li class="nav-item"> *@
-                    @*             <a asp-controller="User" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]"> *@
-                    @*                 <i class="far fa-circle nav-icon"></i> *@
-                    @*                 <p>Thêm</p> *@
-                    @*             </a> *@
-                    @*         </li> *@
-                    @*     </ul> *@
-                    @* </li> *@
+                @* <li class="nav-item @ViewData["nhanvien"]"> *@
+                @*     <a class="nav-link"> *@
+                @*         <i class="nav-icon fas fa-tachometer-alt"></i> *@
+                @*         <p> *@
+                @*             Nhân viên *@
+                @*             <i class="right fas fa-angle-left"></i> *@
+                @*         </p> *@
+                @*     </a> *@
+                @*     <ul class="nav nav-treeview"> *@
+                @*         <li class="nav-item"> *@
+                @*             <a asp-controller="User" asp-action="index" class="nav-link  @ViewData["nhanvien-list"]"> *@
+                @*                 <i class="far fa-circle nav-icon"></i> *@
+                @*                 <p>Danh sách</p> *@
+                @*             </a> *@
+                @*         </li> *@
+                @*         <li class="nav-item"> *@
+                @*             <a asp-controller="User" asp-action="create" class="nav-link  @ViewData["nhanvien-create"]"> *@
+                @*                 <i class="far fa-circle nav-icon"></i> *@
+                @*                 <p>Thêm</p> *@
+                @*             </a> *@
+                @*         </li> *@
+                @*     </ul> *@
+                @* </li> *@
                 <li class="nav-item @ViewData["supplier"]">
                     <a class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -167,10 +186,10 @@
                     <a asp-controller="customer" asp-action="index" class="nav-link  @ViewData["customer-index"]">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                        Customers
+                            Customers
                         </p>
                     </a>
-                  
+
                 </li>
                 <li class="nav-item @ViewData["category"]">
                     <a class="nav-link">
@@ -210,7 +229,7 @@
                                 <p>Danh sách</p>
                             </a>
                         </li>
-@*                         <li class="nav-item">
+                        @*                         <li class="nav-item">
                             <a asp-controller="Order" asp-action="Edit" class="nav-link @ViewData["order-edit"]">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Cập nhật</p>

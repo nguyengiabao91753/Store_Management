@@ -2,89 +2,152 @@
 
     @{
     ViewData["Title"] = "Danh sách người dùng";
+    // Đặt ViewData cho menu sidebar nếu cần, dựa trên các view khác
+    // ViewData["user"] = "menu-open";
+    // ViewData["user-list"] = "active";
     }
 
-    <h1>Danh sách User</h1>
+   
+    @*  CSS Links cho DataTables *@
+    @section csslinks {
+        <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+        <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    }
 
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Tạo mới User</a>
-    </p>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    @* Bắt đầu thẻ Card *@
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Danh sách Người dùng</h3>
 
-    @* Hiển thị thông báo thành công/thất bại từ Controller *@
-    @if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-    @if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-}
+                            <div class="card-tools">
+                                @* Nút Tạo mới được căn phải *@
+                                <a asp-action="Create" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip">
+                                    <i class="fas fa-plus"></i> Tạo mới User
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Username)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FullName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Role)
-                </th>
-                <th>
-                    Trạng thái
-                </th>
-                <th>
-                    Thao tác
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Role)
-                </td>
-                <td>
-                    @if (item.Active)
-                    {
-                    <span class="badge badge-success">Hoạt động</span>
-                    }
-                    else
-                    {
-                    <span class="badge badge-danger">Đã khóa</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-warning">Sửa</a> 
-                    <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-info">Chi tiết</a> 
+                            @* Hiển thị thông báo thành công/thất bại từ Controller *@
+                            @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                        }
+                            @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                        }
 
-                    @if (item.Active)
-                    {
-                    @*Hiển thị nút Khóa khi User đang Hoạt động*@
-                    <a asp-action="Lock" asp-route-id="@item.UserId" class="btn btn-sm btn-danger"
-                       onclick="return confirm('Bạn chắc chắn muốn KHÓA User: @item.FullName không?');">Khóa</a>
-                    }
-                    else
-                    {
-                    @* Bắt buộc sử dụng thẻ <text> hoặc đảm bảo không có khoảng trắng/dòng trống nếu mã HTML phức tạp *@
-                    @* Ở đây, không cần <text> vì thẻ <a> là thẻ HTML duy nhất trong khối else *@
-                    <a asp-action="Restore" asp-route-id="@item.UserId" class="btn btn-sm btn-success"
-                       onclick="return confirm('Bạn chắc chắn muốn KHÔI PHỤC User: @item.FullName không?');">Khôi phục</a>
-                    }
-                    <form asp-action="Delete" asp-route-id="@item.UserId" method="post" style="display:inline;" onsubmit="return confirm('Bạn chắc chắn muốn xóa User: @item.FullName không?');">
-                        <button type="submit" class="btn btn-sm btn-danger">Xóa Vĩnh Viễn</button>
-                    </form>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+                            <table id="example1" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Username)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.FullName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Role)
+                                        </th>
+                                        <th>
+                                            Trạng thái
+                                        </th>
+                                        <th>
+                                            Thao tác
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Username)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Role)
+                                        </td>
+                                        @* Cột Trạng thái (Logic Lock/Restore) *@
+                                        <td>
+                                            @if (item.Active)
+                                            {
+                                            <span class="badge badge-success">Hoạt động</span>
+                                            }
+                                            else
+                                            {
+                                            <span class="badge badge-danger">Đã khóa</span>
+                                            }
+                                        </td>
+                                        @* Cột Thao tác (Logic Lock/Restore) *@
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-warning" data-toggle="tooltip"> <i class="fas fa-edit"></i> </a>
+                                            <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-primary" data-toggle="tooltip"> <i class="fas fa-eye"></i> </a>
+
+                                            @if (item.Active)
+                                            {
+                                            @* Nút Khóa *@
+                                            <a asp-action="Lock" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-danger" data-toggle="tooltip"
+                                               onclick="return confirm('Bạn chắc chắn muốn KHÓA User: @item.FullName không?');"> <i class="fa-solid fa-lock"> </i></a>
+                                            }
+                                            else
+                                            {
+                                            @* Nút Khôi phục *@
+                                            <a asp-action="Restore" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-success" data-toggle="tooltip"
+                                               onclick="return confirm('Bạn chắc chắn muốn KHÔI PHỤC User: @item.FullName không?');"> <i class="fa-solid fa-rotate-left"> </i></a>
+                                            }
+                                            @* Nút Xóa Vĩnh Viễn (Form Post) *@
+                                            <form asp-action="Delete" asp-route-id="@item.UserId" method="post" style="display:inline; margin-left: 5px;" onsubmit="return confirm('Bạn chắc chắn muốn xóa VĨNH VIỄN User: @item.FullName không?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-dark" data-toggle="tooltip"> <i class="fas fa-trash-alt"> </i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    @* ========================================================= *@
+    @* PHẦN 2: JavaScript Links và Khởi tạo DataTables *@
+    @* ========================================================= *@
+    @section jslinks {
+        <script src="~/js/jquery-3.7.1.min.js"></script>
+        <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+        <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+        <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+        <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+        <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+        <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+        <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+        <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+        <script>
+            // Khởi tạo DataTable (ID: example1)
+            $(function () {
+
+                $("#example1").DataTable({
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            });
+        </script>
+    }
