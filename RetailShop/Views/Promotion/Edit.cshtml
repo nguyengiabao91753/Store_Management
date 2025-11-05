@@ -68,7 +68,8 @@
                                    class="form-control"
                                    name="startdate"
                                    asp-for="StartDate"
-                                   readonly />
+                                   readonly 
+                                   disabled/>
                         </div>
 
                         <div class="form-group">
@@ -86,9 +87,9 @@
                             <input type="number" class="form-control" name="usagelimit" asp-for="UsageLimit">
                         </div>
 
-                        <div class="form-group" hidden>
+                        <div class="form-group">
                             <label>Used Count</label>
-                            <input type="number" class="form-control" name="usedcount" asp-for="UsedCount">
+                            <input type="number" class="form-control" name="usedcount" asp-for="UsedCount" >
                         </div>
 
                         <div class="form-group">
@@ -149,9 +150,9 @@
                             <input type="number" class="form-control" name="usagelimit" asp-for="UsageLimit">
                         </div>
 
-                        <div class="form-group" hidden>
+                        <div class="form-group">
                             <label>Used Count</label>
-                            <input type="number" class="form-control" name="usedcount" asp-for="UsedCount">
+                            <input type="number" class="form-control" name="usedcount" asp-for="UsedCount" >
                         </div>
 
                         <div class="form-group">

@@ -154,5 +154,43 @@ namespace RetailShop.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        // -------------------------------------------------------------------
+        // 8. ACTION: Khóa người dùng (LOCK - GET ID)
+        // -------------------------------------------------------------------
+        [HttpGet("lock/{id}")]
+        public async Task<IActionResult> Lock(int id)
+        {
+            var result = await _userService.LockUserAsync(id);
+
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = result.Message ?? "Khóa User thành công!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Message ?? "Khóa User thất bại!";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // -------------------------------------------------------------------
+        // 9. ACTION: Khôi phục người dùng (RESTORE - GET ID)
+        // -------------------------------------------------------------------
+        [HttpGet("restore/{id}")]
+        public async Task<IActionResult> Restore(int id)
+        {
+            var result = await _userService.RestoreUserAsync(id);
+
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = result.Message ?? "Khôi phục User thành công!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Message ?? "Khôi phục User thất bại!";
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

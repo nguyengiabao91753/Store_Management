@@ -1,120 +1,165 @@
-﻿@{
+﻿@using RetailShop.Client.Extension
+@{
     ViewData["Title"] = "Checkout";
+    var adminurl = SD.AdminUrl;
 }
+@model RetailShop.Client.Dtos.OrderPlaceDto
+
 @section csslinks {
     <link rel="stylesheet" href="~/css/Checkout.css" asp-append-version="true" />
 }
 
-<div class="checkout-wrapper container my-5">
-    <div class="row g-4">
-        <!-- LEFT: ORDER DETAILS -->
-        <div class="col-lg-8">
-            <div class="card checkout-card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h5 class="fw-bold mb-1">Order details</h5>
-                        <p class="text-muted small mb-0">
-                            Customer: <strong>Anup Kumar</strong> · Table #005 · Dine In
-                        </p>
+<form id="checkoutForm" asp-action="PlaceOrder" asp-controller="Order" method="post">
+    <div class="checkout-wrapper container my-5">
+        <div class="row g-4">
+            <!-- LEFT: ORDER DETAILS -->
+            <div class="col-lg-8">
+                <div class="card checkout-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="fw-bold mb-1">Order details</h5>
+                        </div>
+                        <span id="discountBadge" class="badge bg-light text-primary px-3 py-2 d-none"></span>
                     </div>
-                    <span class="badge bg-light text-primary px-3 py-2">15% Discount offer</span>
-                </div>
 
-                <div id="order-list" class="order-list mb-4"></div>
+                    <div id="order-list" class="order-list mb-4">
+                        @for (int i = 0; i < Model.Products.Count; i++)
+                        {
+                            var p = Model.Products[i];
+                            <div class="d-flex align-items-center justify-content-between border-bottom py-2">
+                                <div class="d-flex align-items-center">
+                                    <img src="@adminurl@p.ProductImage" alt="@p.ProductName" class="rounded me-3" width="56" height="56"> <div>
+                                        <div class="fw-semibold">@p.ProductName</div>
+                                        <div class="small text-muted"></div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="small text-muted">@p.Quantity</div>
+                                    <div class="fw-semibold each-price-product"> @((p.Price * p.Quantity).ToString("C")) </div>
+                                </div>
+                            </div>
 
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card p-3 border-0 shadow-sm h-100">
-                            <h6 class="fw-bold">Discount coupon</h6>
-                            <p class="text-muted small mb-2">Apply coupon for special discount.</p>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter coupon code" />
-                                <button class="btn btn-primary">Apply</button>
+                            <input type="hidden" name="Products[@i].ProductId" value="@p.ProductId" />
+                            <input type="hidden" name="Products[@i].Quantity" value="@p.Quantity" />
+                            <input type="hidden" name="Products[@i].Price" value="@p.Price" />
+                        }
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card p-3 border-0 shadow-sm h-100">
+                                <h6 class="fw-bold">Discount coupon</h6>
+                                <p class="text-muted small mb-2">Apply coupon for special discount.</p>
+                                <div class="input-group">
+                                    <input type="text" id="promoCode" class="form-control" placeholder="Enter coupon code" />
+                                    <button type="button" id="btnApplyPromo" class="btn btn-primary">Apply</button>
+                                </div>
+                                <small id="promoMessage" class="text-success mt-1 d-block"></small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card p-3 border-0 shadow-sm h-100">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Subtotal</span><span id="subtotal">$0.00</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>VAT (8%)</span><span id="vat">$0.00</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Special discount</span><span id="discount">$0.00</span>
+                                </div>
+                                <hr />
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Total</span>
+                                    <span id="total" class="fw-bold fs-5 text-dark">$0.00</span>
+                                </div>
+
+                                <input type="hidden" id="TotalAmount" name="TotalAmount" />
+                                <input type="hidden" id="DiscountAmount" name="DiscountAmount" />
+                                <input type="hidden" id="PromoId" name="PromoId" />
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="card p-3 border-0 shadow-sm h-100">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>Subtotal</span><span id="subtotal">$0.00</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>Service charges</span><span>$4.88</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>Restaurant tax</span><span>$12.67</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>Special discount</span><span>-$23.43</span>
-                            </div>
-                            <hr />
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-bold">Total</span>
-                                <span id="total" class="fw-bold fs-5 text-dark">$35.04</span>
-                            </div>
+                <div class="card mt-4 p-4">
+                    <h5 class="fw-bold mb-3">Customer Information</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Customer Name</label>
+                            <input type="text" name="CustomerName" class="form-control" placeholder="Enter customer name" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="CustomerPhone" class="form-control" placeholder="Enter phone number" required />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- RIGHT: PAYMENT MODE -->
-        <div class="col-lg-4">
-            <div class="card checkout-card p-4">
-                <h5 class="fw-bold mb-2">Select payment mode</h5>
-                <p class="text-muted small mb-4">Select a payment method to complete your order.</p>
+            <!-- RIGHT: PAYMENT MODE -->
+            <div class="col-lg-4">
+                <div class="card checkout-card p-4">
+                    <h5 class="fw-bold mb-2">Select payment mode</h5>
+                    <p class="text-muted small mb-4">Select a payment method to complete your order.</p>
 
-                <div class="payment-options d-flex flex-column gap-3 mb-4">
-                    <div class="payment-option active">
-                        <div class="d-flex align-items-center">
-                            <div class="icon me-3 bg-light"><i class="fa-solid fa-credit-card text-primary"></i></div>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Pay using card</h6>
-                                <p class="small text-muted mb-0">Complete payment with credit/debit card.</p>
+                    <div class="payment-options d-flex flex-column gap-3 mb-4">
+                        <label class="payment-option active">
+                            <input type="radio" name="PaymentMethod" value="card" checked hidden />
+                            <div class="d-flex align-items-center">
+                                <div class="icon me-3 bg-light"><i class="fa-solid fa-credit-card text-primary"></i></div>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">Pay using card</h6>
+                                    <p class="small text-muted mb-0">Complete payment with credit/debit card.</p>
+                                </div>
                             </div>
-                        </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="PaymentMethod" value="cash" hidden />
+                            <div class="d-flex align-items-center">
+                                <div class="icon me-3 bg-light"><i class="fa-solid fa-money-bill-wave text-primary"></i></div>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">Pay in cash</h6>
+                                    <p class="small text-muted mb-0">Collect cash from customer directly.</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="PaymentMethod" value="bank_transfer" hidden />
+                            <div class="d-flex align-items-center">
+                                <div class="icon me-3 bg-light"><i class="fa-solid fa-building-columns text-primary"></i></div>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">Bank Transfer</h6>
+                                    <p class="small text-muted mb-0">Pay using bank transfer.</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="PaymentMethod" value="e-wallet" hidden />
+                            <div class="d-flex align-items-center">
+                                <div class="icon me-3 bg-light"><i class="fa-solid fa-qrcode text-primary"></i></div>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">E-wallet / QR</h6>
+                                    <p class="small text-muted mb-0">Scan QR code for instant payment.</p>
+                                </div>
+                            </div>
+                        </label>
                     </div>
 
-                    <div class="payment-option">
-                        <div class="d-flex align-items-center">
-                            <div class="icon me-3 bg-light"><i class="fa-solid fa-money-bill-wave text-primary"></i></div>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Pay on cash</h6>
-                                <p class="small text-muted mb-0">Collect cash from customer directly.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="payment-option">
-                        <div class="d-flex align-items-center">
-                            <div class="icon me-3 bg-light"><i class="fa-solid fa-qrcode text-primary"></i></div>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Pay using UPI / QR</h6>
-                                <p class="small text-muted mb-0">Scan QR code for instant payment.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 fs-5" id="confirmPayment">
+                        Confirm payment
+                    </button>
                 </div>
-
-                <button class="btn btn-primary w-100 py-3 fs-5" id="confirmPayment">
-                    Confirm payment
-                </button>
             </div>
         </div>
     </div>
-
-    <!-- Confirm Cancel Transaction Modal -->
-    <div id="cancelConfirm" class="confirm-overlay d-none">
-        <div class="confirm-box">
-            <p>Do you want to cancel the current transaction?</p>
-            <div class="d-flex justify-content-between gap-2 mt-3 ConfirmButton">
-                <button id="confirmNo" class="btn btn-secondary btn-sm">No</button>
-                <button id="confirmYes" class="btn btn-danger btn-sm">Yes</button>
-            </div>
-        </div>
-    </div>
-</div>
+</form>
 
 @section Scripts {
     <script src="~/js/Checkout.js" asp-append-version="true"></script>

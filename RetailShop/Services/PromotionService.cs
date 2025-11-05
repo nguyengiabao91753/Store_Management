@@ -53,7 +53,7 @@ public class PromotionService : IPromotionService
                 rs.Message = "Promotion Code already exists.";
                 return rs;
             }
-            var isValidResult = await isValid(promotion);
+            var isValidResult = IsValid(promotion);
             if (!isValidResult.IsSuccess)
             {
                 return new ResultService<Promotion>
@@ -93,24 +93,24 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
-    public async Task<ResultService<Boolean>> isValid(Promotion promotion)
+    public ResultService<bool> IsValid(Promotion promotion)
     {
         var rs = new ResultService<Boolean>();
         try
         {
             // ======= VALIDATION SECTION =======
             var today = DateOnly.FromDateTime(DateTime.Today);
-            if (promotion.StartDate < today)
+            if (promotion.StartDate != default && promotion.StartDate < today)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Start date cannot be before today.";
                 rs.Data = false;
                 return rs;
             }
-            if (promotion.EndDate < promotion.StartDate)
+            if (promotion.EndDate < promotion.StartDate || promotion.EndDate < today)
             {
                 rs.IsSuccess = false;
-                rs.Message = "End date must be after start date.";
+                rs.Message = "End date must be after start date or a date in the future.";
                 rs.Data = false;
                 return rs;
             }
@@ -118,6 +118,13 @@ public class PromotionService : IPromotionService
             {
                 rs.IsSuccess = false;
                 rs.Message = "Discount value must be greater than 0.";
+                rs.Data = false;
+                return rs;
+            }
+            if (promotion.UsageLimit <= 0)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Limit must be more than 0.";
                 rs.Data = false;
                 return rs;
             }
@@ -159,7 +166,15 @@ public class PromotionService : IPromotionService
                 rs.Message = "Promotion not found.";
                 return rs;
             }
-            var isValidResult = await isValid(promotion);
+            if(promotion.UsedCount > promotion.UsageLimit)
+            {
+                return new ResultService<Promotion>
+                {
+                    IsSuccess = false,
+                    Message = "Usage limit cannot be less than Used count"
+                };
+            }
+            var isValidResult = IsValid(promotion);
             if (!isValidResult.IsSuccess)
             {
                 return new ResultService<Promotion>
@@ -174,10 +189,12 @@ public class PromotionService : IPromotionService
             existingPromotion.Description = promotion.Description;
             existingPromotion.DiscountType = promotion.DiscountType;
             existingPromotion.DiscountValue = promotion.DiscountValue;
-            existingPromotion.StartDate = promotion.StartDate;
+            if (promotion.StartDate != default)
+                existingPromotion.StartDate = promotion.StartDate;
             existingPromotion.EndDate = promotion.EndDate;
             existingPromotion.MinOrderAmount = promotion.MinOrderAmount;
             existingPromotion.UsageLimit = promotion.UsageLimit;
+            existingPromotion.UsedCount = promotion.UsedCount;
             existingPromotion.Status = promotion.Status;
 
             _db.Promotions.Update(existingPromotion);
@@ -202,7 +219,6 @@ public class PromotionService : IPromotionService
         var rs = new ResultService<Promotion>();
         try
         {
-            
             var promotion = await _db.Promotions.FindAsync(id);
             if (promotion == null)
             {

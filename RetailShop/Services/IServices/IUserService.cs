@@ -10,4 +10,6 @@ using RetailShop.Dtos;
         Task<ResultService<User>> CreateUserAsync(User user);
         Task<ResultService<User>> EditUserAsync(User user);
         Task<ResultService<User>> DeleteUserAsync(int id);
+        Task<ResultService<User>> LockUserAsync(int id);
+        Task<ResultService<User>> RestoreUserAsync(int id);
 }

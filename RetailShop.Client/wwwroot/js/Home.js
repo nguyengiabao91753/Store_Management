@@ -84,14 +84,22 @@
             cartList.innerHTML = `<div class="text-muted">No item selected</div>`;
         } else {
             cartList.innerHTML = cart.map(p => `
-                <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="${p.image}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">
                     <div>
                         <strong>${p.name}</strong><br/>
-                        <small>${p.qty} × $${p.price.toFixed(2)}</small>
+                        <small>$${p.price.toFixed(2)}</small>
                     </div>
-                    <div class="fw-bold">$${(p.qty * p.price).toFixed(2)}</div>
                 </div>
-            `).join('');
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary qty-minus" data-id="${p.id}">−</button>
+                    <span>${p.qty}</span>
+                    <button class="btn btn-sm btn-outline-secondary qty-plus" data-id="${p.id}">+</button>
+                    <div class="fw-bold ms-2">$${(p.qty * p.price).toFixed(2)}</div>
+                </div>
+            </div>
+        `).join('');
         }
 
         const subtotal = cart.reduce((sum, p) => sum + p.qty * p.price, 0);
@@ -101,6 +109,8 @@
         subtotalElem.textContent = `$${subtotal.toFixed(2)}`;
         taxElem.textContent = `$${tax.toFixed(2)}`;
         totalElem.textContent = `$${total.toFixed(2)}`;
+
+        wireQuantityButtons(); // thêm dòng này
     }
 
     document.getElementById('clearCartBtn').addEventListener('click', () => {
@@ -109,4 +119,78 @@
     });
 
     wireAddToCartButtons();
+
+
+    function wireQuantityButtons() {
+        document.querySelectorAll('.qty-plus').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const item = cart.find(p => p.id === id);
+                if (item) item.qty++;
+                renderCart();
+            });
+        });
+
+        document.querySelectorAll('.qty-minus').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const item = cart.find(p => p.id === id);
+                if (item) {
+                    item.qty--;
+                    if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+                }
+                renderCart();
+            });
+        });
+    }
+
+
+
+    document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        const products = cart.map(item => ({
+            productId: item.id,
+            productName: item.name,
+            productImage: item.image,
+            barcode: item.barcode,
+            price: item.price,
+            unit: item.unit,
+            quantity: item.qty
+        }));
+
+        const data = JSON.stringify(products);
+        const encoded = toBase64Unicode(data);
+        window.location.href = `/Checkout?data=${encoded}`;
+
+       //fetch('/Checkout', {
+       //     method: 'POST',
+       //     headers: {
+       //         'Content-Type': 'application/json'
+       //     },
+       //     body: JSON.stringify(products)
+       //}).then(() => window.location.href = '/Checkout');           ;
+
+        //if (response.ok) {
+        //    const html = await response.text();
+        //    document.open();
+        //    document.write(html);
+        //    document.close();
+        //} else {
+        //    alert("Failed to open checkout page!");
+        //}
+    });
+
+    function toBase64Unicode(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    function fromBase64Unicode(str) {
+        return decodeURIComponent(escape(atob(str)));
+    }
+
+
 });

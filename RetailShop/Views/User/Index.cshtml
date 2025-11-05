@@ -33,6 +33,9 @@
                     @Html.DisplayNameFor(model => model.Role)
                 </th>
                 <th>
+                    Trạng thái
+                </th>
+                <th>
                     Thao tác
                 </th>
             </tr>
@@ -51,10 +54,34 @@
                     @Html.DisplayFor(modelItem => item.Role)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-warning">Sửa</a> |
-                    <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-info">Chi tiết</a> |
+                    @if (item.Active)
+                    {
+                    <span class="badge badge-success">Hoạt động</span>
+                    }
+                    else
+                    {
+                    <span class="badge badge-danger">Đã khóa</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-warning">Sửa</a> 
+                    <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-info">Chi tiết</a> 
+
+                    @if (item.Active)
+                    {
+                    @*Hiển thị nút Khóa khi User đang Hoạt động*@
+                    <a asp-action="Lock" asp-route-id="@item.UserId" class="btn btn-sm btn-danger"
+                       onclick="return confirm('Bạn chắc chắn muốn KHÓA User: @item.FullName không?');">Khóa</a>
+                    }
+                    else
+                    {
+                    @* Bắt buộc sử dụng thẻ <text> hoặc đảm bảo không có khoảng trắng/dòng trống nếu mã HTML phức tạp *@
+                    @* Ở đây, không cần <text> vì thẻ <a> là thẻ HTML duy nhất trong khối else *@
+                    <a asp-action="Restore" asp-route-id="@item.UserId" class="btn btn-sm btn-success"
+                       onclick="return confirm('Bạn chắc chắn muốn KHÔI PHỤC User: @item.FullName không?');">Khôi phục</a>
+                    }
                     <form asp-action="Delete" asp-route-id="@item.UserId" method="post" style="display:inline;" onsubmit="return confirm('Bạn chắc chắn muốn xóa User: @item.FullName không?');">
-                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Xóa Vĩnh Viễn</button>
                     </form>
                 </td>
             </tr>

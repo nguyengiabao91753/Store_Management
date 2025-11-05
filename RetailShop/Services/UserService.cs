@@ -210,5 +210,91 @@ namespace RetailShop.Services
             }
             return rs;
         }
+
+        // =========================================================
+        // 6. LOCK USER (Set Active = false)
+        // =========================================================
+        public async Task<ResultService<User>> LockUserAsync(int id)
+        {
+            var rs = new ResultService<User>();
+            try
+            {
+                var userToLock = await _db.Users.FindAsync(id);
+
+                if (userToLock == null)
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = $"Không tìm thấy User với ID = {id} cần khóa.";
+                    return rs;
+                }
+
+                if (!userToLock.Active)
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = $"User '{userToLock.FullName}' đã bị khóa.";
+                    return rs;
+                }
+
+                // Thực hiện Khóa (Active = false)
+                userToLock.Active = false;
+
+                // Cập nhật trạng thái
+                _db.Users.Update(userToLock);
+                await _db.SaveChangesAsync();
+
+                rs.IsSuccess = true;
+                rs.Message = $"User '{userToLock.FullName}' đã được khóa thành công.";
+                rs.Data = userToLock;
+            }
+            catch (Exception ex)
+            {
+                rs.IsSuccess = false;
+                rs.Message = $"Khóa User thất bại do lỗi hệ thống: {ex.Message}";
+            }
+            return rs;
+        }
+
+        // =========================================================
+        // 7. RESTORE USER (Set Active = true)
+        // =========================================================
+        public async Task<ResultService<User>> RestoreUserAsync(int id)
+        {
+            var rs = new ResultService<User>();
+            try
+            {
+                var userToRestore = await _db.Users.FindAsync(id);
+
+                if (userToRestore == null)
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = $"Không tìm thấy User với ID = {id} cần khôi phục.";
+                    return rs;
+                }
+
+                if (userToRestore.Active)
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = $"User '{userToRestore.FullName}' đã được Khôi phục.";
+                    return rs;
+                }
+
+                // Thực hiện Khôi phục (Active = true)
+                userToRestore.Active = true;
+
+                // Cập nhật trạng thái
+                _db.Users.Update(userToRestore);
+                await _db.SaveChangesAsync();
+
+                rs.IsSuccess = true;
+                rs.Message = $"User '{userToRestore.FullName}' đã được khôi phục thành công.";
+                rs.Data = userToRestore;
+            }
+            catch (Exception ex)
+            {
+                rs.IsSuccess = false;
+                rs.Message = $"Khôi phục User thất bại do lỗi hệ thống: {ex.Message}";
+            }
+            return rs;
+        }
     }
 }
