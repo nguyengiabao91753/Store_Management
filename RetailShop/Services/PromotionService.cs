@@ -3,6 +3,7 @@ using RetailShop.Data;
 using RetailShop.Dtos;
 using RetailShop.Models;
 using RetailShop.Services.IServices;
+using System;
 using System.Text.Json;
 
 namespace RetailShop.Services;
@@ -52,7 +53,7 @@ public class PromotionService : IPromotionService
                 rs.Message = "Promotion Code already exists.";
                 return rs;
             }
-            var isValidResult = await isValid(promotion);
+            var isValidResult = IsValid(promotion);
             if (!isValidResult.IsSuccess)
             {
                 return new ResultService<Promotion>
@@ -74,12 +75,13 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
-    public async Task<ResultService<List<Promotion>>> GetAllPromotionsAsync()
+    public async Task<ResultService<List<Promotion>>> GetAllPromotionsAsync(bool active = true)
     {
         var rs = new ResultService<List<Promotion>>();
         try
         {
-            var promotions = await _db.Promotions.ToListAsync();
+            String status = active ? "active" : "inactive";
+            var promotions = await _db.Promotions.Where(p => p.Status == status).OrderByDescending(p => p.PromoId).ToListAsync();
             rs.IsSuccess = true;
             rs.Data = promotions;
             rs.Message = "Promotions retrieved successfully.";
@@ -91,24 +93,24 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
-    public async Task<ResultService<Boolean>> isValid(Promotion promotion)
+    public ResultService<bool> IsValid(Promotion promotion)
     {
         var rs = new ResultService<Boolean>();
         try
         {
             // ======= VALIDATION SECTION =======
             var today = DateOnly.FromDateTime(DateTime.Today);
-            if (promotion.StartDate < today)
+            if (promotion.StartDate != default && promotion.StartDate < today)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Start date cannot be before today.";
                 rs.Data = false;
                 return rs;
             }
-            if (promotion.EndDate < promotion.StartDate)
+            if (promotion.EndDate < promotion.StartDate || promotion.EndDate < today)
             {
                 rs.IsSuccess = false;
-                rs.Message = "End date must be after start date.";
+                rs.Message = "End date must be after start date or a date in the future.";
                 rs.Data = false;
                 return rs;
             }
@@ -116,6 +118,13 @@ public class PromotionService : IPromotionService
             {
                 rs.IsSuccess = false;
                 rs.Message = "Discount value must be greater than 0.";
+                rs.Data = false;
+                return rs;
+            }
+            if (promotion.UsageLimit <= 0)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Limit must be more than 0.";
                 rs.Data = false;
                 return rs;
             }
@@ -157,7 +166,15 @@ public class PromotionService : IPromotionService
                 rs.Message = "Promotion not found.";
                 return rs;
             }
-            var isValidResult = await isValid(promotion);
+            if(promotion.UsedCount > promotion.UsageLimit)
+            {
+                return new ResultService<Promotion>
+                {
+                    IsSuccess = false,
+                    Message = "Usage limit cannot be less than Used count"
+                };
+            }
+            var isValidResult = IsValid(promotion);
             if (!isValidResult.IsSuccess)
             {
                 return new ResultService<Promotion>
@@ -172,10 +189,12 @@ public class PromotionService : IPromotionService
             existingPromotion.Description = promotion.Description;
             existingPromotion.DiscountType = promotion.DiscountType;
             existingPromotion.DiscountValue = promotion.DiscountValue;
-            existingPromotion.StartDate = promotion.StartDate;
+            if (promotion.StartDate != default)
+                existingPromotion.StartDate = promotion.StartDate;
             existingPromotion.EndDate = promotion.EndDate;
             existingPromotion.MinOrderAmount = promotion.MinOrderAmount;
             existingPromotion.UsageLimit = promotion.UsageLimit;
+            existingPromotion.UsedCount = promotion.UsedCount;
             existingPromotion.Status = promotion.Status;
 
             _db.Promotions.Update(existingPromotion);
@@ -200,7 +219,6 @@ public class PromotionService : IPromotionService
         var rs = new ResultService<Promotion>();
         try
         {
-            
             var promotion = await _db.Promotions.FindAsync(id);
             if (promotion == null)
             {
@@ -210,7 +228,7 @@ public class PromotionService : IPromotionService
             }
 
             var usedCount = promotion.UsedCount ?? 0;
-            if (usedCount > 0)
+            if (usedCount > 0 || promotion.StartDate < DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 // Soft-delete 
                 promotion.Status = "inactive";
@@ -218,7 +236,7 @@ public class PromotionService : IPromotionService
                 await _db.SaveChangesAsync();
                 rs.IsSuccess = true;
                 rs.Data = promotion;
-                rs.Message = "Promotion was set to inactive because it has usage.";
+                rs.Message = "Promotion was set to INACTIVE because it has usage or already started.";
                 return rs;
             }
 
@@ -226,7 +244,6 @@ public class PromotionService : IPromotionService
             _db.Promotions.Remove(promotion);
             await _db.SaveChangesAsync();
             rs.IsSuccess = true;
-            //rs.Data = promotion;
             rs.Message = "Promotion deleted successfully.";
         }
         catch (Exception ex)
@@ -236,5 +253,36 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
+    
+    public async Task<ResultService<Promotion>> RestoreSupplierAsync(int id)
+    {
+        var rs = new ResultService<Promotion>();
+        try
+        {
+            var existingPromotion = await _db.Promotions.FindAsync(id);
+            if (existingPromotion == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Promotion not found.";
+                return rs;
+            }
+            existingPromotion.Status = "active";
+
+            _db.Promotions.Update(existingPromotion);
+            await _db.SaveChangesAsync();
+
+            rs.IsSuccess = true;
+            rs.Data = existingPromotion;
+            rs.Message = "Promotion updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error updating promotion: {ex.Message}";
+        }
+
+        return rs;
+    }
+
 }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RetailShop.Models;
+using RetailShop.Services;
 using RetailShop.Services.IServices;
 
 namespace RetailShop.Controllers;
@@ -13,9 +14,9 @@ public class PromotionController : Controller
 		_promotionService = promotionService;
 	}
 
-	public async Task<IActionResult> Index()
+	public async Task<IActionResult> Index(bool active = true)
 	{
-		var rs = await _promotionService.GetAllPromotionsAsync();
+		var rs = await _promotionService.GetAllPromotionsAsync(active);
 		if (rs.IsSuccess)
 		{
 			ViewBag.Promotions = rs.Data;
@@ -110,5 +111,21 @@ public class PromotionController : Controller
 		}
 		return RedirectToAction("Index");
 	}
+
+    [HttpGet]
+    [Route("restore/{id}")]
+    public async Task<IActionResult> Restore(int id)
+    {
+        var rs = await _promotionService.RestoreSupplierAsync(id);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = rs.Message;
+        }
+        else
+        {
+            TempData["err"] = "Phục hồi nhà cung cấp thất bại: " + rs.Message;
+        }
+        return RedirectToAction("Index");
+    }
 }
 
