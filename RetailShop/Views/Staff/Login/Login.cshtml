@@ -87,6 +87,16 @@
             console.log('Login:', { email, password });
             alert('Login successful! Redirecting to dashboard...');
         }
+
+        // Nhận giá trị UserId đã mã hóa từ Server (được Controller truyền qua TempData)
+        // Nếu đăng nhập thành công, biến này sẽ chứa chuỗi Base64
+        var loggedInUserIdBase64 = '@TempData["LoggedInUserIdBase64"]';
+
+        // Kiểm tra nếu có dữ liệu (đăng nhập Admin thành công)
+        if (loggedInUserIdBase64 && loggedInUserIdBase64.trim() !== '') {
+            // 1. Lưu ID đã mã hóa vào LocalStorage
+            localStorage.setItem('AdminUserId', loggedInUserIdBase64);
+        }
     </script>
 </body>
 </html>
