@@ -3,6 +3,7 @@ using RetailShop.Data;
 using RetailShop.Dtos;
 using RetailShop.Models;
 using RetailShop.Services.IServices;
+using System;
 using System.Text.Json;
 
 namespace RetailShop.Services;
@@ -74,12 +75,13 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
-    public async Task<ResultService<List<Promotion>>> GetAllPromotionsAsync()
+    public async Task<ResultService<List<Promotion>>> GetAllPromotionsAsync(bool active = true)
     {
         var rs = new ResultService<List<Promotion>>();
         try
         {
-            var promotions = await _db.Promotions.ToListAsync();
+            String status = active ? "active" : "inactive";
+            var promotions = await _db.Promotions.Where(p => p.Status == status).OrderByDescending(p => p.PromoId).ToListAsync();
             rs.IsSuccess = true;
             rs.Data = promotions;
             rs.Message = "Promotions retrieved successfully.";
@@ -210,7 +212,7 @@ public class PromotionService : IPromotionService
             }
 
             var usedCount = promotion.UsedCount ?? 0;
-            if (usedCount > 0)
+            if (usedCount > 0 || promotion.StartDate < DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 // Soft-delete 
                 promotion.Status = "inactive";
@@ -218,7 +220,7 @@ public class PromotionService : IPromotionService
                 await _db.SaveChangesAsync();
                 rs.IsSuccess = true;
                 rs.Data = promotion;
-                rs.Message = "Promotion was set to inactive because it has usage.";
+                rs.Message = "Promotion was set to INACTIVE because it has usage or already started.";
                 return rs;
             }
 
@@ -226,7 +228,6 @@ public class PromotionService : IPromotionService
             _db.Promotions.Remove(promotion);
             await _db.SaveChangesAsync();
             rs.IsSuccess = true;
-            //rs.Data = promotion;
             rs.Message = "Promotion deleted successfully.";
         }
         catch (Exception ex)
@@ -236,5 +237,36 @@ public class PromotionService : IPromotionService
         }
         return rs;
     }
+    
+    public async Task<ResultService<Promotion>> RestoreSupplierAsync(int id)
+    {
+        var rs = new ResultService<Promotion>();
+        try
+        {
+            var existingPromotion = await _db.Promotions.FindAsync(id);
+            if (existingPromotion == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Promotion not found.";
+                return rs;
+            }
+            existingPromotion.Status = "active";
+
+            _db.Promotions.Update(existingPromotion);
+            await _db.SaveChangesAsync();
+
+            rs.IsSuccess = true;
+            rs.Data = existingPromotion;
+            rs.Message = "Promotion updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error updating promotion: {ex.Message}";
+        }
+
+        return rs;
+    }
+
 }
 

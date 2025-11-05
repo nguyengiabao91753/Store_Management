@@ -36,68 +36,139 @@
                     <div class="form-group" hidden>
                         <input type="text" class="form-control" name="promoId" asp-for="PromoId" required>
                     </div>
-                    <div class="form-group">
-                        <label>Promo Code</label>
-                        <input type="text" class="form-control" name="promocode" asp-for="PromoCode" required>
-                    </div>
+                    
+                    @if (Model.StartDate < DateOnly.FromDateTime(DateTime.Today))
+                    {
+                        <div class="form-group">
+                            <label>Promo Code</label>
+                            <input type="text" class="form-control" name="promocode" asp-for="PromoCode" readonly>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" class="form-control" name="description" asp-for="Description">
-                    </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control" name="description" asp-for="Description" readonly>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Discount Type</label>
-                        <select class="form-control" name="discounttype" asp-for="DiscountType" required>
-                            <option value="percent">%</option>
-                            <option value="fixed">VND</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label>Discount Type</label>
+                            <select class="form-control" name="discounttype" asp-for="DiscountType" readonly>
+                                <option value="percent">%</option>
+                                <option value="fixed">VND</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Discount Value</label>
-                        <input type="number" step="0.01" class="form-control" name="discountvalue" asp-for="DiscountValue" required>
-                    </div>
+                        <div class="form-group">
+                            <label>Discount Value</label>
+                            <input type="number" step="0.01" class="form-control" name="discountvalue" asp-for="DiscountValue" readonly>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Start Date</label>
-                        <input type="date" class="form-control" name="startdate" asp-for="StartDate" required>
-                    </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date"
+                                   class="form-control"
+                                   name="startdate"
+                                   asp-for="StartDate"
+                                   readonly />
+                        </div>
 
-                    <div class="form-group">
-                        <label>End Date</label>
-                        <input type="date" class="form-control" name="enddate" asp-for="EndDate" required>
-                    </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" class="form-control" name="enddate" asp-for="EndDate" required>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Minimum Order Amount</label>
-                        <input type="number" step="0.01" class="form-control" name="minorderamount" asp-for="MinOrderAmount">
-                    </div>
+                        <div class="form-group">
+                            <label>Minimum Order Amount</label>
+                            <input type="number" step="0.01" class="form-control" name="minorderamount" asp-for="MinOrderAmount" readonly>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Usage Limit</label>
-                        <input type="number" class="form-control" name="usagelimit" asp-for="UsageLimit">
-                    </div>
+                        <div class="form-group">
+                            <label>Usage Limit</label>
+                            <input type="number" class="form-control" name="usagelimit" asp-for="UsageLimit">
+                        </div>
 
-                    <div class="form-group" hidden>
-                        <label>Used Count</label>
-                        <input type="number" class="form-control" name="usedcount" asp-for="UsedCount">
-                    </div>
+                        <div class="form-group" hidden>
+                            <label>Used Count</label>
+                            <input type="number" class="form-control" name="usedcount" asp-for="UsedCount">
+                        </div>
 
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select class="form-control" name="status" asp-for="Status" required>
-                            <option value="active">active</option>
-                            <option value="inactive">inactive</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status" asp-for="Status" >
+                                <option value="active">active</option>
+                                <option value="inactive">inactive</option>
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>Promo Code</label>
+                            <input type="text" class="form-control" name="promocode" asp-for="PromoCode">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control" name="description" asp-for="Description">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discount Type</label>
+                            <select class="form-control" name="discounttype" asp-for="DiscountType">
+                                <option value="percent">%</option>
+                                <option value="fixed">VND</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discount Value</label>
+                            <input type="number" step="0.01" class="form-control" name="discountvalue" asp-for="DiscountValue">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date"
+                                   class="form-control"
+                                   name="startdate"
+                                   asp-for="StartDate"
+                                   required />
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" class="form-control" name="enddate" asp-for="EndDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Minimum Order Amount</label>
+                                <input type="number" step="0.01" class="form-control" name="minorderamount" asp-for="MinOrderAmount">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Usage Limit</label>
+                            <input type="number" class="form-control" name="usagelimit" asp-for="UsageLimit">
+                        </div>
+
+                        <div class="form-group" hidden>
+                            <label>Used Count</label>
+                            <input type="number" class="form-control" name="usedcount" asp-for="UsedCount">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status" asp-for="Status">
+                                <option value="active">active</option>
+                                <option value="inactive">inactive</option>
+                            </select>
+                        </div>
+
+                    }
 
                 </div>
 
             </div>
 
         </div>
-
 
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">Update</button>

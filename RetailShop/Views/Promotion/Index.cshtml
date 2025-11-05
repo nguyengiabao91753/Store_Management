@@ -72,9 +72,24 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
+
                     <div class="card-header">
                         <a class="btn btn-outline-primary" asp-controller="Promotion" asp-action="create">+ Add Promotion</a>
+                        <div class="dropdown float-right">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Filter
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" asp-controller="promotion" asp-action="index" asp-route-active="true">
+                                    <i class="fas fa-check"></i> Show Active
+                                </a>
+                                <a class="dropdown-item" asp-controller="promotion" asp-action="index" asp-route-active="false">
+                                    <i class="fas fa-trash-alt"></i> Show Deleted
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-hover">
@@ -113,10 +128,13 @@
                                         <td>@p.Status</td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
-                                                <a asp-controller="promotion" asp-action="detail" asp-route-id="@p.PromoId"
+@*                                                 <a asp-controller="promotion" asp-action="detail" asp-route-id="@p.PromoId"
                                                    class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
                                                     <i class="fas fa-eye"></i>
-                                                </a>
+                                                </a> *@
+
+                                                @if(p.Status == "active")
+                                                {
 
                                                 <a asp-controller="promotion" asp-action="edit" asp-route-id="@p.PromoId"
                                                    class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Promotion">
@@ -128,6 +146,15 @@
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>
+                                                }
+
+                                                @if(p.Status == "inactive")
+                                                {
+                                                    <a asp-controller="promotion" asp-action="restore" asp-route-id="@p.PromoId"
+                                                       class="btn btn-sm btn-outline-success" onclick="return confirmRestore()" data-toggle="tooltip" title="Restore Promotion">
+                                                        <i class="fas fa-trash-restore"></i>
+                                                    </a>
+                                                }
                                             </div>
                                         </td>
                                     </tr>
