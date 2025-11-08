@@ -1,0 +1,98 @@
+﻿@model IEnumerable<RetailShop.Client.Models.Product>
+@using RetailShop.Client.Models
+@{
+    ViewData["Title"] = "Home";
+    var categories = ViewBag.Categories as List<Category> ?? new();
+    int? activeCat = ViewBag.ActiveCategoryId as int?;
+    string query = ViewBag.Query as string ?? "";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
+}
+
+<div class="container-fluid px-4 mt-3">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="d-flex gap-3 mb-3 overflow-auto pb-2" id="categoryBar">
+                <button class="category-pill px-3 py-2 text-center btn btn-light border-0 @(activeCat is null ? "active" : "")"
+                        data-category="">
+                    <div class="spacer"></div>
+                    <div class="fw-bold">All Menu</div>
+                    <small class="text-muted"></small>
+                </button>
+
+                @foreach (var c in categories)
+                {
+                    <button class="category-pill px-3 py-2 text-center btn btn-light border-0 @(activeCat == c.CategoryId ? "active" : "")"
+                            data-category="@c.CategoryId">
+                        <div class="spacer"></div>
+                        <div>@c.CategoryName</div>
+                        <small class="text-muted"></small>
+                    </button>
+                }
+            </div>
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <input id="searchInput" type="search" class="form-control"
+                           value="@query"
+                           placeholder="Search something sweet on your mind..." />
+                    <button class="btn btn-outline-secondary" id="searchBtn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="productsGrid" class="row g-3">
+                @await Html.PartialAsync("_ProductCards", Model)
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="cart-panel p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <strong>Eloise's Order</strong><br />
+                        <small class="text-muted">Order #005</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="clearCartBtn">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+
+                   
+                <div id="cartList" class="cartList">
+                    <div class="text-muted">No item selected</div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between">
+                        <div>Subtotal</div>
+                        <div id="subtotal">$0.00</div>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted">
+                        <div>Tax 10%</div>
+                        <div id="tax">$0.00</div>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <div>TOTAL</div>
+                        <div id="total">$0.00</div>
+                    </div>
+                    <div class="mt-3 d-flex gap-2">
+                        <button class="btn btn-outline-secondary flex-grow-1">Promo</button>
+                        <button class="btn btn-outline-primary">Payment</button>
+                    </div>
+                    <button id="placeOrderBtn" class="btn btn-primary w-100 mt-3">
+                        Place Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Home.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "RetailShop\\RetailShop.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "RetailShop.Client\\RetailShop.Client.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

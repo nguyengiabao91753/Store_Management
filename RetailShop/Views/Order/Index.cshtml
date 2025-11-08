@@ -1,0 +1,197 @@
+﻿@{
+    ViewData["order"] = "menu-open";
+    ViewData["order-list"] = "active";
+}
+
+@section csslinks {
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css ">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css ">
+
+}
+@section jslinks {
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script src="~/js/configTableData.js"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var selects = document.querySelectorAll("select.kichhoat-select");
+            selects.forEach(function (select) {
+                changeClass(select);
+            });
+        });
+        function changeClass(selectElement) {
+            var selectedOption = selectElement.value;
+            if (selectedOption === "true") {
+                selectElement.classList.remove("badge-danger");
+                selectElement.classList.add("badge-success");
+            } else if (selectedOption === "false") {
+                selectElement.classList.remove("badge-success");
+                selectElement.classList.add("badge-danger");
+            }
+            $("table").click();
+        }
+    </script>
+    <script>
+        $(function () {
+            function applyStatusFilter(status) {
+                var table = $('#example1').DataTable();
+                if (status === 'all') {
+                    table.column(5).search('').draw();
+                } else {
+                    table.column(5).search('^' + status + '$', true, false).draw();
+                }
+            }
+
+            $('#orderStatusTabs').on('click', 'a.nav-link', function (e) {
+                e.preventDefault();
+                $('#orderStatusTabs a.nav-link').removeClass('active');
+                $(this).addClass('active');
+                var status = $(this).data('status');
+                applyStatusFilter(status);
+            });
+        });
+    </script>
+}
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Order</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Order</a></li>
+                    <li class="breadcrumb-item active">List</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+@*                     <div class="card-header">
+                        <a class="btn btn-outline-primary" asp-controller="order" asp-action="create">+ Add Order</a>
+                    </div> *@
+                    <div class="card-header">
+                        <ul class="nav nav-tabs" id="orderStatusTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-status="all">All</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-status="pending">Pending</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-status="paid">Paid</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-status="canceled">Canceled</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer ID</th>
+                                    <th>User ID</th>
+                                    <th>Promo ID</th>
+                                    <th>Order Date</th>
+                                    <th>Status</th>
+                                    <th>Total Amount</th>
+                                    <th>Discount Amount</th>
+
+                                    <th width="170px">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var s in ViewBag.orders)
+                                {
+                                    <tr>
+                                        <td>@s.OrderId</td>
+                                        <td>@s.CustomerId</td>
+                                        <td>@s.UserId</td>
+                                        <td>@s.PromoId</td>
+                                        <td>@s.OrderDate</td>
+                                        <td>@s.Status</td>
+                                        <td>@s.TotalAmount</td>
+                                        <td>@s.DiscountAmount</td>
+
+
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a asp-controller="order" asp-action="detail" asp-route-id="@s.OrderId"
+                                                   class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="View Detail">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                @if (s.Status == "pending")
+                                                {
+                                                <a asp-controller="order" asp-action="edit" asp-route-id="@s.OrderId"
+                                                   class="btn btn-sm btn-outline-warning" data-toggle="tooltip" title="Edit Order">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                }
+@* 
+                                                <a asp-controller="supplier" asp-action="delete" asp-route-id="@s.OrderId"
+                                                   class="btn btn-sm btn-outline-danger" onclick="return confirmDelete()" data-toggle="tooltip" title="Delete Order">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a> *@
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+
+                                    <th>Order ID</th>
+                                    <th>Customer ID</th>
+                                    <th>User ID</th>
+                                    <th>Promo ID</th>
+                                    <th>Order Date</th>
+                                    <th>Status</th>
+                                    <th>Total Amount</th>
+                                    <th>Discount Amount</th>
+
+                                    <th width="170px">Hành động</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>

@@ -30,6 +30,8 @@ public partial class User
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
+    public bool Active { get; set; } = true;
+
     [InverseProperty("User")]
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
