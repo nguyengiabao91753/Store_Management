@@ -90,7 +90,7 @@ public class ProductService : IProductService
                 .Include(s => s.Supplier)
                 .Include(p => p.Inventories)
             .FirstOrDefaultAsync(s => s.ProductId == id);
-            if (product == null || product.Active == false)
+            if (product == null)
             {
                 rs.IsSuccess = false;
                 rs.Message = "Product not found.";
