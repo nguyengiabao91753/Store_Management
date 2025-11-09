@@ -19,9 +19,9 @@ public class ProductController : Controller
         _categoryService = categoryService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(bool active = true)
     {
-        var rs = await _productService.GetAllProductsAsync();
+        var rs = await _productService.GetAllProductsAsync(active);
         if (rs.IsSuccess)
         {
             ViewBag.Products = rs.Data;
@@ -199,6 +199,21 @@ public class ProductController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpGet]
+    [Route("restore/{id}")]
+    public async Task<IActionResult> Restore(int id)
+    {
+        var rs = await _productService.RestoreProductAsync(id);
+        if (rs.IsSuccess)
+        {
+            TempData["success"] = rs.Message;
+        }
+        else
+        {
+            TempData["err"] = "Phục hồi thất bại";
+        }
+        return RedirectToAction("Index");
+    }
 
     [HttpGet]
     [Route("detail/{id}")]

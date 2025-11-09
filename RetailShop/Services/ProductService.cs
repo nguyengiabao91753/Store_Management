@@ -55,7 +55,7 @@ public class ProductService : IProductService
         }
         return rs;
     }
-    public async Task<ResultService<List<Product>>> GetAllProductsAsync()
+    public async Task<ResultService<List<Product>>> GetAllProductsAsync(bool active = true)
     {
         var rs = new ResultService<List<Product>>();
         try
@@ -64,7 +64,7 @@ public class ProductService : IProductService
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
                 .Include(p => p.Inventories)
-                .Where(p => p.Active)
+                .Where(p => p.Active == active)
                 .AsNoTracking()
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
@@ -195,6 +195,33 @@ public class ProductService : IProductService
             var inner = ex.InnerException?.Message ?? "";
             rs.IsSuccess = false;
             rs.Message = $"Error deleting product: {ex.Message} | Inner: {inner}";
+        }
+        return rs;
+    }
+
+    public async Task<ResultService<bool>> RestoreProductAsync(int id)
+    {
+        var rs = new ResultService<bool>();
+        try
+        {
+            var product = await _db.Products.FindAsync(id);
+            if (product == null)
+            {
+                rs.IsSuccess = false;
+                rs.Message = "Product not found.";
+                rs.Data = false;
+                return rs;
+            }
+            product.Active = true;
+            await _db.SaveChangesAsync();
+            rs.IsSuccess = true;
+            rs.Data = true;
+            rs.Message = "Product deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            rs.IsSuccess = false;
+            rs.Message = $"Error deleting product: {ex.Message}";
         }
         return rs;
     }
