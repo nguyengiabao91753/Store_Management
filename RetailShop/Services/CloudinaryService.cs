@@ -2,6 +2,8 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
 using RetailShop.Services.IServices;
+using RetailShop.Dtos;
+using RetailShop.Models;
 
 namespace RetailShop.Services;
 public class CloudinaryService : ICloudinaryService

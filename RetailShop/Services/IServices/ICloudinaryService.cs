@@ -1,6 +1,7 @@
-﻿namespace RetailShop.Services.IServices;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+
+namespace RetailShop.Services.IServices;
 
 public interface ICloudinaryService
 {
