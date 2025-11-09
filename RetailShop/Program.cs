@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies; // <-- Cần cho Cookie Auth
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using RetailShop.Data;
+using RetailShop.Models;
 using RetailShop.Services;
 using RetailShop.Services.IServices;
 using System;
-using Microsoft.AspNetCore.Authentication.Cookies; // <-- Cần cho Cookie Auth
-using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     
 
 
+
+
 #region Add De[pendency Injection for Services
 builder.Services.AddScoped<IExample, Example>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
@@ -53,6 +56,11 @@ builder.Services.AddScoped<IUserService, UserService> ();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 #endregion
+
+// Cloudinary Configuration
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 
 var app = builder.Build();
