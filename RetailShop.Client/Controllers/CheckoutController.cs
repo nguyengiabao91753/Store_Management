@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RetailShop.Client.Dtos;
 using RetailShop.Client.Models;
@@ -7,6 +8,7 @@ using System.Text;
 
 namespace RetailShop.Client.Controllers
 {
+    [Authorize]
     [Route("Checkout")]
     public class CheckoutController : Controller
     {

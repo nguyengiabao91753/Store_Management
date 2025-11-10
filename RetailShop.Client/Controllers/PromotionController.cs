@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailShop.Client.Services.IServices;
 
 namespace RetailShop.Client.Controllers;
+
+[Authorize]
 public class PromotionController : Controller
 {
     private readonly IPromotionPOSService _promotionPOSService;
