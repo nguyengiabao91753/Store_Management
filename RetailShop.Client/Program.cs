@@ -30,6 +30,7 @@ builder.Services.AddScoped<ICustomerPOSService, CustomerPOSService>();
 builder.Services.AddScoped<IPaymentPOSService, PaymentPOSService>();
 builder.Services.AddScoped<IInventoryPOSService, InventoryPOSService>();
 builder.Services.AddScoped<IOrderPOSService, OrderPOSService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 
 
