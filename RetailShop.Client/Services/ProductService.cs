@@ -23,7 +23,7 @@ namespace RetailShop.Client.Services
 
         public Task<List<Product>> GetProductsAsync(int? categoryId, string? q)
         {
-            var query = _ctx.Products
+            var query = _ctx.Products.Where(p => p.Active == true)
                             .AsNoTracking();
 
             if (categoryId.HasValue && categoryId.Value > 0)

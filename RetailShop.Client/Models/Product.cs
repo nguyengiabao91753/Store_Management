@@ -44,7 +44,6 @@ public partial class Product
     [InverseProperty("Products")]
     public virtual Category? Category { get; set; }
 
-    [NotMapped]
     public bool Active { get; set; } = true;
 
     [InverseProperty("Product")]
