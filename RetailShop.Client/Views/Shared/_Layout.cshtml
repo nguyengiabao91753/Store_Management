@@ -8,6 +8,9 @@
     @RenderSection("csslinks", required: false)
 </head>
 <body class="hold-transition sidebar-mini">
+    <!-- ✅ Toast container -->
+    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;"></div>
+
     <div class="wrapper">
         @if (ViewData["Title"]?.ToString() != "Payment Status")
         {
@@ -21,6 +24,7 @@
 
     </div>
 
+
     @* JS chung *@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -29,5 +33,32 @@
 
     @* JS riêng từng trang *@
     @RenderSection("Scripts", required: false)
+    <script>
+            function showToast(message, type = "info") {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+
+            // ✅ Xác định màu theo loại
+            let bgClass = "bg-primary";
+            if (type === "error") bgClass = "bg-danger";
+            if (type === "success") bgClass = "bg-success";
+            if (type === "warning") bgClass = "bg-warning text-dark";
+
+            toast.className = `toast align-items-center text-white ${bgClass} border-0 show mb-2`;
+            toast.role = "alert";
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body fw-semibold">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+
+            container.appendChild(toast);
+
+            // Tự động ẩn sau 3 giây
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+    </script>
 </body>
 </html>

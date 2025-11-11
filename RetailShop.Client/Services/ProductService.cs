@@ -13,6 +13,33 @@ namespace RetailShop.Client.Services
             _ctx = ctx;
         }
 
+        public async Task<bool> CheckProductQuantityAsync(int productId, int quantity)
+        {
+            try
+            {
+                var product = await _ctx.Products
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync(p => p.ProductId == productId && p.Active == true);
+                if(product == null)
+                {
+                    return false;
+                }
+
+                var inventory = await _ctx.Inventories
+                                          .AsNoTracking()
+                                          .FirstOrDefaultAsync(i => i.ProductId == productId);
+                if (inventory == null || inventory.Quantity== 0 || inventory.Quantity < quantity)
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public Task<List<Category>> GetCategoriesAsync()
         {
             return _ctx.Categories

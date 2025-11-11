@@ -6,5 +6,7 @@ namespace RetailShop.Client.Services
     {
         Task<List<Category>> GetCategoriesAsync();
         Task<List<Product>> GetProductsAsync(int? categoryId, string? q);
+
+        Task<bool> CheckProductQuantityAsync(int productId, int quantity);
     }
 }
