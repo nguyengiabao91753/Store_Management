@@ -103,6 +103,14 @@ namespace RetailShop.Services
                     return rs;
                 }
 
+                // 2. Hash mật khẩu (Bổ sung kiểm tra rỗng)
+                if (string.IsNullOrEmpty(user.Password))
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = "Mật khẩu không được để trống.";
+                    return rs;
+                }
+
                 //Mã hóa Mật khẩu
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
@@ -138,22 +146,34 @@ namespace RetailShop.Services
             var rs = new ResultService<User>();
             try
             {
-                // 1. Kiểm tra username trùng lặp
-                // Controller đã truyền đối tượng 'user' (là existingUser) 
-                // với Username cũ (không thay đổi trên form Edit)
-                var duplicateUserName = await _db.Users
-                    .AnyAsync(u => u.Username == user.Username && u.UserId != user.UserId);
+                // 1. Tìm User cũ trong DB (Phải được TRACKING, bỏ AsNoTracking())
+                var userToUpdate = await _db.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
 
-                if (duplicateUserName)
+                if (userToUpdate == null)
                 {
                     rs.IsSuccess = false;
-                    rs.Message = $"Username '{user.Username}' đã được người dùng khác sử dụng.";
+                    rs.Message = $"Không tìm thấy User với ID = {user.UserId} cần cập nhật.";
                     return rs;
                 }
 
-                // 2. LƯU THAY ĐỔI
-                // Dùng Update() để đảm bảo EF biết đối tượng này đã được sửa
-                _db.Users.Update(user);
+                // 2. Kiểm tra Username (dùng AsNoTracking cho việc kiểm tra)
+                var existingUser = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == user.Username && u.UserId != user.UserId);
+                if (existingUser != null)
+                {
+                    rs.IsSuccess = false;
+                    rs.Message = $"Username '{user.Username}' đã tồn tại với User khác.";
+                    return rs;
+                }
+
+                // 3. CẬP NHẬT CÁC TRƯỜNG ĐƯỢC PHÉP THAY ĐỔI
+                userToUpdate.FullName = user.FullName; 
+                userToUpdate.Role = user.Role;         
+
+                //Mật khẩu (Password), CreatedAt, Active sẽ được EF Core giữ nguyên giá trị cũ
+                // vì chúng ta không gán lại chúng và entity đang được Tracking.
+
+                // 4. Lưu thay đổi vào database
+                // Không cần _db.Users.Update(userToUpdate) vì nó đã được track
                 await _db.SaveChangesAsync();
 
                 rs.IsSuccess = true;
@@ -162,7 +182,7 @@ namespace RetailShop.Services
             }
             catch (Exception ex)
             {
-                //...
+               
                 rs.IsSuccess = false;
                 rs.Message = $"Lỗi khi cập nhật người dùng: {ex.Message}";
             }
