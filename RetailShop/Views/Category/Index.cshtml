@@ -55,7 +55,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Category Name</th>
-                            <th width="180px">Actions</th>
+                            <th width="220px">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,14 +66,34 @@
                                 <td>@c.CategoryName</td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a asp-controller="category" asp-action="detail" asp-route-id="@c.CategoryId"
-                                           class="btn btn-sm btn-outline-primary" title="View Detail">
+                                        <a asp-controller="category"
+                                           asp-action="detail"
+                                           asp-route-id="@c.CategoryId"
+                                           class="btn btn-sm btn-outline-primary"
+                                           title="View Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-controller="category" asp-action="edit" asp-route-id="@c.CategoryId"
-                                           class="btn btn-sm btn-outline-warning" title="Edit Category">
+
+                                        <a asp-controller="category"
+                                           asp-action="edit"
+                                           asp-route-id="@c.CategoryId"
+                                           class="btn btn-sm btn-outline-warning"
+                                           title="Edit Category">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <form asp-controller="category"
+                                              asp-action="delete"
+                                              asp-route-id="@c.CategoryId"
+                                              method="post"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xoá (ẩn) danh mục này không?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Delete (Inactive)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

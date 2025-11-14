@@ -9,7 +9,7 @@ public interface ICategoryService
     Task<ResultService<List<Category>>> GetAllCategoriesAsync();
     Task<ResultService<Category>> GetCategoryByIdAsync(int id);
     Task<ResultService<Category>> UpdateCategoryAsync(Category category);
-        Task<ResultService<List<Product>>> GetProductsByCategoryIdAsync(int categoryId);
-
+    Task<ResultService<List<Product>>> GetProductsByCategoryIdAsync(int categoryId);
+    Task<ResultService<bool>> SoftDeleteCategoryAsync(int id);
     }
 }

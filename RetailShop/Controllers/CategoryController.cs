@@ -1,127 +1,113 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RetailShop.Dtos;
 using RetailShop.Models;
 using RetailShop.Services.IServices;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace RetailShop.Controllers;
-
-[Route("category")]
-public class CategoryController : Controller
+namespace RetailShop.Controllers
 {
-    private readonly ICategoryService _categoryService;
-
-    public CategoryController(ICategoryService categoryService)
+    public class CategoryController : Controller
     {
-        _categoryService = categoryService;
-    }
+        private readonly ICategoryService _categoryService;
 
-    // === READ: Danh sách danh mục ===
-    public async Task<IActionResult> Index()
-    {
-        var rs = await _categoryService.GetAllCategoriesAsync();
-        if (rs.IsSuccess)
+        public CategoryController(ICategoryService categoryService)
         {
-            ViewBag.Categories = rs.Data;
-        }
-        else
-        {
-            TempData["err"] = "Lấy danh sách danh mục thất bại: " + rs.Message;
-            ViewBag.Categories = new List<Category>();
-        }
-        return View();
-    }
-
-    // === CREATE: Hiển thị form thêm mới ===
-    [HttpGet]
-    [Route("create")]
-    public IActionResult Create()
-    {
-        return View("Create");
-    }
-
-    // === CREATE: Lưu danh mục mới ===
-    [HttpPost]
-    [Route("store")]
-    public async Task<IActionResult> Store(Category category)
-    {
-        if (!ModelState.IsValid)
-        {
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                          .Select(e => e.ErrorMessage)
-                                          .ToList();
-            TempData["err"] = "Thêm thất bại: " + string.Join(", ", errors);
-            return View("Create", category);
+            _categoryService = categoryService;
         }
 
-        var result = await _categoryService.CreateCategoryAsync(category);
-        if (result.IsSuccess)
+        public async Task<IActionResult> Index()
         {
-            TempData["success"] = "Thêm danh mục thành công!";
-            return RedirectToAction("Index");
-        }
-        else
-        {
-            TempData["err"] = "Thêm thất bại: " + result.Message;
-            return View("Create", category);
-        }
-    }
-
-    // === EDIT: Hiển thị form sửa ===
-    [HttpGet]
-    [Route("edit/{id}")]
-    public async Task<IActionResult> Edit(int id)
-    {
-        var rs = await _categoryService.GetCategoryByIdAsync(id);
-        if (rs.IsSuccess)
-        {
-            return View("Edit", rs.Data);
-        }
-        TempData["err"] = "Lấy thông tin danh mục thất bại: " + rs.Message;
-        return RedirectToAction("Index");
-    }
-
-    // === UPDATE: Lưu cập nhật ===
-    [HttpPost]
-    [Route("update")]
-    public async Task<IActionResult> Update(Category category)
-    {
-        if (!ModelState.IsValid)
-        {
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                          .Select(e => e.ErrorMessage)
-                                          .ToList();
-            TempData["err"] = "Cập nhật thất bại: " + string.Join(", ", errors);
-            return View("Edit", category);
+            var rs = await _categoryService.GetAllCategoriesAsync();
+            ViewBag.Categories = rs.Data ?? new List<Category>();
+            return View();
         }
 
-        var rs = await _categoryService.UpdateCategoryAsync(category);
-        if (rs.IsSuccess)
+        [HttpGet]
+        public IActionResult Create()
         {
-            TempData["success"] = "Cập nhật thành công!";
-            return RedirectToAction("Index");
-        }
-        else
-        {
-            TempData["err"] = "Cập nhật thất bại: " + rs.Message;
-            return View("Edit", category);
-        }
-    }
-
-    // === DETAIL: Xem sản phẩm thuộc danh mục ===
-    [HttpGet]
-    [Route("detail/{id}")]
-    public async Task<IActionResult> Detail(int id)
-    {
-        var rsCategory = await _categoryService.GetCategoryByIdAsync(id);
-        if (!rsCategory.IsSuccess)
-        {
-            TempData["err"] = "Không tìm thấy danh mục.";
-            return RedirectToAction("Index");
+            return View();
         }
 
-        var rsProducts = await _categoryService.GetProductsByCategoryIdAsync(id);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Category model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-        ViewBag.Products = rsProducts.IsSuccess ? rsProducts.Data : new List<Product>();
-        return View("Detail", rsCategory.Data);
+            var rs = await _categoryService.CreateCategoryAsync(model);
+
+            if (!rs.IsSuccess)
+            {
+                ModelState.AddModelError(string.Empty, rs.Message);
+                return View(model);
+            }
+
+            TempData["Success"] = rs.Message;
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var rs = await _categoryService.GetCategoryByIdAsync(id);
+            if (!rs.IsSuccess || rs.Data == null)
+            {
+                return NotFound();
+            }
+            return View(rs.Data);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Category model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var rs = await _categoryService.UpdateCategoryAsync(model);
+
+            if (!rs.IsSuccess)
+            {
+                ModelState.AddModelError(string.Empty, rs.Message);
+                return View(model);
+            }
+
+            TempData["Success"] = rs.Message;
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
+        {
+            var rs = await _categoryService.GetCategoryByIdAsync(id);
+            if (!rs.IsSuccess || rs.Data == null)
+            {
+                return NotFound();
+            }
+            return View(rs.Data);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var rs = await _categoryService.SoftDeleteCategoryAsync(id);
+
+            if (!rs.IsSuccess)
+            {
+                TempData["Error"] = rs.Message;
+            }
+            else
+            {
+                TempData["Success"] = rs.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

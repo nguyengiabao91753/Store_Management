@@ -237,7 +237,12 @@
                         </li> *@
                     </ul>
                 </li>
-
+                <li class="nav-item @ViewData["inventory"]">
+                    <a asp-controller="Inventory" asp-action="Index" class="nav-link @ViewData["inventory-index"]">
+                        <i class="nav-icon fas fa-boxes"></i>
+                        <p>Thống kê tồn kho</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

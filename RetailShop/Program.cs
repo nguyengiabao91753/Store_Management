@@ -55,16 +55,22 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IUserService, UserService> ();
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<IInventoryReportService, InventoryReportService>();
 #endregion
 
 // Cloudinary Configuration
 builder.Services.Configure<CloudinarySettings>(
-    builder.Configuration.GetSection("CloudinarySettings"));
+builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    Console.WriteLine(">>> APP is connected to DB:");
+    Console.WriteLine(">>> " + db.Database.GetDbConnection().ConnectionString);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
