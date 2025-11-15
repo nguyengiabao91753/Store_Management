@@ -54,6 +54,42 @@
                     </tr>
                 </thead>
                 <tbody id="orderTableBody">
+
+                    @* @foreach (var order in ViewBag.orders)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+                            <td>@order.OrderDate.ToString("dd/MM/yyyy - hh:mm tt")</td>
+                            <td>@order.CustomerName</td>
+                            <td>
+                                @if (order.OrderStatus == "Done")
+                                {
+                                    <span class="status done">Done</span>
+                                }
+                                else if (order.OrderStatus == "Canceled")
+                                {
+                                    <span class="status canceled">Canceled</span>
+                                }
+                                else
+                                {
+                                    <span class="status pending">Pending</span>
+                                }
+                            </td>
+                            <td>USD @order.TotalPayment.ToString("F2")</td>
+                            <td>
+                                @if (order.PaymentStatus == "Paid")
+                                {
+                                    <span class="badge-status paid">Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status unpaid">Unpaid</span>
+                                }
+                            </td>
+                            <td><a href="#" class="text-primary text-decoration-none">Detail</a></td>
+                        </tr>
+                    }
+) *@
                     <tr>
                         <td>001</td>
                         <td>25/05/2024 - 08:00 AM</td>

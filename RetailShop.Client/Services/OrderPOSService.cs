@@ -1,4 +1,5 @@
-﻿using RetailShop.Client.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RetailShop.Client.Data;
 using RetailShop.Client.Dtos;
 using RetailShop.Client.Models;
 using RetailShop.Client.Services.IServices;
@@ -80,5 +81,12 @@ public class OrderPOSService : IOrderPOSService
             return false;
         }
 
+    }
+    public async Task<IReadOnlyList<Order>> GetAllOrdersAsync()
+    {
+        return await _db.Orders
+                        .AsNoTracking()
+                        .OrderBy(c => c.OrderDate)
+                        .ToListAsync();
     }
 }
