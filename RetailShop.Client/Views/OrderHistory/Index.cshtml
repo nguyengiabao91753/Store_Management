@@ -41,8 +41,8 @@
     <!-- Table -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead class="table-light">
+			<table class="table align-middle mb-0">
+				<thead class="table-light text-center">
                     <tr>
                         <th>#</th>
                         <th>Date & Time</th>
@@ -53,71 +53,43 @@
                         <th>Orders</th>
                     </tr>
                 </thead>
-                <tbody id="orderTableBody">
+				<tbody id="orderTableBody">
 
-                    @* @foreach (var order in ViewBag.orders)
-                    {
-                        <tr>
-                            <td>@order.OrderId</td>
-                            <td>@order.OrderDate.ToString("dd/MM/yyyy - hh:mm tt")</td>
-                            <td>@order.CustomerName</td>
-                            <td>
-                                @if (order.OrderStatus == "Done")
-                                {
-                                    <span class="status done">Done</span>
-                                }
-                                else if (order.OrderStatus == "Canceled")
-                                {
-                                    <span class="status canceled">Canceled</span>
-                                }
-                                else
-                                {
-                                    <span class="status pending">Pending</span>
-                                }
-                            </td>
-                            <td>USD @order.TotalPayment.ToString("F2")</td>
-                            <td>
-                                @if (order.PaymentStatus == "Paid")
-                                {
-                                    <span class="badge-status paid">Paid</span>
-                                }
-                                else
-                                {
-                                    <span class="badge-status unpaid">Unpaid</span>
-                                }
-                            </td>
-                            <td><a href="#" class="text-primary text-decoration-none">Detail</a></td>
-                        </tr>
-                    }
-) *@
-                    <tr>
-                        <td>001</td>
-                        <td>25/05/2024 - 08:00 AM</td>
-                        <td>George</td>
-                        <td><span class="status done">Done</span></td>
-                        <td>USD 35.00</td>
-                        <td><span class="badge-status paid">Paid</span></td>
-                        <td><a href="#" class="text-primary text-decoration-none">Detail</a></td>
-                    </tr>
-                    <tr>
-                        <td>005</td>
-                        <td>25/05/2024 - 08:42 AM</td>
-                        <td>Eliza</td>
-                        <td><span class="status canceled">Canceled</span></td>
-                        <td>USD 12.25</td>
-                        <td><span class="badge-status unpaid">Unpaid</span></td>
-                        <td><a href="#" class="text-primary text-decoration-none">Detail</a></td>
-                    </tr>
-                    <tr>
-                        <td>006</td>
-                        <td>25/05/2024 - 09:00 AM</td>
-                        <td>Jelly</td>
-                        <td><span class="status done">Done</span></td>
-                        <td>USD 64.00</td>
-                        <td><span class="badge-status paid">Paid</span></td>
-                        <td><a href="#" class="text-primary text-decoration-none">Detail</a></td>
-                    </tr>
-                </tbody>
+					@foreach (var order in ViewBag.orders)
+					{
+						<tr>
+							<td>@order.OrderId</td>
+							<td>@(order.OrderDate != null ? ((DateTime)order.OrderDate).ToString("dd/MM/yyyy - hh:mm tt") : "-")</td>
+							<td>@order.CustomerName</td>
+							<td>
+								@if (order.OrderStatus == "Done")
+								{
+									<span class="status done">Done</span>
+								}
+								else if (order.OrderStatus == "Canceled")
+								{
+									<span class="status canceled">Canceled</span>
+								}
+								else
+								{
+									<span class="status pending">Pending</span>
+								}
+							</td>
+							<td>VND @order.TotalPayment.ToString("F2")</td>
+							<td>
+								@if (order.PaymentStatus == "Paid")
+								{
+									<span class="badge-status paid">Paid</span>
+								}
+								else
+								{
+									<span class="badge-status unpaid">Unpaid</span>
+								}
+							</td>
+							<td><a asp-controller="OrderHistory" asp-action="Details" asp-route-id="@order.OrderId" class="text-primary text-decoration-none">Detail</a></td>
+						</tr>
+					}
+				</tbody>
             </table>
         </div>
     </div>

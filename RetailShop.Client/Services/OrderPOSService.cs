@@ -89,4 +89,80 @@ public class OrderPOSService : IOrderPOSService
                         .OrderBy(c => c.OrderDate)
                         .ToListAsync();
     }
+
+    public async Task<IReadOnlyList<OrderHistoryRowDto>> GetOrderHistoryRowsAsync()
+    {
+        var orders = await _db.Orders
+            .Include(o => o.Customer)
+            .Include(o => o.Payment)
+            .AsNoTracking()
+            .OrderByDescending(o => o.OrderDate)
+            .ToListAsync();
+
+        var rows = orders.Select(o =>
+        {
+            var statusRaw = o.Status?.Trim();
+            string orderStatus =
+                string.Equals(statusRaw, "canceled", StringComparison.OrdinalIgnoreCase) ? "Canceled" :
+                (string.Equals(statusRaw, "paid", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(statusRaw, "done", StringComparison.OrdinalIgnoreCase)) ? "Done" :
+                "Pending";
+
+            return new OrderHistoryRowDto
+            {
+                OrderId = o.OrderId,
+                OrderDate = o.OrderDate,
+                CustomerName = o.Customer?.Name ?? "Walk-in",
+                OrderStatus = orderStatus,
+                TotalPayment = o.TotalAmount ?? 0m,
+                PaymentStatus = o.Payment != null ? "Paid" : "Unpaid"
+            };
+        }).ToList();
+
+        return rows;
+    }
+
+	public async Task<IReadOnlyList<OrderHistoryRowDto>> GetOrderHistoryRowsAsync(DateTime? start, DateTime? end)
+	{
+		var query = _db.Orders
+			.Include(o => o.Customer)
+			.Include(o => o.Payment)
+			.AsNoTracking()
+			.AsQueryable();
+
+		if (start.HasValue)
+		{
+			query = query.Where(o => o.OrderDate >= start.Value);
+		}
+		if (end.HasValue)
+		{
+			query = query.Where(o => o.OrderDate <= end.Value);
+		}
+
+		var orders = await query
+			.OrderByDescending(o => o.OrderDate)
+			.ToListAsync();
+
+		var rows = orders.Select(o =>
+		{
+			var statusRaw = o.Status?.Trim();
+			string orderStatus =
+				string.Equals(statusRaw, "canceled", StringComparison.OrdinalIgnoreCase) ? "Canceled" :
+				(string.Equals(statusRaw, "paid", StringComparison.OrdinalIgnoreCase) ||
+				 string.Equals(statusRaw, "done", StringComparison.OrdinalIgnoreCase)) ? "Done" :
+				"Pending";
+
+			return new OrderHistoryRowDto
+			{
+				OrderId = o.OrderId,
+				OrderDate = o.OrderDate,
+				CustomerName = o.Customer?.Name ?? "Not defined Customer",
+				OrderStatus = orderStatus,
+				TotalPayment = o.TotalAmount ?? 0m,
+				PaymentStatus = o.Payment != null ? "Paid" : "Unpaid"
+			};
+		}).ToList();
+
+		return rows;
+	}
 }

@@ -68,16 +68,16 @@
             <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <div class="text-muted small">Subtotal</div>
-                    <div>USD @subtotal.ToString("F2")</div>
+                    <div>VND @subtotal.ToString("F2")</div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <div class="text-muted small">Discount</div>
-                    <div>USD @discount.ToString("F2")</div>
+                    <div>VND @discount.ToString("F2")</div>
                 </div>
                 <hr class="my-2" />
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="fw-semibold">Total</div>
-                    <div class="fw-semibold">USD @total.ToString("F2")</div>
+                    <div class="fw-semibold">VND @total.ToString("F2")</div>
                 </div>
             </div>
         </div>
@@ -85,13 +85,13 @@
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead class="table-light">
+			<table class="table align-middle mb-0">
+				<thead class="table-light text-center">
                     <tr>
-                        <th>Product</th>
-                        <th class="text-end">Price</th>
-                        <th class="text-end">Qty</th>
-                        <th class="text-end">Subtotal</th>
+						<th>Product</th>
+						<th class="text-center">Price</th>
+						<th class="text-center">Qty</th>
+						<th class="text-center">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,9 +101,9 @@
                     {
                         <tr>
                             <td>@(item.Product?.ProductName ?? $"SKU #{item.ProductId}")</td>
-                            <td class="text-end">USD @item.Price.ToString("F2")</td>
+                            <td class="text-end">VND @item.Price.ToString("F2")</td>
                             <td class="text-end">@item.Quantity</td>
-                            <td class="text-end">USD @( (item.Subtotal ?? (item.Price * item.Quantity)).ToString(\"F2\") )</td>
+							<td class="text-end">VND @( (item.Subtotal ?? (item.Price * item.Quantity)).ToString("F2") )</td>
                         </tr>
                     }
                 }
