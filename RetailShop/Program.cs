@@ -15,7 +15,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        // Chỉ định tên Scheme, bạn có thể dùng mặc định
+        // Chỉ định tên Scheme
         options.LoginPath = "/login"; // <-- Đặt trang đăng nhập (Action Index của LoginController)
         options.LogoutPath = "/login/logout"; // <-- Đặt trang đăng xuất (Action Logout của LoginController
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Thời gian hết hạn của cookie (ví dụ: 30 phút)
