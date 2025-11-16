@@ -8,29 +8,32 @@ namespace RetailShop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IExample _example;
+        private readonly IDashboardService _iDashboardService;
 
-        public HomeController(ILogger<HomeController> logger, IExample example)
+        public HomeController(ILogger<HomeController> logger, IDashboardService iDashboardService)
         {
             _logger = logger;
-            _example = example;
+            _iDashboardService = iDashboardService;
         }
 
         public IActionResult Index()
         {
-            ViewBag.Message = _example.GetMessage();
-            return View();
+            var model = new DashboardViewModel
+            {
+                MonthlyRevenue = _iDashboardService.GetMonthlyRevenue(),
+                TopProducts = _iDashboardService.GetTopSellingProducts()
+            };
+
+            return View(model);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult GetOrders(DateTime? startDate, DateTime? endDate, int? month, int? year, int pageIndex = 1, int pageSize = 10)
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var orders = _iDashboardService.GetRecentOrders(startDate, endDate, month, year, pageIndex, pageSize);
+            var totalOrders = _iDashboardService.GetRecentOrders(startDate, endDate, month, year).Count;
+            var totalPages = (int)Math.Ceiling((double)totalOrders / pageSize);
+             return Json(new { data = orders, totalPages, currentPage = pageIndex });
         }
     }
 }

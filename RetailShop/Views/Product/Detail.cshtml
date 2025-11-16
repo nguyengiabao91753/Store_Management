@@ -11,8 +11,13 @@
         if (string.IsNullOrWhiteSpace(imgName))
             return Url.Content("~/Admin/dist/img/default-150x150.png");
 
-        if (imgName.StartsWith("/")) // đường dẫn đã đầy đủ
+        // Nếu là URL Cloudinary → trả về luôn
+        if (imgName.StartsWith("http"))
             return imgName;
+
+        // Nếu vẫn còn ảnh local cũ
+        if (imgName.StartsWith("/"))
+            return Url.Content(imgName);
 
         return Url.Content("~/uploads/" + imgName);
     };

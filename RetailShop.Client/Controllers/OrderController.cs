@@ -65,6 +65,19 @@ namespace RetailShop.Client.Controllers
                 }
             }
 
+            //Update inventory
+            foreach (var item in orderPlaceDto.Products)
+            {
+                try
+                {
+
+                    await _inventoryPOSService.ReduceStockAsync(item.ProductId, item.Quantity);
+                }catch (Exception ex)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
             // Place order
             var order = await _orderPOSService.PlaceOrderAsync(orderPlaceDto, customerId);
             if (order.OrderId == 0)
@@ -82,11 +95,7 @@ namespace RetailShop.Client.Controllers
             if (payment.PaymentId == 0)
                 return BadRequest("Payment processing failed");
 
-            //Update inventory
-            foreach (var item in orderPlaceDto.Products)
-            {
-                await _inventoryPOSService.ReduceStockAsync(item.ProductId, item.Quantity);
-            }
+           
 
             // Upodate promotion usage
             if (orderPlaceDto.PromoId != null)

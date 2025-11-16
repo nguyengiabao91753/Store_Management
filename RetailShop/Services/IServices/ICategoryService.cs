@@ -1,6 +1,5 @@
 ﻿using RetailShop.Dtos;
 using RetailShop.Models;
-using RetailShop.Dtos;
 
 namespace RetailShop.Services.IServices
 {

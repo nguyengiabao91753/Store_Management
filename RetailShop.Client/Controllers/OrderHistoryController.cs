@@ -41,5 +41,5 @@ namespace RetailShop.Client.Controllers;
             }
 
             return View(order);
-        }
     }
+}

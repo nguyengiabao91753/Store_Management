@@ -1,48 +1,74 @@
 ﻿@model RetailShop.Models.User
 
 @{
-    ViewData["Title"] = "Tạo mới User";
+    ViewData["Title"] = "Create User";
+    // Set sidebar menu active (using "user" based on your controller route)
+    ViewData["user"] = "menu-open";
+    ViewData["user-create"] = "active";
 }
 
-<h1>Tạo mới User</h1>
+@section csslinks {
+}
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form method="post" asp-controller="user" asp-action="Create">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Create New User</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @* Trường Username *@
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
+            <div class="row form">
+                <div class="col-md">
 
-            @* Trường Password *@
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <input asp-for="Username" class="form-control" required>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
 
-            @* Trường FullName *@
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" type="password" class="form-control" required>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
 
-            @* Trường Role (Có thể dùng Select List trong thực tế) *@
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
+                    <div class="form-group">
+                        <label asp-for="FullName"></label>
+                        <input asp-for="FullName" class="form-control">
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
 
-            <div class="form-group">
-                <input type="submit" value="Tạo mới" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                    <div class="form-group">
+                        <label asp-for="Role"></label>
+                        <select asp-for="Role" class="form-control" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="staff">Staff</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+
+                </div>
             </div>
-        </form>
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+        </div>
     </div>
-</div>
+</form>
+
+@section jslinks {
+}

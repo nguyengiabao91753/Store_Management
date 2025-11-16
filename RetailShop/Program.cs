@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies; // <-- Cần cho Cookie Auth
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using RetailShop.Data;
+using RetailShop.Models;
 using RetailShop.Services;
 using RetailShop.Services.IServices;
 using System;
-using Microsoft.AspNetCore.Authentication.Cookies; // <-- Cần cho Cookie Auth
-using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        // Chỉ định tên Scheme, bạn có thể dùng mặc định
+        // Chỉ định tên Scheme
         options.LoginPath = "/login"; // <-- Đặt trang đăng nhập (Action Index của LoginController)
         options.LogoutPath = "/login/logout"; // <-- Đặt trang đăng xuất (Action Logout của LoginController
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Thời gian hết hạn của cookie (ví dụ: 30 phút)
@@ -38,6 +39,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     
 
 
+
+
 #region Add De[pendency Injection for Services
 builder.Services.AddScoped<IExample, Example>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
@@ -47,11 +50,17 @@ builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddScoped<IUserService, UserService> ();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 #endregion
+
+// Cloudinary Configuration
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 
 var app = builder.Build();
