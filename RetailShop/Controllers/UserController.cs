@@ -65,7 +65,7 @@ namespace RetailShop.Controllers
         // -------------------------------------------------------------------
         // 4. ACTION: Xử lý dữ liệu Form Tạo mới (CREATE - POST)
         // -------------------------------------------------------------------
-        [HttpPost]
+        [HttpPost("create")]
         //[ValidateAntiForgeryToken] // Bảo vệ chống tấn công CSRF
         public async Task<IActionResult> Create(User user)
         {
@@ -111,7 +111,7 @@ namespace RetailShop.Controllers
         // -------------------------------------------------------------------
         // 6. ACTION: Xử lý dữ liệu Form Chỉnh sửa (EDIT - POST)
         // -------------------------------------------------------------------
-        [HttpPost]
+        [HttpPost("edit/{id}")]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, User user)
         {

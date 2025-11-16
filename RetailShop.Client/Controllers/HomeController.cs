@@ -35,6 +35,13 @@ namespace RetailShop.Client.Controllers
             return PartialView("_ProductCards", products);
         }
 
+        [HttpGet("checkAvailable")]
+        public async Task<IActionResult> CheckProductQuantity(int productId, int quantity)
+        {
+            var IsAvailable = await _svc.CheckProductQuantityAsync(productId, quantity);
+            return Json(new { isAvailable = IsAvailable });
+        }
+
         public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

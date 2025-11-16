@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using RetailShop.Services.IServices;
 using RetailShop.Dtos;
 using RetailShop.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace RetailShop.Services;
 public class CloudinaryService : ICloudinaryService

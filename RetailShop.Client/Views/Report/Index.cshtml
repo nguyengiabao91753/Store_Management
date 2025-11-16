@@ -14,116 +14,151 @@
     </div>
 
     <div class="row g-3">
-        <div class="col-md-3">
-            <div class="kpi">
-                <div class="small text-muted">Total Sales Amount</div>
-                <div class="fs-4 fw-bold">12,650.00 USD</div>
-                <div class="small text-success">+ USD 1,543.30 (12.2%)</div>
+        <div class="col-md-4">
+            <div class="kpi p-3">
+                <div class="small text-muted">Tổng doanh thu trong năm</div>
+                <div class="fs-4 fw-bold" id="totalRevenue"></div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="kpi">
-                <div class="small text-muted">Total Product Sales</div>
-                <div class="fs-4 fw-bold">1,250 Items</div>
-                <div class="small text-success">+ 125 Items (10%)</div>
+        <div class="col-md-4">
+            <div class="kpi p-3">
+                <div class="small text-muted">Tổng sản phẩm đã bán trong năm</div>
+                <div class="fs-4 fw-bold" id="totalProductsSold"></div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="kpi">
-                <div class="small text-muted">Total Customers</div>
-                <div class="fs-4 fw-bold">400 Persons</div>
-                <div class="small text-danger">-5 Persons (0.02%)</div>
+        <div class="col-md-4">
+            <div class="kpi p-3">
+                <div class="small text-muted">Tổng đơn hàng trong năm</div>
+                <div class="fs-4 fw-bold" id="totalOrders"></div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="kpi">
-                <div class="small text-muted">Net Profit</div>
-                <div class="fs-4 fw-bold">12,650.00 USD</div>
-                <div class="small text-success">+ USD 3,792 (0.3%)</div>
-            </div>
-        </div>
+        @* <div class="col-md-3"> *@
+        @*     <div class="kpi"> *@
+        @*         <div class="small text-muted">Net Profit</div> *@
+        @*         <div class="fs-4 fw-bold">12,650.00 USD</div> *@
+        @*         <div class="small text-success">+ USD 3,792 (0.3%)</div> *@
+        @*     </div> *@
+        @* </div> *@
     </div>
 
     <div class="row g-3 mt-3">
+        @*Bar chart*@
         <div class="col-lg-8">
-            <div class="graph-card">
+            <div class="graph-card p-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="mb-0">Report Graph</h6>
+                </div>
+
+                <div class="mb-3">
+                    <label>Từ ngày:</label>
+                    <input type="date" id="fromDate" />
+                    <label>Đến ngày:</label>
+                    <input type="date" id="toDate" />
+                    <button id="btnFilter" class="btn btn-primary">Xem báo cáo</button>
+                </div>
+
+                @*Chart*@
+                <div style="height: 300px; padding:16px; border-radius:8px; background:linear-gradient(180deg,#f8fbff,#fff)">
+                    <canvas id="BarChart"></canvas>
+                </div>
+
+                @*Modal chi tiết*@
+                <div id="ReportDetailModal" class="modal-overlay" style="display:none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 id="ReportModalTitle"></h4>
+                            <button id="closeModalBtn" class="close-btn">×</button>
+                        </div>
+                        <div class="modal-body" id="ReportDetailContainer"></div>
+                    </div>
+                </div>
+
+                @* <div class="d-flex gap-3 mt-3"> *@
+                @*     <div><strong>Amount</strong><div class="small text-muted">12,650.00 USD</div></div> *@
+                @*     <div><strong>Growth</strong><div class="small text-success">+1,543.30 USD</div></div> *@
+                @*     <div><strong>Growth %</strong><div class="small text-success">12.2%</div></div> *@
+                @* </div> *@
+            </div>
+        </div>
+
+        @*Sản phẩm bán chạy*@
+        <div class="col-lg-4">
+            <div class="fav-list p-3 overflow-auto" style="height: 382.6px;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Sản phẩm bán chạy</h6>
+                </div>
+                <ul class="list-unstyled mb-0" id="bestSellingList">
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mt-3">
+
+        @*Khách hàng thân thiết*@
+        <div class="col-lg-4">
+            <div class="fav-list p-3 overflow-auto" style="height: 382.6px;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Khách hàng thân thiết</h6>
+                </div>
+                <ul class="list-unstyled mb-0" id="loyalCustomersList">
+                </ul>
+            </div>
+        </div>
+
+        @*Line chart*@
+        <div class="col-lg-8">
+            <div class="graph-card p-3">
                 <div class="d-flex justify-content-between mb-2">
                     <h6 class="mb-0">Report Graph</h6>
                     <div class="small text-muted">Total Sales Amount</div>
                 </div>
-                <div class="mock-graph align-items-end mt-3"
-                     style="height:220px; display:flex; gap:8px; padding:16px; border-radius:8px; background:linear-gradient(180deg,#f8fbff,#fff)">
-                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
-                        <div style="height:60%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
-                    </div>
-                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
-                        <div style="height:70%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
-                    </div>
-                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
-                        <div style="height:50%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
-                    </div>
-                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
-                        <div style="height:80%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
-                    </div>
-                    <div style="width:36px; background:rgba(31,100,255,0.15); border-radius:6px;">
-                        <div style="height:65%; background:rgba(31,100,255,1); border-radius:6px 6px 0 0;"></div>
-                    </div>
+
+                <div class="dropdown mb-3 text-end m-3">
+                    <button class="btn btn-outline-primary dropdown-toggle"
+                            type="button"
+                            id="chartViewDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Theo Tháng
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="chartViewDropdown">
+                        <li><a class="dropdown-item chart-view-option" data-group="month">Theo Tháng</a></li>
+                        <li><a class="dropdown-item chart-view-option" data-group="year">Theo Năm</a></li>
+                    </ul>
                 </div>
 
-                <div class="d-flex gap-3 mt-3">
-                    <div><strong>Amount</strong><div class="small text-muted">12,650.00 USD</div></div>
-                    <div><strong>Growth</strong><div class="small text-success">+1,543.30 USD</div></div>
-                    <div><strong>Growth %</strong><div class="small text-success">12.2%</div></div>
+                @*Chart*@
+                <div style="height: 300px; padding:16px; border-radius:8px; background:linear-gradient(180deg,#f8fbff,#fff)">
+                    <canvas id="LineChart"></canvas>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-lg-4">
-            <div class="fav-list">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0">Favorite Product</h6>
-                    <div class="small text-muted">Top sold items</div>
-                </div>
-                <ul class="list-unstyled mb-0">
-                    <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="https://via.placeholder.com/48?text=Cro" class="rounded" style="width:48px;height:48px;">
-                            <div>
-                                <div class="fw-semibold">Buttermelt Croissant</div>
-                                <small class="text-muted">Pastry</small>
-                            </div>
-                        </div>
-                        <div>183 Times</div>
-                    </li>
-                    <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="https://via.placeholder.com/48?text=Beef" class="rounded" style="width:48px;height:48px;">
-                            <div>
-                                <div class="fw-semibold">Beef Crowich</div>
-                                <small class="text-muted">Sandwich</small>
-                            </div>
-                        </div>
-                        <div>160 Times</div>
-                    </li>
-                    <li class="d-flex justify-content-between align-items-center py-2">
-                        <div class="d-flex align-items-center gap-2">
-                            <img src="https://via.placeholder.com/48?text=Cake" class="rounded" style="width:48px;height:48px;">
-                            <div>
-                                <div class="fw-semibold">Sliced Blackforest</div>
-                                <small class="text-muted">Cake</small>
-                            </div>
-                        </div>
-                        <div>125 Times</div>
-                    </li>
-                </ul>
+                @* <!-- Modal chi tiết --> *@
+                @* <div id="ReportDetailModal" class="modal-overlay" style="display:none;"> *@
+                @*     <div class="modal-content"> *@
+                @*         <div class="modal-header"> *@
+                @*             <h4 id="ReportModalTitle"></h4> *@
+                @*             <button id="closeModalBtn" class="close-btn">×</button> *@
+                @*         </div> *@
+                @*         <div class="modal-body" id="ReportDetailContainer"></div> *@
+                @*     </div> *@
+                @* </div> *@
+
+                @* <div class="d-flex gap-3 mt-3"> *@
+                @*     <div><strong>Amount</strong><div class="small text-muted">12,650.00 USD</div></div> *@
+                @*     <div><strong>Growth</strong><div class="small text-success">+1,543.30 USD</div></div> *@
+                @*     <div><strong>Growth %</strong><div class="small text-success">12.2%</div></div> *@
+                @* </div> *@
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="~/js/Report.js" asp-append-version="true"></script>
 }

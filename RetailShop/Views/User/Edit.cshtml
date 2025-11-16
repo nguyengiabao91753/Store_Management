@@ -1,51 +1,75 @@
 ﻿@model RetailShop.Models.User
 
 @{
-    ViewData["Title"] = "Chỉnh sửa User";
+    ViewData["Title"] = "Edit User";
+    // Set sidebar menu active
+    ViewData["user"] = "menu-open";
+    ViewData["user-edit"] = "active"; // Or use "user-list" if you prefer
 }
 
-<h1>Chỉnh sửa User</h1>
+@section csslinks {
+}
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<form method="post" asp-controller="user" asp-action="Edit" asp-route-id="@(Model.UserId)">
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Edit User</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @* Trường ẩn (Hidden Field) để giữ UserId khi POST *@
             <input type="hidden" asp-for="UserId" />
-            @* BỔ SUNG CÁC TRƯỜNG ẨN ĐỂ ĐẢM BẢO CÁC GIÁ TRỊ CŨ ĐƯỢC GỬI LẠI *@
-
             <input type="hidden" asp-for="Password" />
             <input type="hidden" asp-for="CreatedAt" />
             <input type="hidden" asp-for="Active" />
 
-            @* Trường Username (thường không cho phép sửa đổi trong thực tế) *@
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" readonly /> @* Thêm readonly để bảo vệ trường *@
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
+            <div class="row form">
+                <div class="col-md">
 
-            @* Trường FullName *@
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <input asp-for="Username" class="form-control" readonly>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                        <small class="form-text text-muted">Username cannot be changed.</small>
+                    </div>
 
-            @* Trường Role *@
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
+                    <div class="form-group">
+                        <label asp-for="FullName"></label>
+                        <input asp-for="FullName" class="form-control">
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
 
-            @* Thêm phần thay đổi mật khẩu (nếu cần, thường nằm trong form riêng) *@
+                    <div class="form-group">
+                        <label asp-for="Role"></label>
+                        <select asp-for="Role" class="form-control" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="staff">Staff</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
 
-            <div class="form-group">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                </div>
             </div>
-        </form>
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+        </div>
     </div>
-</div>
+</form>
+
+@section jslinks {
+}

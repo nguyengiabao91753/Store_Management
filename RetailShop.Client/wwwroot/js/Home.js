@@ -152,6 +152,20 @@
             return;
         }
 
+        for (const item of cart) {
+            const res = await fetch(`/checkAvailable?productId=${item.id}&quantity=${item.qty}`);
+            if (!res.ok) {
+                showToast(`Cannot check availability for ${item.name}.`, "error");
+                return;
+            }
+
+            const result = await res.json();
+            if (!result.isAvailable) {
+                showToast(`❌ Product "${item.name}" does not have enough stock.`, "warning");
+                return;
+            }
+        }
+
         const products = cart.map(item => ({
             productId: item.id,
             productName: item.name,
