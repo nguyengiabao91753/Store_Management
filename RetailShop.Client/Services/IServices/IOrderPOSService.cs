@@ -13,4 +13,7 @@ public interface IOrderPOSService
 
 	// Returns projection filtered by date range (inclusive). Nulls mean no bound.
 	Task<IReadOnlyList<OrderHistoryRowDto>> GetOrderHistoryRowsAsync(DateTime? start, DateTime? end);
+
+	// Returns an Order with all related details for the Details view
+	Task<Order?> GetOrderByIdWithDetailsAsync(int orderId);
 }

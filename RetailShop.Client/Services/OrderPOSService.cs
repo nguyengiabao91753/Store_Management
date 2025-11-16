@@ -165,4 +165,19 @@ public class OrderPOSService : IOrderPOSService
 
 		return rows;
 	}
+
+	public async Task<Order?> GetOrderByIdWithDetailsAsync(int orderId)
+	{
+		var order = await _db.Orders
+			.Include(o => o.Customer)
+			.Include(o => o.User)
+			.Include(o => o.Promo)
+			.Include(o => o.Payment)
+			.Include(o => o.OrderItems)
+				.ThenInclude(oi => oi.Product)
+			.AsNoTracking()
+			.FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+		return order;
+	}
 }

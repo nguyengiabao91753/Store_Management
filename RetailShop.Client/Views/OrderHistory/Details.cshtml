@@ -94,16 +94,16 @@
 						<th class="text-center">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                 @if (Model.OrderItems != null && Model.OrderItems.Any())
                 {
                     foreach (var item in Model.OrderItems)
                     {
                         <tr>
                             <td>@(item.Product?.ProductName ?? $"SKU #{item.ProductId}")</td>
-                            <td class="text-end">VND @item.Price.ToString("F2")</td>
-                            <td class="text-end">@item.Quantity</td>
-							<td class="text-end">VND @( (item.Subtotal ?? (item.Price * item.Quantity)).ToString("F2") )</td>
+                            <td class="text-center">VND @item.Price.ToString("F2")</td>
+                            <td class="text-center">@item.Quantity</td>
+							<td class="text-center">VND @( (item.Subtotal ?? (item.Price * item.Quantity)).ToString("F2") )</td>
                         </tr>
                     }
                 }
