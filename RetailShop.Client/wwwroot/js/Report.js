@@ -378,8 +378,8 @@
                     const quantity = item.totalProductsSold || 0;
 
                     // Nếu có ảnh thì lấy từ product.imageUrl, nếu không thì dùng ảnh placeholder
-                    const imageUrl = product.imageUrl
-                        ? `/images/products/${product.imageUrl}`
+                    const imageUrl = product.productImage
+                        ? `${product.productImage}`
                         : `https://via.placeholder.com/48?text=${encodeURIComponent(productName.substring(0, 3))}`;
 
                     const li = `
