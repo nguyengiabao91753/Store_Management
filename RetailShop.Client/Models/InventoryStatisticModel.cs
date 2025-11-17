@@ -1,4 +1,4 @@
-﻿namespace RetailShop.Models
+﻿namespace RetailShop.Client.Models
 {
     public class InventoryStatisticModel
     {

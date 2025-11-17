@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RetailShop.Services.IServices;
+using RetailShop.Client.Services.IServices;
 
 namespace RetailShop.Controllers
 {

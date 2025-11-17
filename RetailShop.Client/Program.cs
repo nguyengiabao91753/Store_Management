@@ -3,6 +3,7 @@ using RetailShop.Client.Data;
 using RetailShop.Client.Extension;
 using RetailShop.Client.Services;
 using RetailShop.Client.Services.IServices;
+using RetailShop.Services;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +32,7 @@ builder.Services.AddScoped<IPaymentPOSService, PaymentPOSService>();
 builder.Services.AddScoped<IInventoryPOSService, InventoryPOSService>();
 builder.Services.AddScoped<IOrderPOSService, OrderPOSService>();
 builder.Services.AddScoped<IReportService, ReportService>();
-
+builder.Services.AddScoped<IInventoryReportService, InventoryReportService>();
 
 
 var app = builder.Build();

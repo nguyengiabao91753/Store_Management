@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RetailShop.Data;
-using RetailShop.Models;
-using RetailShop.Services.IServices;
+using RetailShop.Client.Data;
+using RetailShop.Client.Models;
+using RetailShop.Client.Services.IServices;
 
 namespace RetailShop.Services
 {

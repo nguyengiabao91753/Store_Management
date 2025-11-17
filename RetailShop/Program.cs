@@ -55,7 +55,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IUserService, UserService> ();
 builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddScoped<IInventoryReportService, InventoryReportService>();
+
 #endregion
 
 // Cloudinary Configuration

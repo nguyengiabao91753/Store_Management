@@ -1,6 +1,6 @@
-﻿using RetailShop.Models;
+﻿using RetailShop.Client.Models;
 
-namespace RetailShop.Services.IServices
+namespace RetailShop.Client.Services.IServices
 {
     public interface IInventoryReportService
     {
