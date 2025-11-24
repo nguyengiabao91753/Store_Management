@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RetailShop.Client.Dtos;
 using RetailShop.Client.Models;
 using RetailShop.Client.Services.IServices;
 
 namespace RetailShop.Client.Controllers
 {
+    [Authorize]
     [Route("Order")]
     public class OrderController : Controller
     {

@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RetailShop.Client.Models;
 using RetailShop.Client.Services;
 
 namespace RetailShop.Client.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IProductService _svc;

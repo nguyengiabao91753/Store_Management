@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RetailShop.Client.Services.IServices;
 
 namespace RetailShop.Client.Controllers
 {
     [Route("Report")]
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly IReportService _reportService;

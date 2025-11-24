@@ -3,6 +3,7 @@
    Dùng chung cho layout POS
    ============================== *@
 @using Microsoft.AspNetCore.Http;
+@using System.Security.Claims;
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="menuSidebar">
     <div class="offcanvas-header">
@@ -12,8 +13,16 @@
                 <i class="fa fa-user"></i>
             </div>
             <div>
-                <div class="fw-semibold">Jelly Grande</div>
-                <small class="text-muted">Cashier</small>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="fw-semibold" id="cashierName">@User.FindFirst("FullName")?.Value</div>
+                    <small class="text-muted">@User.FindFirst("DisplayRole")?.Value</small>
+                }
+                else
+                {
+                    <div class="fw-semibold" id="cashierName">Chưa đăng nhập</div>
+                    <small class="text-muted">(Không xác định)</small>
+                }
             </div>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -58,12 +67,14 @@
         </div>
 
         <div class="mt-4 small text-muted">
-            <strong>Bakehouse</strong><br />
-            The dreamy taste & magic of sweet moments in every bite from our bakery.
+            <strong>Cửa hàng...</strong><br />
+            Hệ thống quản lý bán hàng
         </div>
 
         <div class="mt-3">
-            <button class="btn btn-outline-danger w-100">Log Out</button>
+            <button class="btn btn-outline-danger w-100" onclick="logout()">
+                <i class="fa fa-sign-out-alt me-2"></i> Đăng xuất
+            </button>
         </div>
     </div>
 </div>
