@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop", "RetailShop\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop.Client", "RetailShop.Client\RetailShop.Client.csproj", "{AC6012DF-3869-431A-A116-2690B5673D1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop.API", "RetailShop.API\RetailShop.API.csproj", "{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AC6012DF-3869-431A-A116-2690B5673D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC6012DF-3869-431A-A116-2690B5673D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6012DF-3869-431A-A116-2690B5673D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
