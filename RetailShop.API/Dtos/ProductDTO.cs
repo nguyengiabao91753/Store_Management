@@ -28,8 +28,6 @@ public class ProductDTO
 
     public string? ProductImage { get; set; }
 
-    public IFormFile? ImageFile { get; set; }
-
 
     public string? Barcode { get; set; }
 
