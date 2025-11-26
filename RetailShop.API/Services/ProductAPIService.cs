@@ -17,8 +17,9 @@ public class ProductAPIService : IProductAPIService
         _mapper = mapper;
     }
 
-    public async Task<bool> CheckProductQuantityAsync(int productId, int quantity)
+    public async Task<ResponseDto?> CheckProductQuantityAsync(int productId, int quantity)
     {
+        var response = new ResponseDto();
         try
         {
             var product = await _db.Products
@@ -27,7 +28,7 @@ public class ProductAPIService : IProductAPIService
                                     .FirstOrDefaultAsync(p => p.ProductId == productId && p.Active == true);
             if (product == null)
             {
-                return false;
+                return response;
             }
 
             var inventory = await _db.Inventories
@@ -35,18 +36,23 @@ public class ProductAPIService : IProductAPIService
                                       .FirstOrDefaultAsync(i => i.ProductId == productId);
             if (inventory == null || inventory.Quantity == 0 || inventory.Quantity < quantity)
             {
-                return false;
+                return response;
             }
         }
         catch (Exception ex)
         {
-            return false;
+            return response;
         }
-        return true;
+        response.IsSuccess = true;
+
+        return response;
     }
 
-    public async Task<List<ProductDTO>> GetProductsAsync(int? categoryId, string? q)
+    public async Task<ResponseDto?> GetProductsAsync(int? categoryId, string? q)
     {
+
+        var response = new ResponseDto();
+
         var query = _db.Products.Where(p => p.Active == true)
                             .Include(p => p.Category)
                             .Include(p => p.Supplier)
@@ -62,6 +68,8 @@ public class ProductAPIService : IProductAPIService
         var list = await query.OrderBy(p => p.CreatedAt)
                     .ToListAsync();
 
-        return _mapper.Map<List<ProductDTO>>(list);
+        response.Result= _mapper.Map<List<ProductDTO>>(list);
+        response.IsSuccess = true;
+        return response;
     }
 }

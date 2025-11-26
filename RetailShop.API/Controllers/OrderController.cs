@@ -25,7 +25,7 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> CreateOrderAsync([FromBody] OrderPlaceDto orderPlaceDto)
     {
         var result = await _orderAPIService.PlaceOrderAsync(orderPlaceDto);
-        if (result.OrderId!= null)
+        if (result.IsSuccess)
         {
             return Ok(result);
         }

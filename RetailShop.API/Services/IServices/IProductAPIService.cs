@@ -4,7 +4,7 @@ namespace RetailShop.API.Services.IServices;
 
 public interface IProductAPIService
 {
-    Task<List<ProductDTO>> GetProductsAsync(int? categoryId, string? q);
+    Task<ResponseDto?> GetProductsAsync(int? categoryId, string? q);
 
-    Task<bool> CheckProductQuantityAsync(int productId, int quantity);
+    Task<ResponseDto?> CheckProductQuantityAsync(int productId, int quantity);
 }

@@ -3,11 +3,11 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "RetailShop\\RetailShop.csproj",
+        "Path": "RetailShop.API\\RetailShop.API.csproj",
         "Action": "Start"
       },
       {
-        "Path": "RetailShop.Client\\RetailShop.Client.csproj",
+        "Path": "RetailShop.Blazor\\RetailShop.Blazor.csproj",
         "Action": "Start"
       }
     ]

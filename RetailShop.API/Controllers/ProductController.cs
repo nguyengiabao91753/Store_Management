@@ -16,8 +16,8 @@ public class ProductController : ControllerBase
     [HttpGet("check-quantity")]
     public async Task<IActionResult> CheckProductQuantity(int productId, int quantity)
     {
-        var isAvailable = await _productService.CheckProductQuantityAsync(productId, quantity);
-        if (isAvailable)
+        var rs = await _productService.CheckProductQuantityAsync(productId, quantity);
+        if (rs.IsSuccess)
         {
             return Ok(new { Message = "Sufficient quantity available." });
         }
@@ -30,7 +30,12 @@ public class ProductController : ControllerBase
     [HttpGet("get-products")]
     public async Task<IActionResult> GetProducts([FromQuery] int? categoryId, [FromQuery] string? q)
     {
-        var products = await _productService.GetProductsAsync(categoryId, q);
-        return Ok(products);
+        var rs = await _productService.GetProductsAsync(categoryId, q);
+        if (rs.IsSuccess)
+        {
+            return Ok(rs);
+        }
+
+        return BadRequest(rs);
     }
 }

@@ -17,10 +17,11 @@ public class OrderAPIService : IOrderAPIService
         _mapper = mapper;
     }
 
-    public async Task<OrderDTO> PlaceOrderAsync(OrderPlaceDto orderPlaceDto, int customerId = 0)
+    public async Task<ResponseDto?> PlaceOrderAsync(OrderPlaceDto orderPlaceDto, int customerId = 0)
     {
         using (var transaction = await _db.Database.BeginTransactionAsync())
         {
+            var responseDto = new ResponseDto();
             try
             {
 
@@ -45,16 +46,19 @@ public class OrderAPIService : IOrderAPIService
                 if (!orderItemsCreated)
                 {
                     transaction.Rollback();
-                    return new OrderDTO();
+                    responseDto.IsSuccess = false;
+                    return responseDto;
                 }
                 await transaction.CommitAsync();
-                return _mapper.Map<OrderDTO>(order);
-
+                responseDto.Result = _mapper.Map<OrderDTO>(order);
+                responseDto.IsSuccess = true;
+                return responseDto;
             }
             catch (Exception)
             {
                 transaction.Rollback();
-                return new OrderDTO();
+                responseDto.IsSuccess = false;
+                return responseDto;
             }
         }
     }

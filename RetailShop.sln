@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop.Client", "Retail
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop.API", "RetailShop.API\RetailShop.API.csproj", "{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop.Mobile", "RetailShop.Mobile\RetailShop.Mobile.csproj", "{8DCC2942-B5B9-43E4-A943-A36702813002}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailShop.Blazor", "RetailShop.Blazor\RetailShop.Blazor.csproj", "{FE068598-341F-449C-8CB4-CF678EDD39B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBDC97E1-1B16-45E6-8ABC-384CA83FFCFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DCC2942-B5B9-43E4-A943-A36702813002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DCC2942-B5B9-43E4-A943-A36702813002}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DCC2942-B5B9-43E4-A943-A36702813002}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DCC2942-B5B9-43E4-A943-A36702813002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE068598-341F-449C-8CB4-CF678EDD39B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE068598-341F-449C-8CB4-CF678EDD39B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE068598-341F-449C-8CB4-CF678EDD39B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE068598-341F-449C-8CB4-CF678EDD39B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

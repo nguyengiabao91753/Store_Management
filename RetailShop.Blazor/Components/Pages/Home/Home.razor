@@ -1,0 +1,37 @@
+﻿@page "/"
+<PageTitle>Home - MockStore</PageTitle>
+
+<div class="home-container">
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-badge">✨ New Collection 2025</span>
+                <h1 class="hero-title">Discover Modern Essentials</h1>
+                <p class="hero-description">
+                    Handpicked products for your everyday life. 
+                    Fast shipping & easy returns.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn-primary" href="/products">Shop Now</a>
+                    <a class="btn-secondary" href="/about">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="/images/hero.png" alt="Modern lifestyle products" />
+            </div>
+        </div>
+    </section>
+
+    <section class="catalog-section">
+        <div class="section-header">
+            <h2>New & Popular</h2>
+            <p>Trending items loved by our community</p>
+        </div>
+        <div class="products-grid">
+            @foreach (var p in Products)
+            {
+                <RetailShop.Blazor.Components.Shared.ProductCard Product="p" />
+            }
+        </div>
+    </section>
+</div>
