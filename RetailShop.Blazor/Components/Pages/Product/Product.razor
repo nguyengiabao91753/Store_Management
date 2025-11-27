@@ -1,0 +1,223 @@
+﻿@page "/products"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<PageTitle>Products - MockStore</PageTitle>
+
+<div class="products-page">
+    <div class="products-header">
+        <h1>All Products</h1>
+        <p>Discover our complete collection</p>
+    </div>
+
+    <div class="products-container">
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar">
+            <div class="filters-header">
+                <h3>Filters</h3>
+                @if (HasActiveFilters())
+                {
+                    <button class="btn-clear" @onclick="ClearFilters">Clear All</button>
+                }
+            </div>
+
+            <!-- Search -->
+            <div class="filter-section">
+                <label class="filter-label">Search</label>
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="Search products..."
+                        @bind="searchQuery"
+                        @bind:event="oninput"
+                        @onkeyup="OnSearchChanged"
+                    />
+                </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="filter-section">
+                <label class="filter-label">Category</label>
+                <div class="filter-options">
+                    @foreach (var category in categories)
+                    {
+                        <label class="filter-option">
+                            <input 
+                                type="checkbox" 
+                                checked="@selectedCategories.Contains(category)"
+                                @onchange="@(() => ToggleCategory(category))"
+                            />
+                            <span>@category</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <!-- Supplier Filter -->
+            <div class="filter-section">
+                <label class="filter-label">Supplier</label>
+                <div class="filter-options">
+                    @foreach (var supplier in suppliers)
+                    {
+                        <label class="filter-option">
+                            <input 
+                                type="checkbox" 
+                                checked="@selectedSuppliers.Contains(supplier)"
+                                @onchange="@(() => ToggleSupplier(supplier))"
+                            />
+                            <span>@supplier</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <!-- Price Range Filter -->
+            <div class="filter-section">
+                <label class="filter-label">Price Range</label>
+                <div class="price-range">
+                    <input 
+                        type="number" 
+                        class="price-input" 
+                        placeholder="Min"
+                        @bind="minPrice"
+                        @bind:event="oninput"
+                        @onchange="ApplyFilters"
+                    />
+                    <span class="price-separator">—</span>
+                    <input 
+                        type="number" 
+                        class="price-input" 
+                        placeholder="Max"
+                        @bind="maxPrice"
+                        @bind:event="oninput"
+                        @onchange="ApplyFilters"
+                    />
+                </div>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="filter-section">
+                <label class="filter-label">Status</label>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input 
+                            type="checkbox" 
+                            checked="@showActive"
+                            @onchange="@(() => { showActive = !showActive; ApplyFilters(); })"
+                        />
+                        <span>In Stock</span>
+                    </label>
+                    <label class="filter-option">
+                        <input 
+                            type="checkbox" 
+                            checked="@showInactive"
+                            @onchange="@(() => { showInactive = !showInactive; ApplyFilters(); })"
+                        />
+                        <span>Out of Stock</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Products Grid -->
+        <div class="products-main">
+            <!-- Toolbar -->
+            <div class="products-toolbar">
+                <div class="results-count">
+                    @filteredProducts.Count() products found
+                </div>
+                <div class="sort-controls">
+                    <label>Sort by:</label>
+                    <select class="sort-select" @bind="sortBy" @bind:after="ApplyFilters">
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="price-asc">Price (Low to High)</option>
+                        <option value="price-desc">Price (High to Low)</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            @if (isLoading)
+            {
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading products...</p>
+                </div>
+            }
+            else if (filteredProducts.Any())
+            {
+                <div class="products-grid">
+                    @foreach (var product in paginatedProducts)
+                    {
+                        <RetailShop.Blazor.Components.Shared.ProductCard Product="product" />
+                    }
+                </div>
+
+                <!-- Pagination Component -->
+                @if (totalPages > 1)
+                {
+                    <div class="pagination">
+                        <button 
+                            class="pagination-btn pagination-prev" 
+                            @onclick="GoToPreviousPage"
+                            disabled="@(currentPage == 1)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                            Previous
+                        </button>
+
+                        <div class="pagination-pages">
+                            @foreach (var pageNumber in GetPageNumbers())
+                            {
+                                @if (pageNumber == -1)
+                                {
+                                    <span class="pagination-ellipsis">...</span>
+                                }
+                                else
+                                {
+                                    <button 
+                                        class="pagination-number @(pageNumber == currentPage ? "active" : "")"
+                                        @onclick="@(() => GoToPage(pageNumber))">
+                                        @pageNumber
+                                    </button>
+                                }
+                            }
+                        </div>
+
+                        <button 
+                            class="pagination-btn pagination-next" 
+                            @onclick="GoToNextPage"
+                            disabled="@(currentPage == totalPages)">
+                            Next
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <h3>No products found</h3>
+                    <p>Try adjusting your filters or search query</p>
+                    <button class="btn-primary" @onclick="ClearFilters">Clear Filters</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
