@@ -1,0 +1,138 @@
+﻿@page "/cart"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject NavigationManager Nav
+
+<PageTitle>Shopping Cart - MockStore</PageTitle>
+
+<div class="cart-container">
+    <div class="cart-header">
+        <h1>Shopping Cart</h1>
+        <p class="cart-subtitle">@Carts.Count items in your cart</p>
+    </div>
+
+    @if (Carts.Count == 0)
+    {
+        <div class="cart-empty">
+            <div class="empty-icon">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+            </div>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added anything to your cart yet.</p>
+            <button class="btn-primary" @onclick='() => Nav.NavigateTo("/")'>
+                Start Shopping
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="cart-layout">
+            <div class="cart-items">
+                @foreach (var item in Carts)
+                {
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="@item.ProductImage" alt="@item.ProductName" />
+                        </div>
+                        <div class="item-details">
+                            <h3 class="item-name">@item.ProductName</h3>
+                            @* <p class="item-category">@item.CategoryName</p> *@
+                            <div class="item-price-mobile">@item.Price.ToString("C")</div>
+                        </div>
+                        <div class="item-quantity">
+                            <button class="qty-btn" @onclick="() => DecreaseQuantity(item)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                            </button>
+                            <input type="number" class="qty-input" value="@item.Quantity" readonly />
+                            <button class="qty-btn" @onclick="() => IncreaseQuantity(item)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="item-price">@item.Price.ToString("C")</div>
+                        <div class="item-total">@((item.Price * item.Quantity).ToString("C"))</div>
+                        <button class="item-remove" @onclick="() => RemoveItem(item)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-card">
+                    <h2>Order Summary</h2>
+
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>@Subtotal.ToString("C")</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>@Shipping.ToString("C")</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span>@Tax.ToString("C")</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span>@Total.ToString("C")</span>
+                    </div>
+
+                    <button class="btn-checkout" @onclick="GoToCheckout">
+                        Proceed to Checkout
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
+
+                    <button class="btn-continue" @onclick='() => Nav.NavigateTo("/")'>
+                        Continue Shopping
+                    </button>
+                </div>
+
+                <div class="trust-badges">
+                    <div class="badge">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        <span>Secure Checkout</span>
+                    </div>
+                    <div class="badge">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        </svg>
+                        <span>30-Day Returns</span>
+                    </div>
+                    <div class="badge">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg>
+                        <span>Free Shipping</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    
+}

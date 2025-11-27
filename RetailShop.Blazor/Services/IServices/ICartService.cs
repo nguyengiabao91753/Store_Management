@@ -6,7 +6,9 @@ public interface ICartService
 {
     public List<Cart> GetCart();
 
-    public bool AddToCart(int product, int quantity);
+    public bool AddToCart(Cart cart);
 
     public bool ClearCart(List<int> products);
+
+    public bool UpdateCart(Cart cart);
 }

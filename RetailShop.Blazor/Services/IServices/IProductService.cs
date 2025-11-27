@@ -9,4 +9,6 @@ namespace RetailShop.Blazor.Services.IServices;
 public interface IProductService
 {
     Task<ResponseDto?> GetAllProductsAsync();
+
+    Task<ResponseDto?> GetProductById(int productId);
 }

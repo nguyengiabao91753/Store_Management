@@ -48,6 +48,26 @@ public class ProductAPIService : IProductAPIService
         return response;
     }
 
+    public async Task<ResponseDto> GetProductById(int productId)
+    {
+        var response = new ResponseDto();
+        var product = await _db.Products
+                                .Where(p => p.Active == true && p.ProductId == productId)
+                                .Include(p => p.Category)
+                                .Include(p => p.Supplier)
+                                .Include(P => P.Inventories)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync();
+        if (product == null)
+        {
+            response.Message = "Product not found.";
+            return response;
+        }
+        response.Result = _mapper.Map<ProductDTO>(product);
+        response.IsSuccess = true;
+        return response;
+    }
+
     public async Task<ResponseDto?> GetProductsAsync(int? categoryId, string? q)
     {
 

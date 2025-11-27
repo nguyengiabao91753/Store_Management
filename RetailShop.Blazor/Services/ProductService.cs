@@ -23,4 +23,14 @@ public class ProductService : IProductService
             Url = SD.ServierAPI + "/api/product/get-products"
         });
     }
+
+    public async Task<ResponseDto?> GetProductById(int productId)
+    {
+        return await _baseService.SendAsync(new RequestDto()
+        {
+            ApiType = SD.ApiType.GET,
+
+            Url = SD.ServierAPI + $"/api/product/get-product-by-id/{productId}"
+        });
+    }
 }

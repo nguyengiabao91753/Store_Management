@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Server;
+using Microsoft.EntityFrameworkCore;
 using RetailShop.Blazor.Components;
 using RetailShop.Blazor.Data;
 using RetailShop.Blazor.Services;
@@ -14,19 +15,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.Configure<CircuitOptions>(options => options.DetailedErrors = true);
 
 
 
 SD.ServierAPI = builder.Configuration.GetValue<string>("Urls:Server");
 
 //Add Services
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
 //Dependency Injection for Services
 builder.Services.AddScoped<IBaseService, BaseService>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
-
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 

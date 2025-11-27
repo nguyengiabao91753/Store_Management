@@ -38,4 +38,15 @@ public class ProductController : ControllerBase
 
         return BadRequest(rs);
     }
+
+    [HttpGet("get-product-by-id/{productId}")]
+    public async Task<IActionResult> GetProductById(int productId)
+    {
+        var rs = await _productService.GetProductById(productId);
+        if (rs.IsSuccess)
+        {
+            return Ok(rs);
+        }
+        return BadRequest(rs);
+    }
 }

@@ -1,29 +1,22 @@
-﻿@inject NavigationManager Nav
+﻿
+@* <NavLink class="product-card" href="@($"/product/{Product.ProductId}")"> *@
 
-<div class="product-card" @onclick="ViewProduct">
-    <div class="product-image-wrapper">
-        <img src="@Product.ProductImage" alt="@Product.ProductName" class="product-image" />
-        <div class="product-badge">New</div>
-    </div>
-    <div class="product-info">
-        <span class="product-category">@Product.CategoryName</span>
-        <h3 class="product-name">@Product.ProductName</h3>
-        <div class="product-footer">
-            <span class="product-price">@Product.Price.ToString("C")</span>
-            <button class="btn-view" @onclick:stopPropagation="true" @onclick="ViewProduct">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+    <div class="product-card" @onclick="ViewProduct">
+        <div class="product-image-wrapper">
+            <img src="@Product.ProductImage" alt="@Product.ProductName" class="product-image" />
+            <div class="product-badge">New</div>
+        </div>
+        <div class="product-info">
+            <span class="product-category">@Product.CategoryName</span>
+            <h3 class="product-name">@Product.ProductName</h3>
+            <div class="product-footer">
+                <span class="product-price">@Product.Price.ToString("C")</span>
+            <button class="btn-view" @onclick="ViewProduct" @onclick:stopPropagation="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
             </button>
+            </div>
         </div>
     </div>
-</div>
-
-@code {
-
-
-    private void ViewProduct()
-    {
-        Nav.NavigateTo($"/product/{Product.ProductId}");
-    }
-}
+@* </NavLink> *@

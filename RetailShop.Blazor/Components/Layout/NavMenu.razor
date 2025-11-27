@@ -1,4 +1,6 @@
-﻿<nav class="main-nav">
+﻿@using RetailShop.Blazor.Models
+@using RetailShop.Blazor.Services.IServices
+<nav class="main-nav">
     <div class="nav-container">
         <div class="nav-brand">
             <a href="/" class="brand-link">
@@ -35,15 +37,71 @@
                     <span>Products</span>
                 </NavLink>
 
-                <NavLink class="nav-link" href="cart">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1" />
-                        <circle cx="20" cy="21" r="1" />
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                    </svg>
-                    <span>Cart</span>
-                    <span class="cart-badge">3</span>
-                </NavLink>
+                @* Added cart preview dropdown wrapper *@
+                <div class="nav-cart-wrapper">
+                    <NavLink class="nav-link" href="cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1" />
+                            <circle cx="20" cy="21" r="1" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg>
+                        <span>Cart</span>
+                        @if (CartItemCount > 0)
+                        {
+                            <span class="cart-badge">@CartItemCount</span>
+                        }
+                    </NavLink>
+
+                    @* Cart preview dropdown *@
+                    <div class="cart-preview-dropdown">
+                        @if (Carts.Count == 0)
+                        {
+                            <div class="cart-preview-empty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="9" cy="21" r="1" />
+                                    <circle cx="20" cy="21" r="1" />
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                </svg>
+                                <p>Your cart is empty</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="cart-preview-header">
+                                <h3>Shopping Cart</h3>
+                                <span class="cart-preview-count">@CartItemCount items</span>
+                            </div>
+                            <div class="cart-preview-items">
+                                @foreach (var item in Carts)
+                                {
+                                    <div class="cart-preview-item">
+                                        <img src="@item.ProductImage" alt="@item.ProductName" />
+                                        <div class="cart-preview-item-details">
+                                            <h4>@item.ProductName</h4>
+                                            <p>@item.Quantity x @item.Price.ToString("C")</p>
+                                        </div>
+                                        <div class="cart-preview-item-total">
+                                            @((item.Price * item.Quantity).ToString("C"))
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="cart-preview-footer">
+                                <div class="cart-preview-subtotal">
+                                    <span>Subtotal:</span>
+                                    <span class="cart-preview-price">@CartSubtotal.ToString("C")</span>
+                                </div>
+                                <a href="/cart" class="cart-preview-btn">
+                                    View Cart (@CartItemCount)
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                        <polyline points="12 5 19 12 12 19" />
+                                    </svg>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
 
                 <NavLink class="nav-link" href="orders">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -75,3 +133,22 @@
         </div>
     </div>
 </nav>
+
+@code {
+    [Inject]
+    public ICartService CartService { get; set; } = default!;
+
+    private List<Cart> Carts { get; set; } = new();
+    private int CartItemCount => Carts.Sum(x => x.Quantity);
+    private decimal CartSubtotal => Carts.Sum(x => x.TotalAmount!.Value);
+
+    protected override void OnInitialized()
+    {
+        Carts = CartService.GetCart()
+        .OrderByDescending(x => x.CreatedAt)
+        .Take(5)
+        .ToList();
+    }
+
+   
+}
