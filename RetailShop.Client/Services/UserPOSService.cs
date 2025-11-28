@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RetailShop.Client.Data;
 using RetailShop.Client.Models;
 using RetailShop.Client.Services.IServices;
+using BCrypt.Net;
 
 namespace RetailShop.Client.Services
 {
@@ -17,8 +18,25 @@ namespace RetailShop.Client.Services
         // Chỉ lấy user theo username và password
         public async Task<User?> GetUserByCredentials(string username, string password)
         {
-            return await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null) return null;
+
+            // Verify the provided password against the stored BCrypt hash
+            try
+            {
+                if (BCrypt.Net.BCrypt.Verify(password, user.Password))
+                {
+                    return user;
+                }
+            }
+            catch
+            {
+                // If verification fails (invalid hash format etc.), treat as authentication failure
+            }
+
+            return null;
         }
     }
 }
