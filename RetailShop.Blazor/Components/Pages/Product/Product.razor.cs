@@ -1,9 +1,18 @@
-﻿using RetailShop.Blazor.Dtos;
+﻿using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
+using RetailShop.Blazor.Dtos;
+using RetailShop.Blazor.Services.IServices;
 
 namespace RetailShop.Blazor.Components.Pages.Product;
 
 public partial class Product
 {
+    [Inject]
+    private IProductService _productService {  get; set; }
+    private ICategoryService _categoryService { get; set; }
+
+
+
     private List<ProductDTO> allProducts = new();
     private IEnumerable<ProductDTO> filteredProducts = new List<ProductDTO>();
     private IEnumerable<ProductDTO> paginatedProducts = new List<ProductDTO>();
@@ -36,10 +45,34 @@ public partial class Product
         isLoading = true;
 
         // TODO: Replace with actual API call
-        // allProducts = await Http.GetFromJsonAsync<List<ProductDTO>>("api/products");
+        //allProducts = await Http.GetFromJsonAsync<List<ProductDTO>>("api/products");
 
-        // Mock data for demo
-        allProducts = GenerateMockProducts();
+        if (_productService.GetAllProductsAsync() == null)
+        {
+            allProducts = new List<ProductDTO>();
+            return;
+        }
+
+        var rs = await _productService.GetAllProductsAsync();
+        if (rs != null && rs.Result != null)
+        {
+            try
+            {
+                var list = JsonConvert.DeserializeObject<List<ProductDTO>>(Convert.ToString(rs.Result));
+                allProducts = list ?? new List<ProductDTO>();
+            }
+            catch
+            {
+                allProducts = new List<ProductDTO>();
+            }
+        }
+        else
+        {
+            allProducts = new List<ProductDTO>();
+        }
+
+        //// Mock data for demo
+        //allProducts = GenerateMockProducts();
 
         // Extract unique categories and suppliers
         categories = allProducts

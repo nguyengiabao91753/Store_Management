@@ -26,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProductAPIService, ProductAPIService>();
 builder.Services.AddScoped<IOrderAPIService, OrderAPIService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoryAPIService, CategoryAPIService>();
+builder.Services.AddScoped<ISupplierAPIService, SupplierAPIService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
