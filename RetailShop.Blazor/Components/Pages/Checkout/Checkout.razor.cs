@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
+using RetailShop.Blazor.Components.Shared;
 using RetailShop.Blazor.Dtos;
 using RetailShop.Blazor.Models;
 using RetailShop.Blazor.Services;
@@ -10,6 +12,10 @@ public partial class Checkout
 {
     [Inject]
     private ICartService CartService { get; set; } = default!;
+    [Inject]
+    private IOrderService OrderService { get; set; } = default!;
+    [Inject]
+    private IPromotionService PromotionService { get; set; } = default!;
     private OrderPlaceDto orderDto = new();
     private List<Cart> cartItems = new();
     private decimal subtotal = 0;
@@ -20,10 +26,12 @@ public partial class Checkout
     private bool isPlacingOrder = false;
     private bool isApplyingPromo = false;
 
+    private Toast? ToastRef;
+
     protected override void OnInitialized()
     {
         LoadCartItems();
-        orderDto.PaymentMethod = "Cash"; // Default payment method
+        orderDto.PaymentMethod = "Cash"; 
     }
 
     private void LoadCartItems()
@@ -62,21 +70,32 @@ public partial class Checkout
         }
 
         isApplyingPromo = true;
-        await Task.Delay(500); // Simulate API call
+        await Task.Delay(500); 
+        var rs = await PromotionService.GetPromotionByCode(promoCode);
+        var promo = JsonConvert.DeserializeObject<PromotionDTO>(Convert.ToString(rs.Result));
 
-        // Mock promo validation - Replace with actual API call
-        if (promoCode.ToUpper() == "SAVE10")
-        {
-            orderDto.PromoId = 1;
-            orderDto.DiscountAmount = subtotal * 0.10m; // 10% discount
-            promoMessage = "Promo code applied! You saved 10%";
-            promoSuccess = true;
-        }
-        else if (promoCode.ToUpper() == "SAVE20")
-        {
-            orderDto.PromoId = 2;
-            orderDto.DiscountAmount = subtotal * 0.20m; // 20% discount
-            promoMessage = "Promo code applied! You saved 20%";
+        if (promo != null) {
+            if (promo.MinOrderAmount != null && subtotal < promo.MinOrderAmount)
+            {
+                promoMessage = $"Minimum order amount for this promo is {promo.MinOrderAmount:C}";
+                promoSuccess = false;
+                orderDto.PromoId = null;
+                orderDto.DiscountAmount = 0;
+                CalculateTotal();
+                isApplyingPromo = false;
+                return;
+            }
+            orderDto.PromoId = promo.PromoId;
+            if (promo.DiscountType == "Percentage")
+            {
+                orderDto.DiscountAmount = subtotal * (promo.DiscountValue / 100);
+                promoMessage = $"Promo code applied! You saved {promo.DiscountValue}%";
+            }
+            else if (promo.DiscountType == "Fixed")
+            {
+                orderDto.DiscountAmount = promo.DiscountValue;
+                promoMessage = $"Promo code applied! You saved {promo.DiscountValue:C}";
+            }
             promoSuccess = true;
         }
         else
@@ -86,7 +105,6 @@ public partial class Checkout
             orderDto.PromoId = null;
             orderDto.DiscountAmount = 0;
         }
-
         CalculateTotal();
         isApplyingPromo = false;
     }
@@ -114,13 +132,28 @@ public partial class Checkout
         // Simulate API call - Replace with actual API
         await Task.Delay(1500);
 
-        // Clear cart and navigate to success page
-        // CartService.ClearCart();
-        // Nav.NavigateTo("/order-success");
+        var rs = await OrderService.PlaceOrderAsync(orderDto);
+        if (rs.IsSuccess)
+        {
+            // Order placed successfully
+            // Clear cart and navigate to success page
+            CartService.ClearCart(null);
+            Nav.NavigateTo("/checkout/success");
+            return;
+        }
+        else
+        {
+            ToastRef?.ShowToast(
+          "Checkout Failed! Please Try Again!",
+          null,
+          Toast.ToastType.Error
+            );
 
-        isPlacingOrder = false;
 
-        // For demo, just show alert
-        // In production, navigate to order confirmation page
+        }
+
+            isPlacingOrder = false;
+
+      
     }
 }

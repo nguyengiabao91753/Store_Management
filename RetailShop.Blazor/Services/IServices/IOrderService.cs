@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 namespace RetailShop.Blazor.Services.IServices;
 public interface IOrderService
 {
-    Task<ResponseDto?> PlaceOrderAsync(ResponseDto responseDto);
+    Task<ResponseDto?> PlaceOrderAsync(OrderPlaceDto orderPlace );
 }

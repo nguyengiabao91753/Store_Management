@@ -39,10 +39,18 @@ public class CartService : ICartService
         }
     }
 
-    public bool ClearCart(List<int> products)
+    public bool ClearCart(List<int>? products = null)
     {
+
         try
         {
+            if (products == null || products.Count == 0)
+            {
+                var allCartItems = _db.Carts.ToList();
+                _db.Carts.RemoveRange(allCartItems);
+                _db.SaveChanges();
+                return true;
+            }
             var cartItems = _db.Carts.Where(c => products.Contains(c.ProductId)).ToList();
             _db.Carts.RemoveRange(cartItems);
             _db.SaveChanges();

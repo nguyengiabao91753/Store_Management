@@ -8,7 +8,7 @@ public interface ICartService
 
     public bool AddToCart(Cart cart);
 
-    public bool ClearCart(List<int> products);
+    public bool ClearCart(List<int>? products);
 
     public bool UpdateCart(Cart cart);
 }

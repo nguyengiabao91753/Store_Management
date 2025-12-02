@@ -17,7 +17,7 @@ public partial class ProductDetail
     [Inject]
     private ICartService CartService { get; set; }
     private ProductDTO? product;
-    private List<Product> relatedProducts = new();
+    private List<ProductDTO> relatedProducts = new();
     private List<string> productImages = new();
     private int quantity = 1;
     private bool isWishlisted = false;
@@ -31,7 +31,8 @@ public partial class ProductDetail
         product = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
 
         // Load related products
-        relatedProducts = GetRelatedProducts();
+        var rs = await ProductService.GetAllProductsAsync();
+        relatedProducts = JsonConvert.DeserializeObject<List<ProductDTO>>(Convert.ToString(rs.Result));
     }
 
     private void IncreaseQuantity()
@@ -69,6 +70,10 @@ public partial class ProductDetail
         else
         {
             Console.WriteLine("Failed to add product to cart.");
+            ToastRef?.ShowToast(
+          "Add to Cart Failed!",
+          $"{quantity}x {product.ProductName}",
+          Toast.ToastType.Error);
         }
 
     }

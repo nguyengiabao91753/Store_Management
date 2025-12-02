@@ -18,13 +18,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //    options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure() // optional resilience
+        builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
 // Add services to the container.
 builder.Services.AddScoped<IProductAPIService, ProductAPIService>();
 builder.Services.AddScoped<IOrderAPIService, OrderAPIService>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

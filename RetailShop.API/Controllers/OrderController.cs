@@ -9,10 +9,16 @@ namespace RetailShop.API.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IOrderAPIService _orderAPIService;
-    public OrderController(IOrderAPIService orderAPIService)
+    private readonly IPromotionService _promotionService;
+    private readonly IInventoryService _inventoryService;
+
+    public OrderController(IOrderAPIService orderAPIService, IPromotionService promotionService, IInventoryService inventoryService)
     {
         _orderAPIService = orderAPIService;
+        _promotionService = promotionService;
+        _inventoryService = inventoryService;
     }
+
 
     //[HttpGet]
     //public async Task<IActionResult> GetOrdersAsync([FromQuery] int userId)
@@ -21,12 +27,32 @@ public class OrderController : ControllerBase
     //    return Ok(orders);
     //}
 
-    [HttpPost]
+    [HttpPost("order-place")]
     public async Task<IActionResult> CreateOrderAsync([FromBody] OrderPlaceDto orderPlaceDto)
     {
         var result = await _orderAPIService.PlaceOrderAsync(orderPlaceDto);
         if (result.IsSuccess)
         {
+            if (orderPlaceDto.Products != null)
+            {
+                foreach (var product in orderPlaceDto.Products)
+                {
+                    var updateInventory = await _inventoryService.UpdateProductStock(product.ProductId, product.Quantity);
+                    if(updateInventory.IsSuccess == false)
+                    {
+                        return BadRequest(updateInventory);
+                    }
+                }
+            }
+            if(orderPlaceDto.PromoId!= null)
+            {
+
+                var updatePromors = await _promotionService.UpdatePromotionCount(orderPlaceDto.PromoId!.Value);
+                if (updatePromors.IsSuccess == false)
+                {
+                    return BadRequest(updatePromors);
+                }
+            }
             return Ok(result);
         }
         return BadRequest(result);

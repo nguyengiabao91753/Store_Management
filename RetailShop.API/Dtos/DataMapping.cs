@@ -70,5 +70,9 @@ public class DataMapping : Profile
         // Nếu bạn cần map ngược (DTO → Entity) thì thêm dòng này
         CreateMap<OrderDTO, Order>();
         CreateMap<OrderItemDTO, OrderItem>();
+
+        // ==================== PROMOTION MAPPING ====================
+        CreateMap<Promotion, PromotionDTO>();
+        CreateMap<ProductDTO, ProductDTO>();
     }
 }

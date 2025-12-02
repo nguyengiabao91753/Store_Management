@@ -1,0 +1,16 @@
+﻿@page "/checkout/success"
+@rendermode InteractiveServer
+
+<div class="status-card" id="statusCard">
+    <div class="status-icon">
+        <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h3>Payment Successful</h3>
+    <p>Your order has been completed successfully!</p>
+    <p class="small text-muted mt-3">
+        Redirecting to home page in <span id="countdown">5</span> seconds...
+    </p>
+</div>
+
+    <script src="~/js/CheckoutStatus.js" asp-append-version="true"></script>
+
