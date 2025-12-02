@@ -28,10 +28,7 @@ public partial class Customer
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 
-    public bool Active { get; set; } = true;
-
     public string Password { get; set; } = null!;
-
 
     [InverseProperty("Customer")]
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();

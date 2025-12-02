@@ -7,7 +7,7 @@ namespace RetailShop.Blazor.Components.Pages.Auth;
 
 public partial class Register
 {
-    [Inject] private IAuthService AuthService { get; set; } = default!;
+    [Inject] private ICustomerAuthService CustomerAuthService { get; set; } = default!;
 
     private RegisterModel registerModel = new();
     private bool showPassword = false;
@@ -18,7 +18,7 @@ public partial class Register
     protected override async Task OnInitializedAsync()
     {
         // Nếu đã đăng nhập rồi thì redirect về home
-        if (await AuthService.IsAuthenticatedAsync())
+        if (await CustomerAuthService.IsAuthenticatedAsync())
         {
             Nav.NavigateTo("/", true);
         }
@@ -58,16 +58,16 @@ public partial class Register
 
         try
         {
-            // LƯU Ý: TẠM THỜI KHÁCH HÀNG SẼ LẤY TẠM ROLE CỦA NHÂN VIÊN DO RÀNG BUỘC DỮ LIỆU
-            var registerDto = new RegisterDto
+            var registerDto = new CustomerRegisterDto
             {
-                Username = registerModel.Username,
+                Name = registerModel.Name,
+                Phone = registerModel.Phone,
+                Email = registerModel.Email,
                 Password = registerModel.Password,
-                FullName = registerModel.FullName,
-                Role = "staff"
+                Address = registerModel.Address
             };
 
-            var result = await AuthService.RegisterAsync(registerDto);
+            var result = await CustomerAuthService.RegisterAsync(registerDto);
 
             if (result.IsSuccess)
             {
@@ -104,13 +104,22 @@ public partial class Register
 
     public class RegisterModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập phải từ 3-50 ký tự")]
-        public string Username { get; set; } = string.Empty;
-
         [Required(ErrorMessage = "Vui lòng nhập họ tên")]
         [StringLength(100, ErrorMessage = "Họ tên không được vượt quá 100 ký tự")]
-        public string FullName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [StringLength(20, ErrorMessage = "Số điện thoại không được vượt quá 20 ký tự")]
+        [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
+        public string Phone { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vui lòng nhập email")]
+        [StringLength(100, ErrorMessage = "Email không được vượt quá 100 ký tự")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; } = string.Empty;
+
+        [StringLength(255, ErrorMessage = "Địa chỉ không được vượt quá 255 ký tự")]
+        public string? Address { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [MinLength(6, ErrorMessage = "Mật khẩu phải ít nhất 6 ký tự")]
