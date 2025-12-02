@@ -7,58 +7,58 @@ using BCrypt.Net;
 
 namespace RetailShop.API.Services
 {
-    public class AuthService : IAuthService
+    public class CustomerAuthService : ICustomerAuthService
     {
         private readonly AppDbContext _context;
 
-        public AuthService(AppDbContext context)
+        public CustomerAuthService(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ResponseDto> RegisterAsync(RegisterDto registerDto)
+        public async Task<ResponseDto> RegisterAsync(CustomerRegisterDto registerDto)
         {
             try
             {
-                // Kiểm tra username đã tồn tại chưa
-                if (await UserExistsAsync(registerDto.Username))
+                // Kiểm tra email đã tồn tại chưa
+                if (await CustomerExistsAsync(registerDto.Email))
                 {
                     return new ResponseDto
                     {
                         IsSuccess = false,
-                        Message = "Username đã tồn tại!"
+                        Message = "Email đã được sử dụng!"
                     };
                 }
 
                 // Mã hóa password bằng BCrypt
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
 
-                // Tạo user mới
-                var user = new User
+                // Tạo customer mới
+                var customer = new Customer
                 {
-                    Username = registerDto.Username,
+                    Name = registerDto.Name,
+                    Phone = registerDto.Phone,
+                    Email = registerDto.Email,
                     Password = hashedPassword,
-                    FullName = registerDto.FullName,
-                    Role = registerDto.Role ?? "User",
+                    Address = registerDto.Address,
                     CreatedAt = DateTime.Now,
-                    Active = true
                 };
 
-                _context.Users.Add(user);
+                _context.Customers.Add(customer);
                 await _context.SaveChangesAsync();
 
                 return new ResponseDto
                 {
                     IsSuccess = true,
                     Message = "Đăng ký thành công!",
-                    Result = new UserDto
+                    Result = new CustomerDto
                     {
-                        UserId = user.UserId,
-                        Username = user.Username,
-                        FullName = user.FullName,
-                        Role = user.Role,
-                        CreatedAt = user.CreatedAt,
-                        Active = user.Active
+                        CustomerId = customer.CustomerId,
+                        Name = customer.Name,
+                        Email = customer.Email,
+                        Phone = customer.Phone,
+                        Address = customer.Address,
+                        CreatedAt = customer.CreatedAt,
                     }
                 };
             }
@@ -72,25 +72,25 @@ namespace RetailShop.API.Services
             }
         }
 
-        public async Task<ResponseDto> LoginAsync(LoginDto loginDto)
+        public async Task<ResponseDto> LoginAsync(CustomerLoginDto loginDto)
         {
             try
             {
-                // Tìm user theo username
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Username == loginDto.Username && u.Active);
+                // Tìm customer theo email
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.Email == loginDto.Email);
 
-                if (user == null)
+                if (customer == null)
                 {
                     return new ResponseDto
                     {
                         IsSuccess = false,
-                        Message = "Username không tồn tại hoặc tài khoản đã bị khóa!"
+                        Message = "Email không tồn tại hoặc tài khoản đã bị khóa!"
                     };
                 }
 
                 // Kiểm tra password
-                if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+                if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, customer.Password))
                 {
                     return new ResponseDto
                     {
@@ -99,14 +99,15 @@ namespace RetailShop.API.Services
                     };
                 }
 
-                // Tạo response với thông tin user
-                var loginResponse = new LoginResponseDto
+                // Tạo response với thông tin customer
+                var loginResponse = new CustomerLoginResponseDto
                 {
-                    UserId = user.UserId,
-                    Username = user.Username,
-                    FullName = user.FullName,
-                    Role = user.Role,
-                    Token = "simple_token_" + user.UserId, // Token đơn giản cho đồ án
+                    CustomerId = customer.CustomerId,
+                    Name = customer.Name,
+                    Email = customer.Email,
+                    Phone = customer.Phone,
+                    Address = customer.Address,
+                    Token = "customer_token_" + customer.CustomerId,
                     Message = "Đăng nhập thành công!"
                 };
 
@@ -127,24 +128,24 @@ namespace RetailShop.API.Services
             }
         }
 
-        public async Task<UserDto?> GetUserByIdAsync(int userId)
+        public async Task<CustomerDto?> GetCustomerByIdAsync(int customerId)
         {
             try
             {
-                var user = await _context.Users
-                    .Where(u => u.UserId == userId && u.Active)
-                    .Select(u => new UserDto
+                var customer = await _context.Customers
+                    .Where(c => c.CustomerId == customerId)
+                    .Select(c => new CustomerDto
                     {
-                        UserId = u.UserId,
-                        Username = u.Username,
-                        FullName = u.FullName,
-                        Role = u.Role,
-                        CreatedAt = u.CreatedAt,
-                        Active = u.Active
+                        CustomerId = c.CustomerId,
+                        Name = c.Name,
+                        Email = c.Email,
+                        Phone = c.Phone,
+                        Address = c.Address,
+                        CreatedAt = c.CreatedAt
                     })
                     .FirstOrDefaultAsync();
 
-                return user;
+                return customer;
             }
             catch
             {
@@ -152,10 +153,10 @@ namespace RetailShop.API.Services
             }
         }
 
-        public async Task<bool> UserExistsAsync(string username)
+        public async Task<bool> CustomerExistsAsync(string email)
         {
-            return await _context.Users
-                .AnyAsync(u => u.Username == username);
+            return await _context.Customers
+                .AnyAsync(c => c.Email == email);
         }
     }
 }

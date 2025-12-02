@@ -7,7 +7,7 @@ namespace RetailShop.Blazor.Components.Pages.Auth;
 
 public partial class Login
 {
-    [Inject] private IAuthService AuthService { get; set; } = default!;
+    [Inject] private ICustomerAuthService CustomerAuthService { get; set; } = default!;
 
     private LoginModel loginModel = new();
     private bool showPassword = false;
@@ -17,7 +17,7 @@ public partial class Login
     protected override async Task OnInitializedAsync()
     {
         // Nếu đã đăng nhập rồi thì redirect về home
-        if (await AuthService.IsAuthenticatedAsync())
+        if (await CustomerAuthService.IsAuthenticatedAsync())
         {
             Nav.NavigateTo("/");
         }
@@ -37,18 +37,18 @@ public partial class Login
 
         try
         {
-            var loginDto = new LoginDto
+            var loginDto = new CustomerLoginDto
             {
-                Username = loginModel.Username,
+                Email = loginModel.Email,
                 Password = loginModel.Password
             };
 
-            var result = await AuthService.LoginAsync(loginDto);
+            var result = await CustomerAuthService.LoginAsync(loginDto);
 
             if (result.IsSuccess)
             {
-                // Đăng nhập thành công, chuyển về trang chủ
-                Nav.NavigateTo("/", false);
+                // Đăng nhập thành công, chuyển về trang chủ với force reload
+                Nav.NavigateTo("/", true);
             }
             else
             {
@@ -79,9 +79,9 @@ public partial class Login
 
     public class LoginModel
     {
-        [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Tên đăng nhập phải từ 3-50 ký tự")]
-        public string Username { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Vui lòng nhập email")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [MinLength(6, ErrorMessage = "Mật khẩu phải ít nhất 6 ký tự")]
