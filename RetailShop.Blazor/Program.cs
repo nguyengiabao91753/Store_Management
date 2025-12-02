@@ -30,6 +30,7 @@ builder.Services.AddScoped<IBaseService, BaseService>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 

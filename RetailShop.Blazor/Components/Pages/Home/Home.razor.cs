@@ -15,7 +15,29 @@ public partial class Home
 
     protected override async Task OnInitializedAsync()
     {
+        if (_productService == null)
+        {
+            Products = new List<ProductDTO>();
+            return;
+        }
+
         var rs = await _productService.GetAllProductsAsync();
-        Products = JsonConvert.DeserializeObject<List<ProductDTO>>(Convert.ToString(rs.Result));
+
+        if (rs != null && rs.Result != null)
+        {
+            try
+            {
+                var list = JsonConvert.DeserializeObject<List<ProductDTO>>(Convert.ToString(rs.Result));
+                Products = list ?? new List<ProductDTO>();
+            }
+            catch
+            {
+                Products = new List<ProductDTO>();
+            }
+        }
+        else
+        {
+            Products = new List<ProductDTO>();
+        }
     }
 }

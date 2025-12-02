@@ -5,7 +5,7 @@
 @layout EmptyLayout
 @inject NavigationManager Nav
 
-<PageTitle>Create Account - MockStore</PageTitle>
+<PageTitle>Đăng ký - RetailShop</PageTitle>
 
 <div class="auth-container">
     <div class="auth-left">
@@ -16,37 +16,37 @@
                         <rect width="32" height="32" rx="8" fill="currentColor" />
                         <path d="M12 10h8v2h-8z M12 15h8v2h-8z M12 20h5v2h-5z" fill="white" />
                     </svg>
-                    <span>MockStore</span>
+                    <span>RetailShop</span>
                 </a>
             </div>
 
             <div class="auth-hero">
-                <h1 class="auth-hero-title">Start your journey with us today</h1>
-                <p class="auth-hero-desc">Join thousands of happy customers and discover a seamless shopping experience with exclusive benefits.</p>
+                <h1 class="auth-hero-title">Bắt đầu hành trình kinh doanh cùng chúng tôi</h1>
+                <p class="auth-hero-desc">Tham gia cùng hàng nghìn cửa hàng và khám phá trải nghiệm quản lý bán hàng tối ưu với những lợi ích độc quyền.</p>
             </div>
 
             <div class="auth-benefits">
                 <div class="benefit-item">
                     <div class="benefit-number">01</div>
                     <div class="benefit-content">
-                        <h3>Exclusive Deals</h3>
-                        <p>Get access to member-only discounts and early access to sales</p>
+                        <h3>Quản lý toàn diện</h3>
+                        <p>Quản lý kho hàng, đơn hàng và khách hàng một cách hiệu quả</p>
                     </div>
                 </div>
 
                 <div class="benefit-item">
                     <div class="benefit-number">02</div>
                     <div class="benefit-content">
-                        <h3>Free Shipping</h3>
-                        <p>Enjoy complimentary shipping on orders over $50</p>
+                        <h3>Báo cáo chi tiết</h3>
+                        <p>Theo dõi doanh thu và phân tích kinh doanh thông qua báo cáo</p>
                     </div>
                 </div>
 
                 <div class="benefit-item">
                     <div class="benefit-number">03</div>
                     <div class="benefit-content">
-                        <h3>Rewards Program</h3>
-                        <p>Earn points with every purchase and redeem for discounts</p>
+                        <h3>Hỗ trợ 24/7</h3>
+                        <p>Đội ngũ hỗ trợ kỹ thuật luôn sẵn sàng giúp đỡ bạn</p>
                     </div>
                 </div>
             </div>
@@ -56,15 +56,15 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.1">
                         <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z" />
                     </svg>
-                    <p>"MockStore has completely transformed my online shopping experience. The quality and service are unmatched!"</p>
+                    <p>"RetailShop đã thay đổi hoàn toàn cách tôi quản lý cửa hàng. Hệ thống rất dễ sử dụng và hiệu quả!"</p>
                 </div>
                 <div class="testimonial-author">
                     <div class="author-avatar">
                         <img src="/placeholder.svg?height=48&width=48" alt="Customer" />
                     </div>
                     <div class="author-info">
-                        <div class="author-name">Sarah Johnson</div>
-                        <div class="author-title">Verified Customer</div>
+                        <div class="author-name">Nguyễn Văn Nam</div>
+                        <div class="author-title">Chủ cửa hàng</div>
                     </div>
                 </div>
             </div>
@@ -74,59 +74,59 @@
     <div class="auth-right">
         <div class="auth-form-container">
             <div class="auth-form-header">
-                <h2>Create your account</h2>
-                <p>Get started with your free account today</p>
+                <h2>Tạo tài khoản của bạn</h2>
+                <p>Bắt đầu hành trình quản lý cửa hàng ngay hôm nay</p>
             </div>
 
-            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister" class="auth-form">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mb-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@errorMessage
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success mb-3">
+                    <i class="fas fa-check-circle me-2"></i>@successMessage
+                </div>
+            }
+
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister" FormName="RegisterForm" class="auth-form">
                 <DataAnnotationsValidator />
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName" class="form-label">First name</label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            <InputText id="firstName" @bind-Value="registerModel.FirstName" class="form-input" placeholder="John" />
-                        </div>
-                        <ValidationMessage For="@(() => registerModel.FirstName)" class="field-validation-error" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lastName" class="form-label">Last name</label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            <InputText id="lastName" @bind-Value="registerModel.LastName" class="form-input" placeholder="Doe" />
-                        </div>
-                        <ValidationMessage For="@(() => registerModel.LastName)" class="field-validation-error" />
-                    </div>
-                </div>
-
                 <div class="form-group">
-                    <label for="email" class="form-label">Email address</label>
+                    <label for="username" class="form-label">Tên đăng nhập</label>
                     <div class="input-wrapper">
                         <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                            <polyline points="22,6 12,13 2,6" />
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
                         </svg>
-                        <InputText id="email" @bind-Value="registerModel.Email" class="form-input" placeholder="you@example.com" />
+                        <InputText id="username" @bind-Value="registerModel.Username" class="form-input" placeholder="Nhập tên đăng nhập" />
                     </div>
-                    <ValidationMessage For="@(() => registerModel.Email)" class="field-validation-error" />
+                    <ValidationMessage For="@(() => registerModel.Username)" class="field-validation-error" />
                 </div>
 
                 <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="fullName" class="form-label">Họ và tên</label>
+                    <div class="input-wrapper">
+                        <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <InputText id="fullName" @bind-Value="registerModel.FullName" class="form-input" placeholder="Nhập họ và tên đầy đủ" />
+                    </div>
+                    <ValidationMessage For="@(() => registerModel.FullName)" class="field-validation-error" />
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Mật khẩu</label>
                     <div class="input-wrapper">
                         <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        <InputText id="password" type="@(showPassword ? "text" : "password")" @bind-Value="registerModel.Password" class="form-input" placeholder="Create a strong password" />
+                        <InputText id="password" type="@(showPassword ? "text" : "password")" @bind-Value="registerModel.Password" class="form-input" placeholder="Tạo mật khẩu mạnh" />
                         <button type="button" class="input-action" @onclick="TogglePassword">
                             @if (showPassword)
                             {
@@ -154,13 +154,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="confirmPassword" class="form-label">Confirm password</label>
+                    <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
                     <div class="input-wrapper">
                         <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        <InputText id="confirmPassword" type="password" @bind-Value="registerModel.ConfirmPassword" class="form-input" placeholder="Re-enter your password" />
+                        <InputText id="confirmPassword" type="password" @bind-Value="registerModel.ConfirmPassword" class="form-input" placeholder="Nhập lại mật khẩu" />
                     </div>
                     <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="field-validation-error" />
                 </div>
@@ -169,7 +169,7 @@
                     <label class="checkbox-label">
                         <InputCheckbox @bind-Value="registerModel.AgreeToTerms" class="checkbox-input" />
                         <span class="checkbox-text">
-                            I agree to the <a href="/terms" class="form-link">Terms of Service</a> and <a href="/privacy" class="form-link">Privacy Policy</a>
+                            Tôi đồng ý với <a href="/terms" class="form-link">Điều khoản dịch vụ</a> và <a href="/privacy" class="form-link">Chính sách bảo mật</a>
                         </span>
                     </label>
                     <ValidationMessage For="@(() => registerModel.AgreeToTerms)" class="field-validation-error" />
@@ -179,11 +179,11 @@
                     @if (isLoading)
                     {
                         <span class="spinner"></span>
-                        <span>Creating account...</span>
+                        <span>Đang tạo tài khoản...</span>
                     }
                     else
                     {
-                        <span>Create account</span>
+                        <span>Tạo tài khoản</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -191,7 +191,7 @@
                 </button>
 
                 <div class="auth-divider">
-                    <span>Or sign up with</span>
+                    <span>Hoặc đăng ký với</span>
                 </div>
 
                 <div class="social-buttons">
@@ -215,9 +215,8 @@
             </EditForm>
 
             <div class="auth-footer">
-                <p>Already have an account? <a href="/login" class="auth-footer-link">Sign in</a></p>
+                <p>Đã có tài khoản? <a href="/login" class="auth-footer-link">Đăng nhập</a></p>
             </div>
         </div>
     </div>
 </div>
-
