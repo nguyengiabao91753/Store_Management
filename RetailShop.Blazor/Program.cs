@@ -22,7 +22,6 @@ builder.Services.Configure<CircuitOptions>(options => options.DetailedErrors = t
 SD.ServierAPI = builder.Configuration.GetValue<string>("Urls:Server");
 
 //Add Services
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
 //Dependency Injection for Services
@@ -30,9 +29,11 @@ builder.Services.AddScoped<IBaseService, BaseService>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddSingleton<CustomerStateService>();
+
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 var app = builder.Build();

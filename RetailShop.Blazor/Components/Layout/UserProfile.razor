@@ -1,12 +1,15 @@
 @using RetailShop.Blazor.Services.IServices
+@using RetailShop.Blazor.Services
 @using RetailShop.Blazor.Dtos
-@inject IAuthService AuthService
+@inject ICustomerAuthService CustomerAuthService
+@inject CustomerStateService CustomerStateService
 @inject NavigationManager Navigation
 
 @implements IDisposable
+@rendermode InteractiveServer
 
-<div class="user-profile-dropdown">
-    @if (isAuthenticated && currentUser != null)
+<div class="user-profile-dropdown" style="position: relative; display: inline-block;">
+    @if (isAuthenticated && currentCustomer != null)
     {
         <button class="user-profile-btn" @onclick="ToggleDropdown">
             <div class="user-avatar">
@@ -16,8 +19,8 @@
                 </svg>
             </div>
             <div class="user-info">
-                <span class="user-name">@currentUser.FullName</span>
-                <span class="user-role">@GetRoleDisplay(currentUser.Role)</span>
+                <span class="user-name">@currentCustomer.Name</span>
+                <span class="user-role">Khách hàng</span>
             </div>
             <svg class="dropdown-arrow @(isDropdownOpen ? "open" : "")" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -26,7 +29,7 @@
 
         @if (isDropdownOpen)
         {
-            <div class="user-dropdown-menu" @onclick:stopPropagation="true">
+            <div class="user-dropdown-menu" style="display: block; position: absolute; top: calc(100% + 8px); right: 0; width: 280px; background: white; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); z-index: 1000;" @onclick:stopPropagation="true">
                 <div class="dropdown-header">
                     <div class="user-avatar-large">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -35,9 +38,9 @@
                         </svg>
                     </div>
                     <div class="user-details">
-                        <h4>@currentUser.FullName</h4>
-                        <p>@currentUser.Username</p>
-                        <span class="user-role-badge">@GetRoleDisplay(currentUser.Role)</span>
+                        <h4>@currentCustomer.Name</h4>
+                        <p>@currentCustomer.Email</p>
+                        <span class="user-role-badge">Khách hàng</span>
                     </div>
                 </div>
 
@@ -52,6 +55,13 @@
                         <span>Thông tin tài khoản</span>
                     </a>
 
+                    <a href="/orders" class="dropdown-item" @onclick="CloseDropdown">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Đơn hàng của tôi</span>
+                    </a>
+
                     <a href="/settings" class="dropdown-item" @onclick="CloseDropdown">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="3"></circle>
@@ -59,19 +69,6 @@
                         </svg>
                         <span>Cài đặt</span>
                     </a>
-
-                    @if (currentUser.Role == "admin")
-                    {
-                        <div class="dropdown-divider"></div>
-                        <a href="/admin" class="dropdown-item" @onclick="CloseDropdown">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <path d="M21 15l-5-5L5 21"></path>
-                            </svg>
-                            <span>@GetRoleDisplay(currentUser.Role)</span>
-                        </a>
-                    }
                 </div>
 
                 <div class="dropdown-divider"></div>
@@ -100,80 +97,63 @@
 
 @code {
     private bool isAuthenticated = false;
-    private UserDto? currentUser = null;
+    private CustomerDto? currentCustomer = null;
     private bool isDropdownOpen = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender)
+        Console.WriteLine("UserProfile OnInitializedAsync called");
+        
+        // Subscribe to state changes
+        CustomerStateService.OnStateChanged += OnStateChanged;
+        
+        // Initialize with current state
+        isAuthenticated = CustomerStateService.IsAuthenticated;
+        currentCustomer = CustomerStateService.CurrentCustomer;
+        
+        Console.WriteLine($"Initial state - isAuthenticated: {isAuthenticated}, customer: {currentCustomer?.Name}");
+        
+        // If state service is empty, try to load from localStorage
+        if (!isAuthenticated)
         {
-            await LoadUserInfo();
-            await JS.InvokeVoidAsync("console.log", $"[UserProfile] Render lần đầu: isAuthenticated={isAuthenticated}, currentUser={{username={currentUser?.Username}, role={currentUser?.Role}}}");
-            StateHasChanged();
+            await LoadCustomerInfoFromStorage();
         }
     }
 
-    protected override void OnInitialized()
+    private async void OnStateChanged()
     {
-        // Subscribe to auth state changes so the UI updates immediately after login/logout
-        AuthService.OnAuthStateChanged += AuthStateChangedHandler;
+        isAuthenticated = CustomerStateService.IsAuthenticated;
+        currentCustomer = CustomerStateService.CurrentCustomer;
+        await InvokeAsync(StateHasChanged);
     }
 
-    private void AuthStateChangedHandler()
+    private async Task LoadCustomerInfoFromStorage()
     {
-        _ = InvokeAsync(async () =>
+        try
         {
-            await JS.InvokeVoidAsync("console.log", "[UserProfile] Nhận event OnAuthStateChanged, gọi LoadUserInfo");
-            await LoadUserInfo();
-            StateHasChanged();
-        });
-    }
-
-    [Inject] private IJSRuntime JS { get; set; }
-
-    private async Task LoadUserInfo()
-    {
-        await JS.InvokeVoidAsync("console.log", "[UserProfile] Gọi LoadUserInfo");
-        // First try server-side auth service (may be populated if same circuit)
-        isAuthenticated = await AuthService.IsAuthenticatedAsync();
-        currentUser = AuthService.CurrentUser;
-
-        // If AuthService doesn't have user (different circuit), fall back to reading localStorage directly on client
-        if (!isAuthenticated || currentUser == null)
-        {
-            try
+            var isAuth = await CustomerAuthService.IsAuthenticatedAsync();
+            if (isAuth)
             {
-                var userJson = await JS.InvokeAsync<string>("authInterop.getCurrentUser");
-                await JS.InvokeVoidAsync("console.log", $"[UserProfile] Fallback read localStorage currentUser: {userJson}");
-                if (!string.IsNullOrEmpty(userJson))
+                var customer = await CustomerAuthService.GetCustomerProfileAsync();
+                if (customer != null)
                 {
-                    try
-                    {
-                        var fromClient = System.Text.Json.JsonSerializer.Deserialize<UserDto>(userJson, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                        if (fromClient != null)
-                        {
-                            currentUser = fromClient;
-                            isAuthenticated = true;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await JS.InvokeVoidAsync("console.error", "[UserProfile] Error deserializing currentUser from localStorage: " + ex.Message);
-                    }
+                    CustomerStateService.SetCustomer(customer);
                 }
             }
-            catch (Exception ex)
-            {
-                await JS.InvokeVoidAsync("console.error", "[UserProfile] authInterop.getCurrentUser failed: " + ex.Message);
-            }
         }
-
-        await JS.InvokeVoidAsync("console.log", $"[UserProfile] Sau LoadUserInfo: isAuthenticated={isAuthenticated}, currentUser={{username={currentUser?.Username}, role={currentUser?.Role}}}");
+        catch
+        {
+            // Ignore errors during initial load
+        }
     }
 
     private void ToggleDropdown()
     {
         isDropdownOpen = !isDropdownOpen;
+        Console.WriteLine($"Dropdown toggled: {isDropdownOpen}");
+        StateHasChanged();
     }
 
     private void CloseDropdown()
@@ -183,21 +163,11 @@
 
     private async Task HandleLogout()
     {
-        await AuthService.LogoutAsync();
+        await CustomerAuthService.LogoutAsync();
         isAuthenticated = false;
-        currentUser = null;
+        currentCustomer = null;
         isDropdownOpen = false;
         Navigation.NavigateTo("/", true);
-    }
-
-    private string GetRoleDisplay(string role)
-    {
-        return role switch
-        {
-            "admin" => "Quản trị viên",
-            "staff" => "Nhân viên",
-            _ => "Khách hàng"
-        };
     }
 
     // Handle clicks outside component to close dropdown
@@ -210,6 +180,6 @@
 
     public void Dispose()
     {
-        AuthService.OnAuthStateChanged -= AuthStateChangedHandler;
+        CustomerStateService.OnStateChanged -= OnStateChanged;
     }
 }

@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add services to the container.
 builder.Services.AddScoped<IProductAPIService, ProductAPIService>();
 builder.Services.AddScoped<IOrderAPIService, OrderAPIService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 
