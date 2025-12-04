@@ -28,6 +28,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<PaypalService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

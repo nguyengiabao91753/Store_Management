@@ -206,6 +206,143 @@
     font-size: 24px;
 }
 
+/* Added E-Wallet provider selection styles */
+.ewallet-options {
+    margin-top: 16px;
+    padding: 20px;
+    background: var(--color-surface);
+    border-radius: 12px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ewallet-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-text);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ewallet-providers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ewallet-provider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+    .ewallet-provider:not(.disabled):hover {
+        border-color: var(--color-primary);
+        transform: translateX(4px);
+    }
+
+    .ewallet-provider.selected {
+        border-color: var(--color-primary);
+        background: rgba(37, 99, 235, 0.05);
+    }
+
+    .ewallet-provider.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+.provider-check {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: var(--color-primary);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s;
+}
+
+.ewallet-provider.selected .provider-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.provider-logo {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    border-radius: 8px;
+    position: relative;
+}
+
+.coming-soon-badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    background: var(--color-border);
+    padding: 4px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.provider-info {
+    flex: 1;
+}
+
+.provider-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--color-text);
+    margin-bottom: 2px;
+}
+
+.provider-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+.ewallet-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px;
+    background: #dbeafe;
+    border-left: 3px solid var(--color-primary);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1e40af;
+    line-height: 1.5;
+}
+
+    .ewallet-notice svg {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
 /* ===== Promo Code ===== */
 .promo-input-wrapper {
     display: flex;
@@ -383,4 +520,84 @@
     }
 
     .btn-place-order:disabled {
-        opacity: 0
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+.trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+    .badge svg {
+        color: var(--color-primary);
+    }
+
+/* ===== Spinner ===== */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .checkout-content {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-sidebar {
+        position: static;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 24px 16px 60px;
+    }
+
+    .checkout-header h1 {
+        font-size: 28px;
+    }
+
+    .checkout-section {
+        padding: 24px 20px;
+    }
+
+    .order-summary {
+        padding: 24px 20px;
+    }
+
+    .promo-input-wrapper {
+        flex-direction: column;
+    }
+
+    .btn-apply-promo {
+        width: 100%;
+    }
+}

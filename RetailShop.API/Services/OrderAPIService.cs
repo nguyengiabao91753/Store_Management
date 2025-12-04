@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RetailShop.API.Data;
 using RetailShop.API.Dtos;
 using RetailShop.API.Models;
@@ -30,7 +31,7 @@ public class OrderAPIService : IOrderAPIService
                 {
                     PromoId = orderPlaceDto.PromoId,
                     OrderDate = DateTime.Now,
-                    Status = "paid",
+                    Status = "pending",
                     TotalAmount = orderPlaceDto.TotalAmount
                 };
 
@@ -89,5 +90,53 @@ public class OrderAPIService : IOrderAPIService
             return false;
         }
 
+    }
+
+    public async Task<ResponseDto?> CancleOrderAsync(int orderId)
+    {
+        var rs = new ResponseDto();
+        var order = _db.Orders.FirstOrDefault(o => o.OrderId == orderId);
+        if (order == null)
+        {
+            rs.IsSuccess = false;
+            rs.Message = "Order not found";
+            return rs;
+        }
+        order.Status = "canceled";
+        await _db.SaveChangesAsync();
+        rs.IsSuccess = true;
+        return rs;
+    }
+
+    public async Task<ResponseDto?> GetOrdersByCustomer(int CusId)
+    {
+        var rs = new ResponseDto();
+        var orders = await _db.Orders.Where(o => o.CustomerId == CusId)
+                                     .Include(Payment => Payment.Payment)
+                                     .Include(oi => oi.OrderItems)
+                                     .ToListAsync();
+        rs.Result = _mapper.Map<OrderDTO>(orders);
+        rs.IsSuccess = true;
+
+        return rs;
+    }
+
+    public async Task<ResponseDto?> GetOrderById(int orderId)
+    {
+        var rs = new ResponseDto();
+        var order = await _db.Orders
+            .Where(o => o.OrderId == orderId)
+            .Include(o => o.Payment)
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync();
+        if (order == null)
+        {
+            rs.IsSuccess = false;
+            rs.Message = "Order not found";
+            return rs;
+        }
+        rs.Result = _mapper.Map<OrderDTO>(order);
+        rs.IsSuccess = true;
+        return rs;
     }
 }

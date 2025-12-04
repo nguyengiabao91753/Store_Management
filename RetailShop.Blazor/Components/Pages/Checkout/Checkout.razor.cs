@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using RetailShop.Blazor.Components.Shared;
 using RetailShop.Blazor.Dtos;
@@ -16,6 +17,11 @@ public partial class Checkout
     private IOrderService OrderService { get; set; } = default!;
     [Inject]
     private IPromotionService PromotionService { get; set; } = default!;
+    [Inject]
+    private IPaymentService PaymentService { get; set; } = default!;
+
+    [Inject] IJSRuntime JS { get; set; } = default!;
+
     private OrderPlaceDto orderDto = new();
     private List<Cart> cartItems = new();
     private decimal subtotal = 0;
@@ -26,10 +32,17 @@ public partial class Checkout
     private bool isPlacingOrder = false;
     private bool isApplyingPromo = false;
 
+    private string selectedEWallet = "";
+
     private Toast? ToastRef;
+
+    private DotNetObjectReference<Checkout> objRef;
+
 
     protected override void OnInitialized()
     {
+        objRef = DotNetObjectReference.Create(this);
+
         LoadCartItems();
         orderDto.PaymentMethod = "Cash"; 
     }
@@ -58,6 +71,15 @@ public partial class Checkout
     private void SelectPaymentMethod(string method)
     {
         orderDto.PaymentMethod = method;
+        if (method != "e-wallet")
+        {
+            selectedEWallet = "";
+        }
+    }
+
+    private void SelectEWallet(string provider)
+    {
+        selectedEWallet = provider;
     }
 
     private async Task ApplyPromo()
@@ -86,12 +108,14 @@ public partial class Checkout
                 return;
             }
             orderDto.PromoId = promo.PromoId;
-            if (promo.DiscountType == "Percentage")
+            if (promo.DiscountType == "percent")
             {
+                
                 orderDto.DiscountAmount = subtotal * (promo.DiscountValue / 100);
+               
                 promoMessage = $"Promo code applied! You saved {promo.DiscountValue}%";
             }
-            else if (promo.DiscountType == "Fixed")
+            else if (promo.DiscountType == "fixed")
             {
                 orderDto.DiscountAmount = promo.DiscountValue;
                 promoMessage = $"Promo code applied! You saved {promo.DiscountValue:C}";
@@ -129,10 +153,39 @@ public partial class Checkout
 
         isPlacingOrder = true;
 
-        // Simulate API call - Replace with actual API
-        await Task.Delay(1500);
 
-        var rs = await OrderService.PlaceOrderAsync(orderDto);
+        var rs = new ResponseDto();
+        if (orderDto.PaymentMethod =="e-wallet" && string.IsNullOrWhiteSpace(selectedEWallet))
+        {
+            ToastRef?.ShowToast(
+          "Please select an e-wallet provider!",
+          null,
+          Toast.ToastType.Error
+            );
+            isPlacingOrder = false;
+            return;
+        }
+        else if(orderDto.PaymentMethod == "e-wallet")
+        {
+            //Gọi API create Paypal
+            var paypalResult = await PaymentService.CreatePaypal(orderDto);
+            if (paypalResult == null || string.IsNullOrWhiteSpace(paypalResult))
+            {
+                ToastRef?.ShowToast("Failed to create PayPal payment!", null, Toast.ToastType.Error);
+                isPlacingOrder = false;
+                return;
+            }
+            // Redirect user to PayPal approval URL
+            await JS.InvokeVoidAsync("openPaypalPopup", paypalResult, objRef);
+
+            return;
+        }
+        else
+        {
+             rs = await OrderService.PlaceOrderAsync(orderDto);
+
+        }
+
         if (rs.IsSuccess)
         {
             // Order placed successfully
@@ -155,5 +208,22 @@ public partial class Checkout
             isPlacingOrder = false;
 
       
+    }
+
+
+    [JSInvokable]
+    public  Task OnPaypalSuccess(string orderId)
+    {
+        // clear cart
+        CartService.ClearCart(null);
+        Nav.NavigateTo($"/checkout/success?orderId={orderId}");
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task OnPaypalFailed()
+    {
+        ToastRef?.ShowToast("Payment failed!", null, Toast.ToastType.Error);
+        return Task.CompletedTask;
     }
 }

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RetailShop.API.Dtos;
+namespace RetailShop.Blazor.Dtos;
 
 public class OrderDTO
 {
@@ -29,7 +29,8 @@ public class OrderDTO
 
     public decimal? DiscountAmount { get; set; }
 
-    public string ? PaymentMethod { get; set; }
+    public string? PaymentMethod { get; set; }
+
 
     public List<OrderItemDTO>? OrderItems { get; set; }
 }

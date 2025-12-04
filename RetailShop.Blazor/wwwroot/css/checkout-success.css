@@ -1,0 +1,337 @@
+﻿/* ===== Success Container ===== */
+.success-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 24px;
+}
+
+.success-card {
+    background: white;
+    border-radius: 24px;
+    padding: 60px 48px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.6s ease-out;
+    text-align: center;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Success Icon ===== */
+.success-icon-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 32px;
+}
+
+.success-circle-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 50%;
+    animation: scaleIn 0.5s ease-out 0.2s both;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.success-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkmark {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: drawCheck 0.6s ease-out 0.5s forwards;
+}
+
+@keyframes drawCheck {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ===== Success Text ===== */
+.success-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 12px 0;
+    animation: fadeIn 0.6s ease-out 0.8s both;
+}
+
+.success-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0 0 32px 0;
+    line-height: 1.6;
+    animation: fadeIn 0.6s ease-out 0.9s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Order Info ===== */
+.order-info {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    animation: fadeIn 0.6s ease-out 1s both;
+}
+
+.order-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+    .order-info-item:last-child {
+        border-bottom: none;
+    }
+
+.info-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 16px;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* ===== Next Steps ===== */
+.next-steps {
+    text-align: left;
+    margin-bottom: 32px;
+    animation: fadeIn 0.6s ease-out 1.1s both;
+}
+
+    .next-steps h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0 0 20px 0;
+    }
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.step-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+    .step-item:hover {
+        background: #f1f5f9;
+        transform: translateX(4px);
+    }
+
+.step-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.step-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 4px 0;
+}
+
+.step-content p {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ===== Countdown Section ===== */
+.countdown-section {
+    margin-bottom: 32px;
+    animation: fadeIn 0.6s ease-out 1.2s both;
+}
+
+.countdown-text {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0 0 12px 0;
+}
+
+.countdown-number {
+    font-weight: 700;
+    color: #2563eb;
+    font-size: 18px;
+}
+
+.countdown-bar {
+    width: 100%;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.countdown-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    width: 100%;
+}
+
+@keyframes countdown {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}
+
+/* ===== Action Buttons ===== */
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    animation: fadeIn 0.6s ease-out 1.3s both;
+}
+
+.btn-primary-action,
+.btn-secondary-action {
+    flex: 1;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary-action {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+    .btn-primary-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+
+.btn-secondary-action {
+    background: white;
+    color: #0f172a;
+    border: 2px solid #e2e8f0;
+}
+
+    .btn-secondary-action:hover {
+        border-color: #667eea;
+        color: #667eea;
+        background: #f8fafc;
+    }
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .success-card {
+        padding: 40px 24px;
+    }
+
+    .success-icon-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .success-icon svg {
+        width: 60px;
+        height: 60px;
+    }
+
+    .success-title {
+        font-size: 24px;
+    }
+
+    .success-subtitle {
+        font-size: 14px;
+    }
+
+    .order-info {
+        padding: 16px;
+    }
+
+    .step-item {
+        padding: 12px;
+    }
+
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+
+        .step-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}

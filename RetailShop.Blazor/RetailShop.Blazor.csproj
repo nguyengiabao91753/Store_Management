@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="PayPal" Version="1.9.1" />
+
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.22" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
 		  <PrivateAssets>all</PrivateAssets>
@@ -19,5 +21,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.3.0" />
 		<PackageReference Include="IdentityModel" Version="7.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.3" />
 	</ItemGroup>
 </Project>

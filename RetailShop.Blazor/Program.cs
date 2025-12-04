@@ -33,7 +33,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
-
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 var app = builder.Build();
 

@@ -1,16 +1,109 @@
 ﻿@page "/checkout/success"
+@using Newtonsoft.Json
+@using RetailShop.Blazor.Dtos
+@using RetailShop.Blazor.Services.IServices
 @rendermode InteractiveServer
 
-<div class="status-card" id="statusCard">
-    <div class="status-icon">
-        <i class="fa-solid fa-circle-check"></i>
+<PageTitle>Order Successful - MockStore</PageTitle>
+
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon-wrapper">
+            <div class="success-circle-bg"></div>
+            <div class="success-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+                    <path class="checkmark" d="M5 13l4 4L19 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="success-title">Payment Successful!</h1>
+        <p class="success-subtitle">Thank you for your purchase. Your order has been confirmed.</p>
+
+        <div class="order-info">
+            <div class="order-info-item">
+                <span class="info-label">Order Number</span>
+                <span class="info-value">#@orderNumber</span>
+            </div>
+            <div class="order-info-item">
+                <span class="info-label">Payment Method</span>
+                <span class="info-value">@paymentMethod</span>
+            </div>
+            <div class="order-info-item">
+                <span class="info-label">Total Amount</span>
+                <span class="info-value">@totalAmount.ToString("C")</span>
+            </div>
+        </div>
+
+       
+
+        <div class="countdown-section">
+            <p class="countdown-text">
+                Redirecting to home page in <span class="countdown-number">@countdown</span> seconds...
+            </p>
+            <div class="countdown-bar">
+                <div class="countdown-progress" style="animation: countdown @(countdown)s linear forwards;"></div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/" class="btn-secondary-action">Go to Home</a>
+            <a href="/orders" class="btn-primary-action">View Orders</a>
+        </div>
     </div>
-    <h3>Payment Successful</h3>
-    <p>Your order has been completed successfully!</p>
-    <p class="small text-muted mt-3">
-        Redirecting to home page in <span id="countdown">5</span> seconds...
-    </p>
 </div>
 
-    <script src="~/js/CheckoutStatus.js" asp-append-version="true"></script>
+@code {
+    private string orderNumber = "MS" + DateTime.Now.Ticks.ToString().Substring(10);
+    private string paymentMethod = "Credit Card";
+    private decimal totalAmount = 299.99m;
+    private int countdown = 10;
+    private System.Threading.Timer? timer;
+    [Inject] NavigationManager Nav { get; set; }
+    [Inject] IOrderService OrderService { get; set; } = default!;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("orderId", out var id))
+        {
+            orderNumber = id;
+
+            var rs = await OrderService.GetOrderById(int.Parse(orderNumber));
+            var order = JsonConvert.DeserializeObject<OrderDTO>(Convert.ToString(rs.Result));
+            paymentMethod = order.PaymentMethod;
+            totalAmount = order.TotalAmount.Value;
+        }
+
+        StartCountdown();
+    }
+
+    private void StartCountdown()
+    {
+        timer = new System.Threading.Timer(async _ =>
+        {
+            if (countdown > 0)
+            {
+                countdown--;
+                await InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                timer?.Dispose();
+                // Navigate to home page
+                await InvokeAsync(() =>
+                {
+                    // Use JavaScript to navigate
+                    // Or use NavigationManager if injected
+                });
+            }
+        }, null, 1000, 1000);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}

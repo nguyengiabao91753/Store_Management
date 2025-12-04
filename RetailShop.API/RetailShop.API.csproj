@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.1.0" />
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    <PackageReference Include="PayPalCheckoutSdk" Version="1.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.20">
 		  <PrivateAssets>all</PrivateAssets>

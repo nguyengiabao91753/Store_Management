@@ -11,6 +11,25 @@ public class OrderService : IOrderService
     {
         _baseService = baseService;
     }
+
+    public async Task<ResponseDto?> GetOrderById(int orderId)
+    {
+        return await _baseService.SendAsync(new RequestDto()
+        {
+            ApiType = SD.ApiType.GET,
+            Url = SD.ServierAPI + "/api/order/get-order-by-id/" + orderId
+        });
+    }
+
+    public async Task<ResponseDto?> GetOrdersByCustomer(int CusId)
+    {
+       return await _baseService.SendAsync(new RequestDto()
+        {
+            ApiType = SD.ApiType.GET,
+            Url = SD.ServierAPI + "/api/order/get-orders-by-customer/" + CusId
+        });
+    }
+
     public async Task<ResponseDto?> PlaceOrderAsync(OrderPlaceDto orderPlace)
     {
         return await _baseService.SendAsync(new RequestDto()

@@ -1,0 +1,43 @@
+﻿@page "/paypal-callback"
+@using RetailShop.Blazor.Dtos
+@using RetailShop.Blazor.Ubility
+
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<h3>Processing payment...</h3>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        var paymentId = query["paymentId"];
+        var payerId = query["PayerID"];
+        var orderId = query["orderId"];
+
+        if (paymentId is null || payerId is null)
+        {
+            // lỗi: paypal hủy thanh toán
+            Navigation.NavigateTo("/payment-failed");
+            return;
+        }
+
+        // Gọi API execute
+        var result = await Http.GetFromJsonAsync<PaypalResponse>(
+            $"{SD.ServierAPI}/api/payment/execute-paypal?paymentId={paymentId}&PayerID={payerId}&orderId={orderId}"
+        );
+
+        if (result != null)
+        {
+            Navigation.NavigateTo($"/payment-success/{orderId}");
+        }
+        else
+        {
+            Navigation.NavigateTo("/payment-failed");
+        }
+    }
+}
+
+

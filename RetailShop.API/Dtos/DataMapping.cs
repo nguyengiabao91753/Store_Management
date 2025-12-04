@@ -46,6 +46,8 @@ public class DataMapping : Profile
             .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
             .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.DiscountAmount))
 
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Payment.PaymentMethod))
+
             // OrderItems
             .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
 
