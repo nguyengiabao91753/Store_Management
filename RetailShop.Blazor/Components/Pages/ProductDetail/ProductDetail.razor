@@ -1,6 +1,9 @@
 ﻿@page "/product/{ProductId:int}"
 @using RetailShop.Blazor.Components.Shared
+@using RetailShop.Blazor.Services
 @inject NavigationManager Nav
+@inject CustomerStateService CustomerStateService
+
 @rendermode InteractiveServer
 
 <PageTitle>@product?.ProductName - MockStore</PageTitle>

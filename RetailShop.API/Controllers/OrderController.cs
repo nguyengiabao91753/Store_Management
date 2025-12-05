@@ -39,7 +39,7 @@ public class OrderController : ControllerBase
         if (result.IsSuccess)
         {
             // Fix: Cast result.Result to Order before accessing OrderId
-            var order = result.Result as Order;
+            var order = result.Result as OrderDTO;
             if (order == null)
             {
                 return BadRequest("Order creation failed: Result is not an Order.");
@@ -48,7 +48,7 @@ public class OrderController : ControllerBase
             //Thanh toán
             var paymentResult = await _paymentService.CreatePayment(new Payment
             {
-                OrderId = order.OrderId,
+                OrderId = order.OrderId.Value,
                 Amount = orderPlaceDto.TotalAmount!.Value,
                 PaymentMethod = orderPlaceDto.PaymentMethod,
                 PaymentDate = DateTime.UtcNow

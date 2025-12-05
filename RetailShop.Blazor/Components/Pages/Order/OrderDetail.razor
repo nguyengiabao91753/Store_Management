@@ -1,0 +1,204 @@
+﻿@page "/orders/{OrderId:int}"
+@using RetailShop.Blazor.Dtos
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<PageTitle>Order #@OrderId - MockStore</PageTitle>
+
+<div class="order-detail-container">
+    @if (isLoading)
+    {
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading order details...</p>
+        </div>
+    }
+    else if (order == null)
+    {
+        <div class="error-state">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <h3>Order not found</h3>
+            <p>The order you're looking for doesn't exist.</p>
+            <button class="btn-primary" @onclick='() => Nav.NavigateTo("/orders")'>Back to Orders</button>
+        </div>
+    }
+    else
+    {
+        <div class="order-detail-header">
+            <button class="btn-back" @onclick='() => Nav.NavigateTo("/orders")'>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Orders
+            </button>
+            <button class="btn-export" @onclick="ExportOrder">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export PDF
+            </button>
+        </div>
+
+        <div class="order-detail-content">
+            <div class="order-main">
+                <div class="order-info-card">
+                    <div class="order-title-row">
+                        <div>
+                            <h1>Order #@order.OrderId</h1>
+                            <p class="order-date">Placed on @order.OrderDate?.ToString("MMMM dd, yyyy at hh:mm tt")</p>
+                        </div>
+                        <span class="order-status status-@order.Status?.ToLower()">
+                            @order.Status
+                        </span>
+                    </div>
+                </div>
+
+                <div class="order-items-card">
+                    <h2>Order Items</h2>
+                    <div class="order-items-list">
+                        @foreach (var item in order.OrderItems ?? new List<OrderItemDTO>())
+                        {
+                            <div class="order-item">
+                                <div class="item-image">
+                                    <img src="@item.ProductImage" alt="@item.ProductName" />
+                                </div>
+                                <div class="item-details">
+                                    <h3>@item.ProductName</h3>
+                                    <div class="item-meta">
+                                        @if (!string.IsNullOrEmpty(item.Barcode))
+                                        {
+                                            <span class="meta-item">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M3 5v14M7 5v14M11 5v14M15 5v14M19 5v14"/>
+                                                </svg>
+                                                @item.Barcode
+                                            </span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.Unit))
+                                        {
+                                            <span class="meta-item">Unit: @item.Unit</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="item-quantity">
+                                    <span class="quantity-label">Quantity</span>
+                                    <span class="quantity-value">@item.Quantity</span>
+                                </div>
+                                <div class="item-price">
+                                    <span class="price-label">Unit Price</span>
+                                    <span class="price-value">@item.Price.ToString("C")</span>
+                                </div>
+                                <div class="item-subtotal">
+                                    <span class="subtotal-label">Subtotal</span>
+                                    <span class="subtotal-value">@item.Subtotal?.ToString("C")</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="order-sidebar">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>@((order.TotalAmount ?? 0) + (order.DiscountAmount ?? 0)).ToString("C")</span>
+                    </div>
+                    @if (order.DiscountAmount > 0)
+                    {
+                        <div class="summary-row discount">
+                            <span>
+                                Discount
+                                @if (!string.IsNullOrEmpty(order.PromoCode))
+                                {
+                                    <span class="promo-code">(@order.PromoCode)</span>
+                                }
+                            </span>
+                            <span>-@order.DiscountAmount?.ToString("C")</span>
+                        </div>
+                    }
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>@order.TotalAmount?.ToString("C")</span>
+                    </div>
+                </div>
+
+                <div class="customer-card">
+                    <h3>Customer Information</h3>
+                    <div class="customer-info">
+                        <div class="info-row">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <div>
+                                <span class="info-label">Name</span>
+                                <span class="info-value">@order.Name</span>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(order.Phone))
+                        {
+                            <div class="info-row">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <div>
+                                    <span class="info-label">Phone</span>
+                                    <span class="info-value">@order.Phone</span>
+                                </div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(order.Email))
+                        {
+                            <div class="info-row">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                <div>
+                                    <span class="info-label">Email</span>
+                                    <span class="info-value">@order.Email</span>
+                                </div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(order.Address))
+                        {
+                            <div class="info-row">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <div>
+                                    <span class="info-label">Address</span>
+                                    <span class="info-value">@order.Address</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <h3>Payment Method</h3>
+                    <div class="payment-method">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                        <span>@order.PaymentMethod</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

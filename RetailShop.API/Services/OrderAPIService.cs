@@ -32,7 +32,8 @@ public class OrderAPIService : IOrderAPIService
                     PromoId = orderPlaceDto.PromoId,
                     OrderDate = DateTime.Now,
                     Status = "pending",
-                    TotalAmount = orderPlaceDto.TotalAmount
+                    TotalAmount = orderPlaceDto.TotalAmount,
+                    CustomerId = orderPlaceDto.CustomerId,
                 };
 
                 if (customerId != 0)
@@ -78,6 +79,7 @@ public class OrderAPIService : IOrderAPIService
                     Quantity = item.Quantity,
                     Price = item.Price,
                     Subtotal = item.Price * item.Quantity
+
                 };
                 await _db.OrderItems.AddAsync(orderItem);
 
@@ -112,10 +114,11 @@ public class OrderAPIService : IOrderAPIService
     {
         var rs = new ResponseDto();
         var orders = await _db.Orders.Where(o => o.CustomerId == CusId)
+                                     .Include(cus => cus.Customer)
                                      .Include(Payment => Payment.Payment)
-                                     .Include(oi => oi.OrderItems)
+                                     .Include(oi => oi.OrderItems).ThenInclude(p => p.Product)
                                      .ToListAsync();
-        rs.Result = _mapper.Map<OrderDTO>(orders);
+        rs.Result = _mapper.Map<List<OrderDTO>>(orders);
         rs.IsSuccess = true;
 
         return rs;
@@ -126,8 +129,9 @@ public class OrderAPIService : IOrderAPIService
         var rs = new ResponseDto();
         var order = await _db.Orders
             .Where(o => o.OrderId == orderId)
+            .Include(cus => cus.Customer)
             .Include(o => o.Payment)
-            .Include(o => o.OrderItems)
+            .Include(oi => oi.OrderItems).ThenInclude(p => p.Product)
             .FirstOrDefaultAsync();
         if (order == null)
         {

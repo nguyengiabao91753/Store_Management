@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RetailShop.Blazor.Components.Shared;
 using RetailShop.Blazor.Dtos;
+using RetailShop.Blazor.Services;
 using RetailShop.Blazor.Services.IServices;
 
 namespace RetailShop.Blazor.Components.Pages.ProductDetail;
@@ -47,6 +48,17 @@ public partial class ProductDetail
 
     private void AddToCart()
     {
+        if(CustomerStateService.IsAuthenticated == false)
+        {
+            ToastRef?.ShowToast(
+           "Not Logged In!",
+           "Please log in to add items to your cart.",
+           Toast.ToastType.Error
+           );
+            Nav.NavigateTo("/login");
+            return;
+        }
+
         // Add to cart logic here
         Console.WriteLine($"Added {quantity} x {product.ProductName} to cart");
         var rs = CartService.AddToCart(new Models.Cart

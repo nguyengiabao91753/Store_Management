@@ -17,6 +17,8 @@ public class OrderPlaceDto
 
     public decimal? DiscountAmount { get; set; }
 
+    public int? CustomerId { get; set; }
+
     public string? CustomerName { get; set; }
 
     public string? CustomerPhone { get; set; }

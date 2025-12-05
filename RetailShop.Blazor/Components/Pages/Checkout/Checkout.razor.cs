@@ -20,6 +20,7 @@ public partial class Checkout
     [Inject]
     private IPaymentService PaymentService { get; set; } = default!;
 
+    [Inject] private CustomerStateService CustomerStateService { get; set; }
     [Inject] IJSRuntime JS { get; set; } = default!;
 
     private OrderPlaceDto orderDto = new();
@@ -41,6 +42,14 @@ public partial class Checkout
 
     protected override void OnInitialized()
     {
+        if(CustomerStateService.IsAuthenticated == false)
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+        orderDto.CustomerId = CustomerStateService.CurrentCustomer.CustomerId;
+        orderDto.CustomerName = CustomerStateService.CurrentCustomer.Name;
+        orderDto.CustomerPhone = CustomerStateService.CurrentCustomer.Phone;
         objRef = DotNetObjectReference.Create(this);
 
         LoadCartItems();

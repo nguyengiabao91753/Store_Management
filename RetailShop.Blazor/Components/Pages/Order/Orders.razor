@@ -1,0 +1,138 @@
+﻿@page "/orders"
+@using RetailShop.Blazor.Dtos
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<PageTitle>My Orders - MockStore</PageTitle>
+
+<div class="orders-container">
+    <div class="orders-header">
+        <div>
+            <h1>My Orders</h1>
+            <p class="orders-subtitle">Track and manage your purchases</p>
+        </div>
+        <div class="orders-search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" @bind="searchQuery" @bind:event="oninput" placeholder="Search orders..." />
+        </div>
+    </div>
+
+    <div class="orders-tabs">
+        <button class="tab @(selectedTab == "all" ? "active" : "")" @onclick='() => SelectTab("all")'>
+            All Orders
+            <span class="tab-count">@allOrders.Count</span>
+        </button>
+        <button class="tab @(selectedTab == "pending" ? "active" : "")" @onclick='() => SelectTab("pending")'>
+            Pending
+            <span class="tab-count">@allOrders.Count(o => o.Status == "pending")</span>
+        </button>
+        <button class="tab @(selectedTab == "paid" ? "active" : "")" @onclick='() => SelectTab("paid")'>
+            Paid
+            <span class="tab-count">@allOrders.Count(o => o.Status == "paid")</span>
+        </button>
+        <button class="tab @(selectedTab == "canceled" ? "active" : "")" @onclick='() => SelectTab("canceled")'>
+            Canceled
+            <span class="tab-count">@allOrders.Count(o => o.Status == "canceled")</span>
+        </button>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="orders-loading">
+            <div class="spinner"></div>
+            <p>Loading your orders...</p>
+        </div>
+    }
+    else if (filteredOrders.Count == 0)
+    {
+        <div class="orders-empty">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+            </svg>
+            <h3>No orders found</h3>
+            <p>@(selectedTab == "all" ? "You haven't placed any orders yet" : $"No {selectedTab} orders")</p>
+            <a href="/products" class="btn-primary" style="margin-top: 20px; text-decoration: none;">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="orders-list">
+            @foreach (var order in filteredOrders)
+            {
+                <div class="order-card" @onclick="() => ViewOrderDetail(order.OrderId ?? 0)">
+                    <div class="order-card-header">
+                        <div class="order-info">
+                            <div class="order-id">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                                Order #@order.OrderId
+                            </div>
+                            <div class="order-date">
+                                @order.OrderDate?.ToString("MMM dd, yyyy - hh:mm tt")
+                            </div>
+                        </div>
+                        <span class="order-status status-@order.Status?.ToLower()">
+                            @order.Status
+                        </span>
+                    </div>
+
+                    <div class="order-card-body">
+                        <div class="order-items-preview">
+                            @foreach (var item in order.OrderItems?.Take(3) ?? new List<OrderItemDTO>())
+                            {
+                                <div class="order-item-preview">
+                                    <img src="@item.ProductImage" alt="@item.ProductName" />
+                                </div>
+                            }
+                            @if ((order.OrderItems?.Count ?? 0) > 3)
+                            {
+                                <div class="order-item-more">
+                                    +@((order.OrderItems?.Count ?? 0) - 3)
+                                </div>
+                            }
+                        </div>
+                        <div class="order-summary">
+                            <div class="order-customer">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                                @order.Name
+                            </div>
+                            <div class="order-payment">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                </svg>
+                                @order.PaymentMethod
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-card-footer">
+                        <div class="order-total">
+                            <span class="label">Total Amount</span>
+                            <span class="amount">@order.TotalAmount?.ToString("C")</span>
+                        </div>
+                        <button class="btn-view-order" @onclick:stopPropagation="true" @onclick="() => ViewOrderDetail(order.OrderId ?? 0)">
+                            View Details
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    
+}

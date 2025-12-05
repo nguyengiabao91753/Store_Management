@@ -20,6 +20,13 @@ public partial class CartPage
 
     protected override void OnInitialized()
     {
+        if(CustomerStateService.IsAuthenticated == false)
+        {
+           
+            Nav.NavigateTo("/login");
+            return;
+        }
+
         var rs = CartService.GetCart();
         Carts = rs;
 

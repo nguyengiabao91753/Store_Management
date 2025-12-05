@@ -1,7 +1,10 @@
 ﻿@page "/cart"
+@using RetailShop.Blazor.Services
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @inject NavigationManager Nav
+@inject CustomerStateService CustomerStateService
+
 
 <PageTitle>Shopping Cart - MockStore</PageTitle>
 
