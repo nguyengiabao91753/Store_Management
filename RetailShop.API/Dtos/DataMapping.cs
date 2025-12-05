@@ -73,6 +73,21 @@ public class DataMapping : Profile
         CreateMap<OrderDTO, Order>();
         CreateMap<OrderItemDTO, OrderItem>();
 
+
+
+
+        // ==================== CATE MAPPING ====================
+        CreateMap<CategoryDTO, Category>();
+        CreateMap<Category, CategoryDTO>();
+
+
+
+
+
+        // ==================== SUPPLIER MAPPING ====================
+        CreateMap<SupplierDTO, Supplier>();
+        CreateMap<Supplier, SupplierDTO>();
+
         // ==================== PROMOTION MAPPING ====================
         CreateMap<Promotion, PromotionDTO>();
         CreateMap<ProductDTO, ProductDTO>();

@@ -1,0 +1,20 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace RetailShop.API.Dtos
+{
+    public class SupplierDTO
+    {
+        public int SupplierId { get; set; }
+
+        public string Name { get; set; } = null!;
+
+        public string? Phone { get; set; }
+
+        public string? Email { get; set; }
+
+        public string? Address { get; set; }
+
+        public bool Active { get; set; } = true;
+    }
+}
